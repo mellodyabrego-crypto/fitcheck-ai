@@ -1,0 +1,21 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+*.iml
+
+# Environment — never commit real keys
+.env
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+*.xml
+!.idea/runConfigurations/
+
+# Pub
+pubspec.lock
