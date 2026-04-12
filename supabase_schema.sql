@@ -15,6 +15,14 @@ CREATE TABLE public.user_profiles (
   notifications_enabled BOOLEAN NOT NULL DEFAULT false,
   notification_time TEXT,
   location    TEXT,
+  -- Onboarding v2 fields
+  goals             JSONB DEFAULT '[]'::jsonb,
+  age_range         TEXT,
+  brands            JSONB DEFAULT '[]'::jsonb,
+  top_size          TEXT,
+  bottom_size       TEXT,
+  shoe_size         TEXT,
+  skin_tone_undertone TEXT,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE(user_id)

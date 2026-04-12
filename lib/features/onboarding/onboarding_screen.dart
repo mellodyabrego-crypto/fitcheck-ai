@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../main.dart';
 
 import '../../core/theme.dart';
 import 'widgets/goal_picker.dart';
@@ -68,9 +71,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 
-  void _finishOnboarding() {
-    // TODO: Save to Supabase user_profiles when not in demo mode
-    context.go('/home');
+  Future<void> _finishOnboarding() async {
+    if (!kDemoMode) {
+      try {
+        final client = Supabase.instance.client;
+        final userId = client.auth.currentUser?.id;
+        if (userId != null) {
+          await client.from('user_profiles').upsert({
+            'user_id': userId,
+            'aesthetics': _selectedAesthetics.toList(),
+            'body_type': _selectedBodyType,
+            'color_preferences': _selectedColors.toList(),
+            'goals': _selectedGoals.toList(),
+            'age_range': _selectedAge,
+            'brands': _selectedBrands,
+            'top_size': _topSize,
+            'bottom_size': _bottomSize,
+            'shoe_size': _shoeSize,
+            'skin_tone_undertone': _skinToneUndertone,
+            'onboarding_complete': true,
+            'updated_at': DateTime.now().toIso8601String(),
+          }, onConflict: 'user_id');
+        }
+      } catch (_) {
+        // Don't block navigation on save failure
+      }
+    }
+    if (mounted) context.go('/home');
   }
 
   bool get _canProceed {

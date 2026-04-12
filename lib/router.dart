@@ -15,15 +15,34 @@ import 'features/onboarding/onboarding_screen.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/home',
-    redirect: (context, state) {
+    redirect: (context, state) async {
       if (kDemoMode) return null;
 
-      final session = Supabase.instance.client.auth.currentSession;
+      final client = Supabase.instance.client;
+      final session = client.auth.currentSession;
       final isLoggedIn = session != null;
-      final isOnAuth = state.matchedLocation == '/auth';
+      final location = state.matchedLocation;
 
-      if (!isLoggedIn && !isOnAuth) return '/auth';
-      if (isLoggedIn && isOnAuth) return '/home';
+      // Not logged in — send to auth unless already there
+      if (!isLoggedIn) {
+        return location == '/auth' ? null : '/auth';
+      }
+
+      // Logged in but on auth screen — check onboarding status
+      if (location == '/auth') {
+        try {
+          final profile = await client
+              .from('user_profiles')
+              .select('onboarding_complete')
+              .eq('user_id', client.auth.currentUser!.id)
+              .maybeSingle();
+          final complete = profile?['onboarding_complete'] as bool? ?? false;
+          return complete ? '/home' : '/onboarding';
+        } catch (_) {
+          return '/home';
+        }
+      }
+
       return null;
     },
     routes: [

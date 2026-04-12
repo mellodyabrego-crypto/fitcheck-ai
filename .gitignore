@@ -18,4 +18,7 @@ build/
 !.idea/runConfigurations/
 
 # Pub
-pubspec.lock
+# pubspec.lock is committed for reproducible CI builds
+
+# Local Netlify folder
+.netlify
