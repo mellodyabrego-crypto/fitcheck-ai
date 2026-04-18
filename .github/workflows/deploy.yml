@@ -1,4 +1,4 @@
-name: Build & Deploy to Netlify
+name: Build & Deploy to Cloudflare Pages
 
 on:
   push:
@@ -20,40 +20,49 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Create .env
-        run: |
-          cat > .env << ENVEOF
-          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
-          CLAUDE_API_KEY=${{ secrets.CLAUDE_API_KEY }}
-          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
-          ENVEOF
-
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build web
-        run: flutter build web --release
+        # Credentials are injected at compile time via --dart-define so they
+        # end up in the JS bundle (the .env asset is NOT reliable in prod).
+        run: |
+          flutter build web --release \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Deploy to Netlify (Preview)
+      - name: Add Cloudflare Pages config
+        run: |
+          echo '/*    /index.html    200' > build/web/_redirects
+          cat > build/web/_headers << 'HEADERS'
+          /main.dart.js
+            Cache-Control: no-cache, must-revalidate
+          /flutter_bootstrap.js
+            Cache-Control: no-cache, must-revalidate
+          /flutter_service_worker.js
+            Cache-Control: no-cache, must-revalidate
+          /flutter.js
+            Cache-Control: no-cache, must-revalidate
+          /index.html
+            Cache-Control: no-cache
+          /canvaskit/*
+            Cache-Control: public, max-age=31536000, immutable
+          /assets/fonts/*
+            Cache-Control: public, max-age=31536000, immutable
+          HEADERS
+
+      - name: Deploy to Cloudflare Pages (Production)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/web --project-name=her-style-co --branch=main --commit-dirty=true
+
+      - name: Deploy to Cloudflare Pages (Preview)
         if: github.event_name == 'pull_request'
-        uses: nwtgck/actions-netlify@v3
+        uses: cloudflare/wrangler-action@v3
         with:
-          publish-dir: build/web
-          netlify-config-path: ./netlify.toml
-          deploy-message: "PR #${{ github.event.number }} — ${{ github.event.pull_request.title }}"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-      - name: Deploy to Netlify (Production)
-        if: github.ref == 'refs/heads/main'
-        uses: nwtgck/actions-netlify@v3
-        with:
-          publish-dir: build/web
-          production-deploy: true
-          netlify-config-path: ./netlify.toml
-          deploy-message: "${{ github.event.head_commit.message }}"
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/web --project-name=her-style-co --branch=preview-${{ github.event.number }} --commit-dirty=true
