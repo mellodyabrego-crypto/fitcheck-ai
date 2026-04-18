@@ -1,0 +1,1136 @@
+{
+  "name": "fashion-history",
+  "totalWords": 161,
+  "remotion": {
+    "captions": [
+      {
+        "text": "Fashion ",
+        "startMs": 0,
+        "endMs": 383,
+        "timestampMs": 0,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "didn't ",
+        "startMs": 430,
+        "endMs": 639,
+        "timestampMs": 430,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "start ",
+        "startMs": 673,
+        "endMs": 952,
+        "timestampMs": 673,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "on ",
+        "startMs": 1010,
+        "endMs": 1068,
+        "timestampMs": 1010,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "a ",
+        "startMs": 1103,
+        "endMs": 1126,
+        "timestampMs": 1103,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "runway. ",
+        "startMs": 1173,
+        "endMs": 1718,
+        "timestampMs": 1173,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "It ",
+        "startMs": 1962,
+        "endMs": 2101,
+        "timestampMs": 1962,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "started ",
+        "startMs": 2148,
+        "endMs": 2531,
+        "timestampMs": 2148,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "with ",
+        "startMs": 2566,
+        "endMs": 2659,
+        "timestampMs": 2566,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "a ",
+        "startMs": 2694,
+        "endMs": 2717,
+        "timestampMs": 2694,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "bone ",
+        "startMs": 2775,
+        "endMs": 3030,
+        "timestampMs": 2775,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "needle, ",
+        "startMs": 3065,
+        "endMs": 3471,
+        "timestampMs": 3065,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "an ",
+        "startMs": 3646,
+        "endMs": 3785,
+        "timestampMs": 3646,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "animal ",
+        "startMs": 3855,
+        "endMs": 4191,
+        "timestampMs": 3855,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "hide, ",
+        "startMs": 4249,
+        "endMs": 4621,
+        "timestampMs": 4249,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "and ",
+        "startMs": 4644,
+        "endMs": 4772,
+        "timestampMs": 4644,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "one ",
+        "startMs": 4853,
+        "endMs": 5074,
+        "timestampMs": 4853,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "very ",
+        "startMs": 5143,
+        "endMs": 5399,
+        "timestampMs": 5143,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "cold ",
+        "startMs": 5480,
+        "endMs": 5793,
+        "timestampMs": 5480,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "ancestor ",
+        "startMs": 5875,
+        "endMs": 6513,
+        "timestampMs": 5875,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "deciding ",
+        "startMs": 6560,
+        "endMs": 7012,
+        "timestampMs": 6560,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "she ",
+        "startMs": 7059,
+        "endMs": 7152,
+        "timestampMs": 7059,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "could ",
+        "startMs": 7198,
+        "endMs": 7349,
+        "timestampMs": 7198,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "do ",
+        "startMs": 7396,
+        "endMs": 7512,
+        "timestampMs": 7396,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "better. ",
+        "startMs": 7593,
+        "endMs": 8266,
+        "timestampMs": 7593,
+        "sceneId": "scene1"
+      },
+      {
+        "text": "Around ",
+        "startMs": 11000,
+        "endMs": 11302,
+        "timestampMs": 11000,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "twenty-five ",
+        "startMs": 11337,
+        "endMs": 11894,
+        "timestampMs": 11337,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "thousand ",
+        "startMs": 11929,
+        "endMs": 12265,
+        "timestampMs": 11929,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "years ",
+        "startMs": 12324,
+        "endMs": 12533,
+        "timestampMs": 12324,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "ago, ",
+        "startMs": 12556,
+        "endMs": 12858,
+        "timestampMs": 12556,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "humans ",
+        "startMs": 12904,
+        "endMs": 13345,
+        "timestampMs": 12904,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "learned ",
+        "startMs": 13403,
+        "endMs": 13635,
+        "timestampMs": 13403,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "to ",
+        "startMs": 13659,
+        "endMs": 13728,
+        "timestampMs": 13659,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "weave. ",
+        "startMs": 13798,
+        "endMs": 14309,
+        "timestampMs": 13798,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Linen ",
+        "startMs": 14553,
+        "endMs": 14913,
+        "timestampMs": 14553,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "in ",
+        "startMs": 15029,
+        "endMs": 15180,
+        "timestampMs": 15029,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Egypt. ",
+        "startMs": 15296,
+        "endMs": 15876,
+        "timestampMs": 15296,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Silk ",
+        "startMs": 16120,
+        "endMs": 16480,
+        "timestampMs": 16120,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "in ",
+        "startMs": 16596,
+        "endMs": 16747,
+        "timestampMs": 16596,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "China. ",
+        "startMs": 16828,
+        "endMs": 17420,
+        "timestampMs": 16828,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Wool ",
+        "startMs": 17629,
+        "endMs": 17966,
+        "timestampMs": 17629,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "in ",
+        "startMs": 18117,
+        "endMs": 18268,
+        "timestampMs": 18117,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Mesopotamia. ",
+        "startMs": 18338,
+        "endMs": 19336,
+        "timestampMs": 18338,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Clothes ",
+        "startMs": 19615,
+        "endMs": 20102,
+        "timestampMs": 19615,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "stopped ",
+        "startMs": 20137,
+        "endMs": 20427,
+        "timestampMs": 20137,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "being ",
+        "startMs": 20474,
+        "endMs": 20694,
+        "timestampMs": 20474,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "just ",
+        "startMs": 20764,
+        "endMs": 20961,
+        "timestampMs": 20764,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "warmth. ",
+        "startMs": 21019,
+        "endMs": 21577,
+        "timestampMs": 21019,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "They ",
+        "startMs": 21820,
+        "endMs": 21983,
+        "timestampMs": 21820,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "became ",
+        "startMs": 22018,
+        "endMs": 22331,
+        "timestampMs": 22018,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "identity. ",
+        "startMs": 22378,
+        "endMs": 23353,
+        "timestampMs": 22378,
+        "sceneId": "scene2"
+      },
+      {
+        "text": "Then ",
+        "startMs": 26000,
+        "endMs": 26174,
+        "timestampMs": 26000,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "fashion ",
+        "startMs": 26255,
+        "endMs": 26580,
+        "timestampMs": 26255,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "got ",
+        "startMs": 26627,
+        "endMs": 26766,
+        "timestampMs": 26627,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "serious. ",
+        "startMs": 26824,
+        "endMs": 27463,
+        "timestampMs": 26824,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "Roman ",
+        "startMs": 27707,
+        "endMs": 28067,
+        "timestampMs": 27707,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "togas ",
+        "startMs": 28136,
+        "endMs": 28577,
+        "timestampMs": 28136,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "marked ",
+        "startMs": 28647,
+        "endMs": 28902,
+        "timestampMs": 28647,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "status. ",
+        "startMs": 28961,
+        "endMs": 29762,
+        "timestampMs": 28961,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "Medieval ",
+        "startMs": 30005,
+        "endMs": 30493,
+        "timestampMs": 30005,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "laws ",
+        "startMs": 30563,
+        "endMs": 30923,
+        "timestampMs": 30563,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "told ",
+        "startMs": 30981,
+        "endMs": 31201,
+        "timestampMs": 30981,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "peasants ",
+        "startMs": 31259,
+        "endMs": 31608,
+        "timestampMs": 31259,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "what ",
+        "startMs": 31642,
+        "endMs": 31759,
+        "timestampMs": 31642,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "they ",
+        "startMs": 31793,
+        "endMs": 31909,
+        "timestampMs": 31793,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "couldn't ",
+        "startMs": 31968,
+        "endMs": 32246,
+        "timestampMs": 31968,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "wear. ",
+        "startMs": 32281,
+        "endMs": 32745,
+        "timestampMs": 32281,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "Kings ",
+        "startMs": 33129,
+        "endMs": 33605,
+        "timestampMs": 33129,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "hoarded ",
+        "startMs": 33674,
+        "endMs": 34034,
+        "timestampMs": 33674,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "velvet. ",
+        "startMs": 34092,
+        "endMs": 34754,
+        "timestampMs": 34092,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "Your ",
+        "startMs": 35079,
+        "endMs": 35242,
+        "timestampMs": 35079,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "clothes ",
+        "startMs": 35288,
+        "endMs": 35718,
+        "timestampMs": 35288,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "were ",
+        "startMs": 35764,
+        "endMs": 35892,
+        "timestampMs": 35764,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "a ",
+        "startMs": 35927,
+        "endMs": 35950,
+        "timestampMs": 35927,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "walking ",
+        "startMs": 36008,
+        "endMs": 36379,
+        "timestampMs": 36008,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "resume. ",
+        "startMs": 36449,
+        "endMs": 37238,
+        "timestampMs": 36449,
+        "sceneId": "scene3"
+      },
+      {
+        "text": "Everything ",
+        "startMs": 41000,
+        "endMs": 41464,
+        "timestampMs": 41000,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "changed ",
+        "startMs": 41534,
+        "endMs": 41998,
+        "timestampMs": 41534,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "in ",
+        "startMs": 42045,
+        "endMs": 42126,
+        "timestampMs": 42045,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "eighteen ",
+        "startMs": 42207,
+        "endMs": 42579,
+        "timestampMs": 42207,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "fifty-eight. ",
+        "startMs": 42649,
+        "endMs": 43403,
+        "timestampMs": 42649,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "A ",
+        "startMs": 43914,
+        "endMs": 43984,
+        "timestampMs": 43914,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "designer ",
+        "startMs": 44065,
+        "endMs": 44495,
+        "timestampMs": 44065,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "named ",
+        "startMs": 44553,
+        "endMs": 44773,
+        "timestampMs": 44553,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "Charles ",
+        "startMs": 44808,
+        "endMs": 45191,
+        "timestampMs": 44808,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "Worth ",
+        "startMs": 45249,
+        "endMs": 45632,
+        "timestampMs": 45249,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "opened ",
+        "startMs": 45748,
+        "endMs": 46062,
+        "timestampMs": 45748,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "the ",
+        "startMs": 46085,
+        "endMs": 46155,
+        "timestampMs": 46085,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "first ",
+        "startMs": 46213,
+        "endMs": 46538,
+        "timestampMs": 46213,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "Paris ",
+        "startMs": 46608,
+        "endMs": 46933,
+        "timestampMs": 46608,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "fashion ",
+        "startMs": 47002,
+        "endMs": 47316,
+        "timestampMs": 47002,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "house, ",
+        "startMs": 47374,
+        "endMs": 47861,
+        "timestampMs": 47374,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "put ",
+        "startMs": 48105,
+        "endMs": 48303,
+        "timestampMs": 48105,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "his ",
+        "startMs": 48349,
+        "endMs": 48454,
+        "timestampMs": 48349,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "name ",
+        "startMs": 48512,
+        "endMs": 48721,
+        "timestampMs": 48512,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "on ",
+        "startMs": 48755,
+        "endMs": 48837,
+        "timestampMs": 48755,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "labels, ",
+        "startMs": 48906,
+        "endMs": 49580,
+        "timestampMs": 48906,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "and ",
+        "startMs": 49754,
+        "endMs": 49916,
+        "timestampMs": 49754,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "invented ",
+        "startMs": 49986,
+        "endMs": 50520,
+        "timestampMs": 49986,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "the ",
+        "startMs": 50578,
+        "endMs": 50648,
+        "timestampMs": 50578,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "seasonal ",
+        "startMs": 50706,
+        "endMs": 51124,
+        "timestampMs": 50706,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "collection. ",
+        "startMs": 51182,
+        "endMs": 51890,
+        "timestampMs": 51182,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "Runways ",
+        "startMs": 52401,
+        "endMs": 52935,
+        "timestampMs": 52401,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "were ",
+        "startMs": 52993,
+        "endMs": 53121,
+        "timestampMs": 52993,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "born. ",
+        "startMs": 53156,
+        "endMs": 53864,
+        "timestampMs": 53156,
+        "sceneId": "scene4"
+      },
+      {
+        "text": "Then ",
+        "startMs": 56000,
+        "endMs": 56174,
+        "timestampMs": 56000,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "came ",
+        "startMs": 56232,
+        "endMs": 56406,
+        "timestampMs": 56232,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "ready-to-wear. ",
+        "startMs": 56441,
+        "endMs": 57161,
+        "timestampMs": 56441,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "Sewing ",
+        "startMs": 57440,
+        "endMs": 57765,
+        "timestampMs": 57440,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "machines. ",
+        "startMs": 57811,
+        "endMs": 58322,
+        "timestampMs": 57811,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "Magazines. ",
+        "startMs": 58368,
+        "endMs": 59088,
+        "timestampMs": 58368,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "Instagram. ",
+        "startMs": 59123,
+        "endMs": 59947,
+        "timestampMs": 59123,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "Fashion ",
+        "startMs": 60389,
+        "endMs": 60760,
+        "timestampMs": 60389,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "stopped ",
+        "startMs": 60818,
+        "endMs": 61085,
+        "timestampMs": 60818,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "being ",
+        "startMs": 61132,
+        "endMs": 61317,
+        "timestampMs": 61132,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "a ",
+        "startMs": 61364,
+        "endMs": 61387,
+        "timestampMs": 61364,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "club ",
+        "startMs": 61433,
+        "endMs": 61700,
+        "timestampMs": 61433,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "and ",
+        "startMs": 61909,
+        "endMs": 62072,
+        "timestampMs": 61909,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "became ",
+        "startMs": 62118,
+        "endMs": 62374,
+        "timestampMs": 62118,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "a ",
+        "startMs": 62397,
+        "endMs": 62420,
+        "timestampMs": 62397,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "conversation. ",
+        "startMs": 62467,
+        "endMs": 63291,
+        "timestampMs": 62467,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "Anyone ",
+        "startMs": 63732,
+        "endMs": 64243,
+        "timestampMs": 63732,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "can ",
+        "startMs": 64290,
+        "endMs": 64406,
+        "timestampMs": 64290,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "remix ",
+        "startMs": 64464,
+        "endMs": 64800,
+        "timestampMs": 64464,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "a ",
+        "startMs": 64858,
+        "endMs": 64893,
+        "timestampMs": 64858,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "trend. ",
+        "startMs": 64940,
+        "endMs": 65474,
+        "timestampMs": 64940,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "But ",
+        "startMs": 65857,
+        "endMs": 66019,
+        "timestampMs": 65857,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "knowing ",
+        "startMs": 66066,
+        "endMs": 66344,
+        "timestampMs": 66066,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "what ",
+        "startMs": 66379,
+        "endMs": 66507,
+        "timestampMs": 66379,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "to ",
+        "startMs": 66553,
+        "endMs": 66612,
+        "timestampMs": 66553,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "wear? ",
+        "startMs": 66670,
+        "endMs": 67134,
+        "timestampMs": 66670,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "Different ",
+        "startMs": 67459,
+        "endMs": 67784,
+        "timestampMs": 67459,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "story. ",
+        "startMs": 67819,
+        "endMs": 68585,
+        "timestampMs": 67819,
+        "sceneId": "scene5"
+      },
+      {
+        "text": "That's ",
+        "startMs": 70000,
+        "endMs": 70255,
+        "timestampMs": 70000,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "where ",
+        "startMs": 70290,
+        "endMs": 70453,
+        "timestampMs": 70290,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "Her ",
+        "startMs": 70499,
+        "endMs": 70639,
+        "timestampMs": 70499,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "Style ",
+        "startMs": 70697,
+        "endMs": 70987,
+        "timestampMs": 70697,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "Co ",
+        "startMs": 71033,
+        "endMs": 71207,
+        "timestampMs": 71033,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "comes ",
+        "startMs": 71277,
+        "endMs": 71509,
+        "timestampMs": 71277,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "in. ",
+        "startMs": 71567,
+        "endMs": 71858,
+        "timestampMs": 71567,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "Upload ",
+        "startMs": 72183,
+        "endMs": 72589,
+        "timestampMs": 72183,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "your ",
+        "startMs": 72635,
+        "endMs": 72740,
+        "timestampMs": 72635,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "closet. ",
+        "startMs": 72775,
+        "endMs": 73344,
+        "timestampMs": 72775,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "Your ",
+        "startMs": 73669,
+        "endMs": 73843,
+        "timestampMs": 73669,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "personal ",
+        "startMs": 73901,
+        "endMs": 74342,
+        "timestampMs": 73901,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "A ",
+        "startMs": 74458,
+        "endMs": 74632,
+        "timestampMs": 74458,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "I ",
+        "startMs": 74748,
+        "endMs": 74865,
+        "timestampMs": 74748,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "stylist ",
+        "startMs": 74946,
+        "endMs": 75457,
+        "timestampMs": 74946,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "turns ",
+        "startMs": 75503,
+        "endMs": 75793,
+        "timestampMs": 75503,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "thousands ",
+        "startMs": 75875,
+        "endMs": 76397,
+        "timestampMs": 75875,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "of ",
+        "startMs": 76432,
+        "endMs": 76490,
+        "timestampMs": 76432,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "years ",
+        "startMs": 76536,
+        "endMs": 76734,
+        "timestampMs": 76536,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "of ",
+        "startMs": 76780,
+        "endMs": 76838,
+        "timestampMs": 76780,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "fashion ",
+        "startMs": 76885,
+        "endMs": 77175,
+        "timestampMs": 76885,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "history ",
+        "startMs": 77233,
+        "endMs": 77570,
+        "timestampMs": 77233,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "into ",
+        "startMs": 77639,
+        "endMs": 77837,
+        "timestampMs": 77639,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "one ",
+        "startMs": 77953,
+        "endMs": 78220,
+        "timestampMs": 77953,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "perfect ",
+        "startMs": 78313,
+        "endMs": 78812,
+        "timestampMs": 78313,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "outfit, ",
+        "startMs": 78870,
+        "endMs": 79497,
+        "timestampMs": 78870,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "for ",
+        "startMs": 79741,
+        "endMs": 79938,
+        "timestampMs": 79741,
+        "sceneId": "scene6"
+      },
+      {
+        "text": "today. ",
+        "startMs": 80008,
+        "endMs": 80728,
+        "timestampMs": 80008,
+        "sceneId": "scene6"
+      }
+    ]
+  },
+  "generatedAt": "2026-04-18T22:09:48.312Z"
+}

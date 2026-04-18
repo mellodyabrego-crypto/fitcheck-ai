@@ -9,12 +9,12 @@ class GoalPicker extends StatelessWidget {
   const GoalPicker({super.key, required this.selected, required this.onChanged});
 
   static const _goals = [
-    ('outfit_ideas', 'Get outfit ideas', Icons.auto_awesome, Color(0xFF6C5CE7)),
-    ('capsule', 'Build a capsule wardrobe', Icons.grid_view, Color(0xFF00B894)),
-    ('track', 'Track what I wear', Icons.calendar_today, Color(0xFF0984E3)),
-    ('find_style', 'Find my personal style', Icons.search, Color(0xFFE17055)),
-    ('intentional', 'Shop more intentionally', Icons.eco, Color(0xFF00CEC9)),
-    ('daily', 'Look put-together daily', Icons.wb_sunny, Color(0xFFF39C12)),
+    ('outfit_ideas', 'Get outfit ideas',         Icons.auto_awesome,   Color(0xFFD8A7B1)),
+    ('capsule',      'Build a capsule wardrobe', Icons.grid_view,      Color(0xFFC6A96B)),
+    ('track',        'Track what I wear',        Icons.calendar_today, Color(0xFFD8A7B1)),
+    ('find_style',   'Find my personal style',   Icons.search,         Color(0xFFC48A96)),
+    ('intentional',  'Shop more intentionally',  Icons.shopping_bag,   Color(0xFFC6A96B)),
+    ('daily',        'Look put-together daily',  Icons.wb_sunny,       Color(0xFFD8A7B1)),
   ];
 
   @override

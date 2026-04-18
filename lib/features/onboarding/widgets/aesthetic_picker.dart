@@ -13,18 +13,18 @@ class AestheticPicker extends StatelessWidget {
   });
 
   static const _aesthetics = [
-    ('minimalist', 'Minimalist', Icons.crop_square, Color(0xFF636E72)),
-    ('streetwear', 'Streetwear', Icons.skateboarding, Color(0xFF2D3436)),
-    ('preppy', 'Preppy', Icons.school, Color(0xFF00B894)),
-    ('y2k', 'Y2K', Icons.star, Color(0xFFE84393)),
-    ('cottagecore', 'Cottagecore', Icons.local_florist, Color(0xFFDFE6E9)),
-    ('casual', 'Casual', Icons.weekend, Color(0xFF74B9FF)),
-    ('formal', 'Formal', Icons.business_center, Color(0xFF2D3436)),
-    ('bohemian', 'Bohemian', Icons.auto_awesome, Color(0xFFFDAA5D)),
-    ('athleisure', 'Athleisure', Icons.fitness_center, Color(0xFF55EFC4)),
-    ('vintage', 'Vintage', Icons.camera_alt, Color(0xFFB8860B)),
-    ('edgy', 'Edgy', Icons.bolt, Color(0xFF636E72)),
-    ('romantic', 'Romantic', Icons.favorite, Color(0xFFFF6B9D)),
+    ('minimalist', 'Minimalist', Icons.crop_square,      AppTheme.primary),
+    ('streetwear', 'Streetwear', Icons.skateboarding,    AppTheme.accent),
+    ('preppy',     'Preppy',     Icons.school,           AppTheme.primaryDeep),
+    ('y2k',        'Y2K',        Icons.star,             AppTheme.primary),
+    ('cottagecore','Cottagecore',Icons.local_florist,    AppTheme.accent),
+    ('casual',     'Casual',     Icons.weekend,          AppTheme.primaryDeep),
+    ('formal',     'Formal',     Icons.business_center,  AppTheme.primary),
+    ('bohemian',   'Bohemian',   Icons.auto_awesome,     AppTheme.accent),
+    ('athleisure', 'Athleisure', Icons.fitness_center,   AppTheme.primaryDeep),
+    ('vintage',    'Vintage',    Icons.camera_alt,       AppTheme.accent),
+    ('edgy',       'Edgy',       Icons.bolt,             AppTheme.primary),
+    ('romantic',   'Romantic',   Icons.favorite,         AppTheme.primaryDeep),
   ];
 
   @override

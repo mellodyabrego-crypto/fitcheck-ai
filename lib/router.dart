@@ -7,41 +7,34 @@ import 'features/auth/auth_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/wardrobe/add_item_screen.dart';
 import 'features/outfits/outfit_screen.dart';
+import 'features/outfits/generate_screen.dart';
 import 'features/fit_check/fit_check_screen.dart';
 import 'features/subscription/paywall_screen.dart';
 import 'features/settings/settings_screen.dart';
+import 'features/profile/edit_profile_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/home',
-    redirect: (context, state) async {
+    redirect: (context, state) {
       if (kDemoMode) return null;
 
-      final client = Supabase.instance.client;
-      final session = client.auth.currentSession;
+      Session? session;
+      try {
+        session = Supabase.instance.client.auth.currentSession;
+      } catch (_) {
+        // Supabase not initialized (missing env) — treat as logged out
+        session = null;
+      }
       final isLoggedIn = session != null;
       final location = state.matchedLocation;
 
-      // Not logged in — send to auth unless already there
-      if (!isLoggedIn) {
-        return location == '/auth' ? null : '/auth';
-      }
+      // Not logged in — send to auth
+      if (!isLoggedIn && location != '/auth') return '/auth';
 
-      // Logged in but on auth screen — check onboarding status
-      if (location == '/auth') {
-        try {
-          final profile = await client
-              .from('user_profiles')
-              .select('onboarding_complete')
-              .eq('user_id', client.auth.currentUser!.id)
-              .maybeSingle();
-          final complete = profile?['onboarding_complete'] as bool? ?? false;
-          return complete ? '/home' : '/onboarding';
-        } catch (_) {
-          return '/home';
-        }
-      }
+      // Logged in but stuck on auth — go to onboarding (onboarding will skip to home if already done)
+      if (isLoggedIn && location == '/auth') return '/onboarding';
 
       return null;
     },
@@ -75,8 +68,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const PaywallScreen(),
       ),
       GoRoute(
+        path: '/generate',
+        builder: (context, state) => const GenerateScreen(),
+      ),
+      GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/edit',
+        builder: (context, state) => const EditProfileScreen(),
       ),
       GoRoute(
         path: '/onboarding',

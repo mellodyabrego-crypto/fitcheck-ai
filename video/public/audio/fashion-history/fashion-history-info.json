@@ -1,0 +1,1230 @@
+{
+  "name": "fashion-history",
+  "voice": "XB0fDUnXU5powFXDhCwa",
+  "model": "eleven_multilingual_v2",
+  "character": "narrator",
+  "dictionary": "her-style-co",
+  "totalScenes": 6,
+  "totalCharacters": 1014,
+  "withTimestamps": true,
+  "generatedAt": "2026-04-18T22:09:48.309Z",
+  "scenes": [
+    {
+      "id": "scene1",
+      "file": "fashion-history-scene1.mp3",
+      "text": "Fashion didn't start on a runway. It started with a bone needle, an animal hide, and one very cold ancestor deciding she could do better.",
+      "size": 133373,
+      "duration": 11,
+      "actualDuration": null,
+      "wordsPerSecond": null,
+      "leadingSilence": 0,
+      "delay": 0,
+      "character": "dramatic",
+      "requestId": "tGf6v3oIqMv5lpU3jmuh",
+      "words": [
+        {
+          "text": "Fashion",
+          "start": 0,
+          "end": 0.383,
+          "startMs": 0,
+          "endMs": 383
+        },
+        {
+          "text": "didn't",
+          "start": 0.43,
+          "end": 0.639,
+          "startMs": 430,
+          "endMs": 639
+        },
+        {
+          "text": "start",
+          "start": 0.673,
+          "end": 0.952,
+          "startMs": 673,
+          "endMs": 952
+        },
+        {
+          "text": "on",
+          "start": 1.01,
+          "end": 1.068,
+          "startMs": 1010,
+          "endMs": 1068
+        },
+        {
+          "text": "a",
+          "start": 1.103,
+          "end": 1.126,
+          "startMs": 1103,
+          "endMs": 1126
+        },
+        {
+          "text": "runway.",
+          "start": 1.173,
+          "end": 1.718,
+          "startMs": 1173,
+          "endMs": 1718
+        },
+        {
+          "text": "It",
+          "start": 1.962,
+          "end": 2.101,
+          "startMs": 1962,
+          "endMs": 2101
+        },
+        {
+          "text": "started",
+          "start": 2.148,
+          "end": 2.531,
+          "startMs": 2148,
+          "endMs": 2531
+        },
+        {
+          "text": "with",
+          "start": 2.566,
+          "end": 2.659,
+          "startMs": 2566,
+          "endMs": 2659
+        },
+        {
+          "text": "a",
+          "start": 2.694,
+          "end": 2.717,
+          "startMs": 2694,
+          "endMs": 2717
+        },
+        {
+          "text": "bone",
+          "start": 2.775,
+          "end": 3.03,
+          "startMs": 2775,
+          "endMs": 3030
+        },
+        {
+          "text": "needle,",
+          "start": 3.065,
+          "end": 3.471,
+          "startMs": 3065,
+          "endMs": 3471
+        },
+        {
+          "text": "an",
+          "start": 3.646,
+          "end": 3.785,
+          "startMs": 3646,
+          "endMs": 3785
+        },
+        {
+          "text": "animal",
+          "start": 3.855,
+          "end": 4.191,
+          "startMs": 3855,
+          "endMs": 4191
+        },
+        {
+          "text": "hide,",
+          "start": 4.249,
+          "end": 4.621,
+          "startMs": 4249,
+          "endMs": 4621
+        },
+        {
+          "text": "and",
+          "start": 4.644,
+          "end": 4.772,
+          "startMs": 4644,
+          "endMs": 4772
+        },
+        {
+          "text": "one",
+          "start": 4.853,
+          "end": 5.074,
+          "startMs": 4853,
+          "endMs": 5074
+        },
+        {
+          "text": "very",
+          "start": 5.143,
+          "end": 5.399,
+          "startMs": 5143,
+          "endMs": 5399
+        },
+        {
+          "text": "cold",
+          "start": 5.48,
+          "end": 5.793,
+          "startMs": 5480,
+          "endMs": 5793
+        },
+        {
+          "text": "ancestor",
+          "start": 5.875,
+          "end": 6.513,
+          "startMs": 5875,
+          "endMs": 6513
+        },
+        {
+          "text": "deciding",
+          "start": 6.56,
+          "end": 7.012,
+          "startMs": 6560,
+          "endMs": 7012
+        },
+        {
+          "text": "she",
+          "start": 7.059,
+          "end": 7.152,
+          "startMs": 7059,
+          "endMs": 7152
+        },
+        {
+          "text": "could",
+          "start": 7.198,
+          "end": 7.349,
+          "startMs": 7198,
+          "endMs": 7349
+        },
+        {
+          "text": "do",
+          "start": 7.396,
+          "end": 7.512,
+          "startMs": 7396,
+          "endMs": 7512
+        },
+        {
+          "text": "better.",
+          "start": 7.593,
+          "end": 8.266,
+          "startMs": 7593,
+          "endMs": 8266
+        }
+      ]
+    },
+    {
+      "id": "scene2",
+      "file": "fashion-history-scene2.mp3",
+      "text": "Around twenty-five thousand years ago, humans learned to weave. Linen in Egypt. Silk in China. Wool in Mesopotamia. Clothes stopped being just warmth. They became identity.",
+      "size": 198574,
+      "duration": 15,
+      "actualDuration": null,
+      "wordsPerSecond": null,
+      "leadingSilence": 0,
+      "delay": 0,
+      "character": "narrator",
+      "requestId": "aTCpdVwPhqE3bASfeUED",
+      "words": [
+        {
+          "text": "Around",
+          "start": 0,
+          "end": 0.302,
+          "startMs": 0,
+          "endMs": 302
+        },
+        {
+          "text": "twenty-five",
+          "start": 0.337,
+          "end": 0.894,
+          "startMs": 337,
+          "endMs": 894
+        },
+        {
+          "text": "thousand",
+          "start": 0.929,
+          "end": 1.265,
+          "startMs": 929,
+          "endMs": 1265
+        },
+        {
+          "text": "years",
+          "start": 1.324,
+          "end": 1.533,
+          "startMs": 1324,
+          "endMs": 1533
+        },
+        {
+          "text": "ago,",
+          "start": 1.556,
+          "end": 1.858,
+          "startMs": 1556,
+          "endMs": 1858
+        },
+        {
+          "text": "humans",
+          "start": 1.904,
+          "end": 2.345,
+          "startMs": 1904,
+          "endMs": 2345
+        },
+        {
+          "text": "learned",
+          "start": 2.403,
+          "end": 2.635,
+          "startMs": 2403,
+          "endMs": 2635
+        },
+        {
+          "text": "to",
+          "start": 2.659,
+          "end": 2.728,
+          "startMs": 2659,
+          "endMs": 2728
+        },
+        {
+          "text": "weave.",
+          "start": 2.798,
+          "end": 3.309,
+          "startMs": 2798,
+          "endMs": 3309
+        },
+        {
+          "text": "Linen",
+          "start": 3.553,
+          "end": 3.913,
+          "startMs": 3553,
+          "endMs": 3913
+        },
+        {
+          "text": "in",
+          "start": 4.029,
+          "end": 4.18,
+          "startMs": 4029,
+          "endMs": 4180
+        },
+        {
+          "text": "Egypt.",
+          "start": 4.296,
+          "end": 4.876,
+          "startMs": 4296,
+          "endMs": 4876
+        },
+        {
+          "text": "Silk",
+          "start": 5.12,
+          "end": 5.48,
+          "startMs": 5120,
+          "endMs": 5480
+        },
+        {
+          "text": "in",
+          "start": 5.596,
+          "end": 5.747,
+          "startMs": 5596,
+          "endMs": 5747
+        },
+        {
+          "text": "China.",
+          "start": 5.828,
+          "end": 6.42,
+          "startMs": 5828,
+          "endMs": 6420
+        },
+        {
+          "text": "Wool",
+          "start": 6.629,
+          "end": 6.966,
+          "startMs": 6629,
+          "endMs": 6966
+        },
+        {
+          "text": "in",
+          "start": 7.117,
+          "end": 7.268,
+          "startMs": 7117,
+          "endMs": 7268
+        },
+        {
+          "text": "Mesopotamia.",
+          "start": 7.338,
+          "end": 8.336,
+          "startMs": 7338,
+          "endMs": 8336
+        },
+        {
+          "text": "Clothes",
+          "start": 8.615,
+          "end": 9.102,
+          "startMs": 8615,
+          "endMs": 9102
+        },
+        {
+          "text": "stopped",
+          "start": 9.137,
+          "end": 9.427,
+          "startMs": 9137,
+          "endMs": 9427
+        },
+        {
+          "text": "being",
+          "start": 9.474,
+          "end": 9.694,
+          "startMs": 9474,
+          "endMs": 9694
+        },
+        {
+          "text": "just",
+          "start": 9.764,
+          "end": 9.961,
+          "startMs": 9764,
+          "endMs": 9961
+        },
+        {
+          "text": "warmth.",
+          "start": 10.019,
+          "end": 10.577,
+          "startMs": 10019,
+          "endMs": 10577
+        },
+        {
+          "text": "They",
+          "start": 10.82,
+          "end": 10.983,
+          "startMs": 10820,
+          "endMs": 10983
+        },
+        {
+          "text": "became",
+          "start": 11.018,
+          "end": 11.331,
+          "startMs": 11018,
+          "endMs": 11331
+        },
+        {
+          "text": "identity.",
+          "start": 11.378,
+          "end": 12.353,
+          "startMs": 11378,
+          "endMs": 12353
+        }
+      ]
+    },
+    {
+      "id": "scene3",
+      "file": "fashion-history-scene3.mp3",
+      "text": "Then fashion got serious. Roman togas marked status. Medieval laws told peasants what they couldn't wear. Kings hoarded velvet. Your clothes were a walking resume.",
+      "size": 181020,
+      "duration": 15,
+      "actualDuration": null,
+      "wordsPerSecond": null,
+      "leadingSilence": 0,
+      "delay": 0,
+      "character": "expert",
+      "requestId": "bpJ6iVCS2oxsjCruBYOO",
+      "words": [
+        {
+          "text": "Then",
+          "start": 0,
+          "end": 0.174,
+          "startMs": 0,
+          "endMs": 174
+        },
+        {
+          "text": "fashion",
+          "start": 0.255,
+          "end": 0.58,
+          "startMs": 255,
+          "endMs": 580
+        },
+        {
+          "text": "got",
+          "start": 0.627,
+          "end": 0.766,
+          "startMs": 627,
+          "endMs": 766
+        },
+        {
+          "text": "serious.",
+          "start": 0.824,
+          "end": 1.463,
+          "startMs": 824,
+          "endMs": 1463
+        },
+        {
+          "text": "Roman",
+          "start": 1.707,
+          "end": 2.067,
+          "startMs": 1707,
+          "endMs": 2067
+        },
+        {
+          "text": "togas",
+          "start": 2.136,
+          "end": 2.577,
+          "startMs": 2136,
+          "endMs": 2577
+        },
+        {
+          "text": "marked",
+          "start": 2.647,
+          "end": 2.902,
+          "startMs": 2647,
+          "endMs": 2902
+        },
+        {
+          "text": "status.",
+          "start": 2.961,
+          "end": 3.762,
+          "startMs": 2961,
+          "endMs": 3762
+        },
+        {
+          "text": "Medieval",
+          "start": 4.005,
+          "end": 4.493,
+          "startMs": 4005,
+          "endMs": 4493
+        },
+        {
+          "text": "laws",
+          "start": 4.563,
+          "end": 4.923,
+          "startMs": 4563,
+          "endMs": 4923
+        },
+        {
+          "text": "told",
+          "start": 4.981,
+          "end": 5.201,
+          "startMs": 4981,
+          "endMs": 5201
+        },
+        {
+          "text": "peasants",
+          "start": 5.259,
+          "end": 5.608,
+          "startMs": 5259,
+          "endMs": 5608
+        },
+        {
+          "text": "what",
+          "start": 5.642,
+          "end": 5.759,
+          "startMs": 5642,
+          "endMs": 5759
+        },
+        {
+          "text": "they",
+          "start": 5.793,
+          "end": 5.909,
+          "startMs": 5793,
+          "endMs": 5909
+        },
+        {
+          "text": "couldn't",
+          "start": 5.968,
+          "end": 6.246,
+          "startMs": 5968,
+          "endMs": 6246
+        },
+        {
+          "text": "wear.",
+          "start": 6.281,
+          "end": 6.745,
+          "startMs": 6281,
+          "endMs": 6745
+        },
+        {
+          "text": "Kings",
+          "start": 7.129,
+          "end": 7.605,
+          "startMs": 7129,
+          "endMs": 7605
+        },
+        {
+          "text": "hoarded",
+          "start": 7.674,
+          "end": 8.034,
+          "startMs": 7674,
+          "endMs": 8034
+        },
+        {
+          "text": "velvet.",
+          "start": 8.092,
+          "end": 8.754,
+          "startMs": 8092,
+          "endMs": 8754
+        },
+        {
+          "text": "Your",
+          "start": 9.079,
+          "end": 9.242,
+          "startMs": 9079,
+          "endMs": 9242
+        },
+        {
+          "text": "clothes",
+          "start": 9.288,
+          "end": 9.718,
+          "startMs": 9288,
+          "endMs": 9718
+        },
+        {
+          "text": "were",
+          "start": 9.764,
+          "end": 9.892,
+          "startMs": 9764,
+          "endMs": 9892
+        },
+        {
+          "text": "a",
+          "start": 9.927,
+          "end": 9.95,
+          "startMs": 9927,
+          "endMs": 9950
+        },
+        {
+          "text": "walking",
+          "start": 10.008,
+          "end": 10.379,
+          "startMs": 10008,
+          "endMs": 10379
+        },
+        {
+          "text": "resume.",
+          "start": 10.449,
+          "end": 11.238,
+          "startMs": 10449,
+          "endMs": 11238
+        }
+      ]
+    },
+    {
+      "id": "scene4",
+      "file": "fashion-history-scene4.mp3",
+      "text": "Everything changed in eighteen fifty-eight. A designer named Charles Worth opened the first Paris fashion house, put his name on labels, and invented the seasonal collection. Runways were born.",
+      "size": 206933,
+      "duration": 15,
+      "actualDuration": null,
+      "wordsPerSecond": null,
+      "leadingSilence": 0,
+      "delay": 0,
+      "character": "expert",
+      "requestId": "PchSJ6Qw0MNDwx0xbBRM",
+      "words": [
+        {
+          "text": "Everything",
+          "start": 0,
+          "end": 0.464,
+          "startMs": 0,
+          "endMs": 464
+        },
+        {
+          "text": "changed",
+          "start": 0.534,
+          "end": 0.998,
+          "startMs": 534,
+          "endMs": 998
+        },
+        {
+          "text": "in",
+          "start": 1.045,
+          "end": 1.126,
+          "startMs": 1045,
+          "endMs": 1126
+        },
+        {
+          "text": "eighteen",
+          "start": 1.207,
+          "end": 1.579,
+          "startMs": 1207,
+          "endMs": 1579
+        },
+        {
+          "text": "fifty-eight.",
+          "start": 1.649,
+          "end": 2.403,
+          "startMs": 1649,
+          "endMs": 2403
+        },
+        {
+          "text": "A",
+          "start": 2.914,
+          "end": 2.984,
+          "startMs": 2914,
+          "endMs": 2984
+        },
+        {
+          "text": "designer",
+          "start": 3.065,
+          "end": 3.495,
+          "startMs": 3065,
+          "endMs": 3495
+        },
+        {
+          "text": "named",
+          "start": 3.553,
+          "end": 3.773,
+          "startMs": 3553,
+          "endMs": 3773
+        },
+        {
+          "text": "Charles",
+          "start": 3.808,
+          "end": 4.191,
+          "startMs": 3808,
+          "endMs": 4191
+        },
+        {
+          "text": "Worth",
+          "start": 4.249,
+          "end": 4.632,
+          "startMs": 4249,
+          "endMs": 4632
+        },
+        {
+          "text": "opened",
+          "start": 4.748,
+          "end": 5.062,
+          "startMs": 4748,
+          "endMs": 5062
+        },
+        {
+          "text": "the",
+          "start": 5.085,
+          "end": 5.155,
+          "startMs": 5085,
+          "endMs": 5155
+        },
+        {
+          "text": "first",
+          "start": 5.213,
+          "end": 5.538,
+          "startMs": 5213,
+          "endMs": 5538
+        },
+        {
+          "text": "Paris",
+          "start": 5.608,
+          "end": 5.933,
+          "startMs": 5608,
+          "endMs": 5933
+        },
+        {
+          "text": "fashion",
+          "start": 6.002,
+          "end": 6.316,
+          "startMs": 6002,
+          "endMs": 6316
+        },
+        {
+          "text": "house,",
+          "start": 6.374,
+          "end": 6.861,
+          "startMs": 6374,
+          "endMs": 6861
+        },
+        {
+          "text": "put",
+          "start": 7.105,
+          "end": 7.303,
+          "startMs": 7105,
+          "endMs": 7303
+        },
+        {
+          "text": "his",
+          "start": 7.349,
+          "end": 7.454,
+          "startMs": 7349,
+          "endMs": 7454
+        },
+        {
+          "text": "name",
+          "start": 7.512,
+          "end": 7.721,
+          "startMs": 7512,
+          "endMs": 7721
+        },
+        {
+          "text": "on",
+          "start": 7.755,
+          "end": 7.837,
+          "startMs": 7755,
+          "endMs": 7837
+        },
+        {
+          "text": "labels,",
+          "start": 7.906,
+          "end": 8.58,
+          "startMs": 7906,
+          "endMs": 8580
+        },
+        {
+          "text": "and",
+          "start": 8.754,
+          "end": 8.916,
+          "startMs": 8754,
+          "endMs": 8916
+        },
+        {
+          "text": "invented",
+          "start": 8.986,
+          "end": 9.52,
+          "startMs": 8986,
+          "endMs": 9520
+        },
+        {
+          "text": "the",
+          "start": 9.578,
+          "end": 9.648,
+          "startMs": 9578,
+          "endMs": 9648
+        },
+        {
+          "text": "seasonal",
+          "start": 9.706,
+          "end": 10.124,
+          "startMs": 9706,
+          "endMs": 10124
+        },
+        {
+          "text": "collection.",
+          "start": 10.182,
+          "end": 10.89,
+          "startMs": 10182,
+          "endMs": 10890
+        },
+        {
+          "text": "Runways",
+          "start": 11.401,
+          "end": 11.935,
+          "startMs": 11401,
+          "endMs": 11935
+        },
+        {
+          "text": "were",
+          "start": 11.993,
+          "end": 12.121,
+          "startMs": 11993,
+          "endMs": 12121
+        },
+        {
+          "text": "born.",
+          "start": 12.156,
+          "end": 12.864,
+          "startMs": 12156,
+          "endMs": 12864
+        }
+      ]
+    },
+    {
+      "id": "scene5",
+      "file": "fashion-history-scene5.mp3",
+      "text": "Then came ready-to-wear. Sewing machines. Magazines. Instagram. Fashion stopped being a club and became a conversation. Anyone can remix a trend. But knowing what to wear? Different story.",
+      "size": 202336,
+      "duration": 14,
+      "actualDuration": null,
+      "wordsPerSecond": null,
+      "leadingSilence": 0,
+      "delay": 0,
+      "character": "narrator",
+      "requestId": "WVdnG5PpPAqwhUT6PPAE",
+      "words": [
+        {
+          "text": "Then",
+          "start": 0,
+          "end": 0.174,
+          "startMs": 0,
+          "endMs": 174
+        },
+        {
+          "text": "came",
+          "start": 0.232,
+          "end": 0.406,
+          "startMs": 232,
+          "endMs": 406
+        },
+        {
+          "text": "ready-to-wear.",
+          "start": 0.441,
+          "end": 1.161,
+          "startMs": 441,
+          "endMs": 1161
+        },
+        {
+          "text": "Sewing",
+          "start": 1.44,
+          "end": 1.765,
+          "startMs": 1440,
+          "endMs": 1765
+        },
+        {
+          "text": "machines.",
+          "start": 1.811,
+          "end": 2.322,
+          "startMs": 1811,
+          "endMs": 2322
+        },
+        {
+          "text": "Magazines.",
+          "start": 2.368,
+          "end": 3.088,
+          "startMs": 2368,
+          "endMs": 3088
+        },
+        {
+          "text": "Instagram.",
+          "start": 3.123,
+          "end": 3.947,
+          "startMs": 3123,
+          "endMs": 3947
+        },
+        {
+          "text": "Fashion",
+          "start": 4.389,
+          "end": 4.76,
+          "startMs": 4389,
+          "endMs": 4760
+        },
+        {
+          "text": "stopped",
+          "start": 4.818,
+          "end": 5.085,
+          "startMs": 4818,
+          "endMs": 5085
+        },
+        {
+          "text": "being",
+          "start": 5.132,
+          "end": 5.317,
+          "startMs": 5132,
+          "endMs": 5317
+        },
+        {
+          "text": "a",
+          "start": 5.364,
+          "end": 5.387,
+          "startMs": 5364,
+          "endMs": 5387
+        },
+        {
+          "text": "club",
+          "start": 5.433,
+          "end": 5.7,
+          "startMs": 5433,
+          "endMs": 5700
+        },
+        {
+          "text": "and",
+          "start": 5.909,
+          "end": 6.072,
+          "startMs": 5909,
+          "endMs": 6072
+        },
+        {
+          "text": "became",
+          "start": 6.118,
+          "end": 6.374,
+          "startMs": 6118,
+          "endMs": 6374
+        },
+        {
+          "text": "a",
+          "start": 6.397,
+          "end": 6.42,
+          "startMs": 6397,
+          "endMs": 6420
+        },
+        {
+          "text": "conversation.",
+          "start": 6.467,
+          "end": 7.291,
+          "startMs": 6467,
+          "endMs": 7291
+        },
+        {
+          "text": "Anyone",
+          "start": 7.732,
+          "end": 8.243,
+          "startMs": 7732,
+          "endMs": 8243
+        },
+        {
+          "text": "can",
+          "start": 8.29,
+          "end": 8.406,
+          "startMs": 8290,
+          "endMs": 8406
+        },
+        {
+          "text": "remix",
+          "start": 8.464,
+          "end": 8.8,
+          "startMs": 8464,
+          "endMs": 8800
+        },
+        {
+          "text": "a",
+          "start": 8.858,
+          "end": 8.893,
+          "startMs": 8858,
+          "endMs": 8893
+        },
+        {
+          "text": "trend.",
+          "start": 8.94,
+          "end": 9.474,
+          "startMs": 8940,
+          "endMs": 9474
+        },
+        {
+          "text": "But",
+          "start": 9.857,
+          "end": 10.019,
+          "startMs": 9857,
+          "endMs": 10019
+        },
+        {
+          "text": "knowing",
+          "start": 10.066,
+          "end": 10.344,
+          "startMs": 10066,
+          "endMs": 10344
+        },
+        {
+          "text": "what",
+          "start": 10.379,
+          "end": 10.507,
+          "startMs": 10379,
+          "endMs": 10507
+        },
+        {
+          "text": "to",
+          "start": 10.553,
+          "end": 10.612,
+          "startMs": 10553,
+          "endMs": 10612
+        },
+        {
+          "text": "wear?",
+          "start": 10.67,
+          "end": 11.134,
+          "startMs": 10670,
+          "endMs": 11134
+        },
+        {
+          "text": "Different",
+          "start": 11.459,
+          "end": 11.784,
+          "startMs": 11459,
+          "endMs": 11784
+        },
+        {
+          "text": "story.",
+          "start": 11.819,
+          "end": 12.585,
+          "startMs": 11819,
+          "endMs": 12585
+        }
+      ]
+    },
+    {
+      "id": "scene6",
+      "file": "fashion-history-scene6.mp3",
+      "text": "That's where Her Style Co comes in. Upload your closet. Your personal A I stylist turns thousands of years of fashion history into one perfect outfit, for today.",
+      "size": 172661,
+      "duration": 12,
+      "actualDuration": null,
+      "wordsPerSecond": null,
+      "leadingSilence": 0,
+      "delay": 0,
+      "character": "calm",
+      "requestId": "rkl9DeYPgUU6Dwsq1Ybv",
+      "words": [
+        {
+          "text": "That's",
+          "start": 0,
+          "end": 0.255,
+          "startMs": 0,
+          "endMs": 255
+        },
+        {
+          "text": "where",
+          "start": 0.29,
+          "end": 0.453,
+          "startMs": 290,
+          "endMs": 453
+        },
+        {
+          "text": "Her",
+          "start": 0.499,
+          "end": 0.639,
+          "startMs": 499,
+          "endMs": 639
+        },
+        {
+          "text": "Style",
+          "start": 0.697,
+          "end": 0.987,
+          "startMs": 697,
+          "endMs": 987
+        },
+        {
+          "text": "Co",
+          "start": 1.033,
+          "end": 1.207,
+          "startMs": 1033,
+          "endMs": 1207
+        },
+        {
+          "text": "comes",
+          "start": 1.277,
+          "end": 1.509,
+          "startMs": 1277,
+          "endMs": 1509
+        },
+        {
+          "text": "in.",
+          "start": 1.567,
+          "end": 1.858,
+          "startMs": 1567,
+          "endMs": 1858
+        },
+        {
+          "text": "Upload",
+          "start": 2.183,
+          "end": 2.589,
+          "startMs": 2183,
+          "endMs": 2589
+        },
+        {
+          "text": "your",
+          "start": 2.635,
+          "end": 2.74,
+          "startMs": 2635,
+          "endMs": 2740
+        },
+        {
+          "text": "closet.",
+          "start": 2.775,
+          "end": 3.344,
+          "startMs": 2775,
+          "endMs": 3344
+        },
+        {
+          "text": "Your",
+          "start": 3.669,
+          "end": 3.843,
+          "startMs": 3669,
+          "endMs": 3843
+        },
+        {
+          "text": "personal",
+          "start": 3.901,
+          "end": 4.342,
+          "startMs": 3901,
+          "endMs": 4342
+        },
+        {
+          "text": "A",
+          "start": 4.458,
+          "end": 4.632,
+          "startMs": 4458,
+          "endMs": 4632
+        },
+        {
+          "text": "I",
+          "start": 4.748,
+          "end": 4.865,
+          "startMs": 4748,
+          "endMs": 4865
+        },
+        {
+          "text": "stylist",
+          "start": 4.946,
+          "end": 5.457,
+          "startMs": 4946,
+          "endMs": 5457
+        },
+        {
+          "text": "turns",
+          "start": 5.503,
+          "end": 5.793,
+          "startMs": 5503,
+          "endMs": 5793
+        },
+        {
+          "text": "thousands",
+          "start": 5.875,
+          "end": 6.397,
+          "startMs": 5875,
+          "endMs": 6397
+        },
+        {
+          "text": "of",
+          "start": 6.432,
+          "end": 6.49,
+          "startMs": 6432,
+          "endMs": 6490
+        },
+        {
+          "text": "years",
+          "start": 6.536,
+          "end": 6.734,
+          "startMs": 6536,
+          "endMs": 6734
+        },
+        {
+          "text": "of",
+          "start": 6.78,
+          "end": 6.838,
+          "startMs": 6780,
+          "endMs": 6838
+        },
+        {
+          "text": "fashion",
+          "start": 6.885,
+          "end": 7.175,
+          "startMs": 6885,
+          "endMs": 7175
+        },
+        {
+          "text": "history",
+          "start": 7.233,
+          "end": 7.57,
+          "startMs": 7233,
+          "endMs": 7570
+        },
+        {
+          "text": "into",
+          "start": 7.639,
+          "end": 7.837,
+          "startMs": 7639,
+          "endMs": 7837
+        },
+        {
+          "text": "one",
+          "start": 7.953,
+          "end": 8.22,
+          "startMs": 7953,
+          "endMs": 8220
+        },
+        {
+          "text": "perfect",
+          "start": 8.313,
+          "end": 8.812,
+          "startMs": 8313,
+          "endMs": 8812
+        },
+        {
+          "text": "outfit,",
+          "start": 8.87,
+          "end": 9.497,
+          "startMs": 8870,
+          "endMs": 9497
+        },
+        {
+          "text": "for",
+          "start": 9.741,
+          "end": 9.938,
+          "startMs": 9741,
+          "endMs": 9938
+        },
+        {
+          "text": "today.",
+          "start": 10.008,
+          "end": 10.728,
+          "startMs": 10008,
+          "endMs": 10728
+        }
+      ]
+    }
+  ]
+}

@@ -58,7 +58,28 @@ class ClothingGridTile extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    // Demo mode: show colored placeholder with icon
+    // Direct network URL (sample/example items)
+    if (item.imagePath.startsWith('http')) {
+      return CachedNetworkImage(
+        imageUrl: item.imagePath,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        placeholder: (_, __) => Container(
+          color: Colors.grey.shade100,
+          child: const Center(
+            child: SizedBox(width: 20, height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2)),
+          ),
+        ),
+        errorWidget: (_, __, ___) => Container(
+          color: _colorFromName(item.color),
+          child: Center(child: Icon(item.category.icon, size: 28,
+            color: Colors.white.withValues(alpha: 0.9))),
+        ),
+      );
+    }
+
+    // Legacy demo placeholder
     if (kDemoMode || item.imagePath == 'demo') {
       return Container(
         width: double.infinity,
@@ -67,20 +88,13 @@ class ClothingGridTile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                item.category.icon,
-                size: 28,
-                color: Colors.white.withValues(alpha: 0.9),
-              ),
+              Icon(item.category.icon, size: 28,
+                  color: Colors.white.withValues(alpha: 0.9)),
               const SizedBox(height: 4),
-              Text(
-                item.color ?? '',
-                style: TextStyle(
-                  fontSize: 10,
+              Text(item.color ?? '',
+                style: TextStyle(fontSize: 10,
                   color: Colors.white.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+                  fontWeight: FontWeight.w600)),
             ],
           ),
         ),
@@ -100,10 +114,8 @@ class ClothingGridTile extends StatelessWidget {
       placeholder: (_, __) => Container(
         color: Colors.grey.shade100,
         child: const Center(
-          child: SizedBox(
-            width: 20, height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
+          child: SizedBox(width: 20, height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2)),
         ),
       ),
       errorWidget: (_, __, ___) => Container(
@@ -122,6 +134,7 @@ class ClothingGridTile extends StatelessWidget {
       'khaki' || 'beige' => Colors.amber.shade300,
       'brown' => Colors.brown.shade400,
       'silver' || 'grey' || 'gray' => Colors.blueGrey.shade300,
+      'gold' => Colors.amber.shade600,
       'red' => Colors.red.shade400,
       'green' => Colors.green.shade400,
       _ => AppTheme.primary.withValues(alpha: 0.6),

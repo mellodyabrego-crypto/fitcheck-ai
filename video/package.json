@@ -1,0 +1,27 @@
+{
+  "name": "her-style-co-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Remotion video projects for Her Style Co.",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render",
+    "render:fashion": "remotion render LongFormFashionHistory out/lf-fashion-history.mp4 --codec=h264 --crf=18",
+    "thumb:fashion": "remotion still LongFormFashionHistory out/lf-fashion-history-thumb.png --frame=30",
+    "voiceover:fashion": "node ../.claude/skills/remotion-ads/scripts/generate.js --scenes scenes/fashion-history.json --with-timestamps --dictionary her-style-co --output-dir public/audio/fashion-history/"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.448",
+    "@remotion/cli": "^4.0.448",
+    "@remotion/google-fonts": "^4.0.448",
+    "@remotion/renderer": "^4.0.448",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "^4.0.448"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.0",
+    "@types/react-dom": "18.3.0",
+    "typescript": "5.4.5"
+  }
+}

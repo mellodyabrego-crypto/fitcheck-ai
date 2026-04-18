@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme.dart';
 import '../../main.dart';
+import '../../widgets/decorative_symbols.dart';
 import '../auth/auth_controller.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -14,12 +14,18 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
+      body: WithDecorations(sparse: true, child: ListView(
         children: [
           // Account section
           _SectionHeader(title: 'Account'),
           _SettingsTile(
-            icon: Icons.person_outline,
+            icon: Icons.manage_accounts_outlined,
+            title: 'Edit Profile',
+            subtitle: 'Change name, email, password, phone',
+            onTap: () => context.push('/profile/edit'),
+          ),
+          _SettingsTile(
+            icon: Icons.palette_outlined,
             title: 'Edit Style Preferences',
             subtitle: 'Update your aesthetics, body type, colors',
             onTap: () => context.push('/onboarding'),
@@ -33,40 +39,34 @@ class SettingsScreen extends ConsumerWidget {
 
           const SizedBox(height: 16),
 
-          // Notifications section
-          _SectionHeader(title: 'Notifications'),
+          // Notifications section — coming soon
+          _SectionHeader(title: 'Notifications (Coming Soon)'),
           _SettingsTile(
             icon: Icons.notifications_outlined,
             title: 'Daily Outfit Reminder',
-            subtitle: 'Get styled every morning',
+            subtitle: 'Coming soon',
             trailing: Switch(
-              value: false, // TODO: wire to user_profile.notificationsEnabled
-              onChanged: (v) {
-                // TODO: toggle notifications
-              },
+              value: false,
+              onChanged: null, // Disabled — feature not implemented
               activeColor: AppTheme.primary,
             ),
           ),
           _SettingsTile(
             icon: Icons.access_time,
             title: 'Reminder Time',
-            subtitle: '7:30 AM', // TODO: wire to user_profile.notificationTime
-            onTap: () async {
-              // TODO: show time picker
-            },
+            subtitle: 'Coming soon',
+            onTap: null,
           ),
 
           const SizedBox(height: 16),
 
-          // Data section
-          _SectionHeader(title: 'Data'),
+          // Data section — coming soon
+          _SectionHeader(title: 'Data (Coming Soon)'),
           _SettingsTile(
             icon: Icons.download,
             title: 'Export Wardrobe',
-            subtitle: 'Download your wardrobe as JSON',
-            onTap: () {
-              // TODO: export data
-            },
+            subtitle: 'Coming soon',
+            onTap: null,
           ),
 
           const SizedBox(height: 16),
@@ -76,12 +76,14 @@ class SettingsScreen extends ConsumerWidget {
           _SettingsTile(
             icon: Icons.description_outlined,
             title: 'Terms of Service',
-            onTap: () => launchUrl(Uri.parse('https://grwm.app/terms')),
+            subtitle: 'Coming soon',
+            onTap: null,
           ),
           _SettingsTile(
             icon: Icons.shield_outlined,
             title: 'Privacy Policy',
-            onTap: () => launchUrl(Uri.parse('https://grwm.app/privacy')),
+            subtitle: 'Coming soon',
+            onTap: null,
           ),
           _SettingsTile(
             icon: Icons.info_outline,
@@ -114,42 +116,27 @@ class SettingsScreen extends ConsumerWidget {
 
           const SizedBox(height: 12),
 
-          // Delete account
+          // Delete account — not wired yet, hidden until implemented
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Delete Account?'),
-                    content: const Text(
-                        'This will permanently delete your account and all data. This cannot be undone.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // TODO: delete account
-                          Navigator.pop(ctx);
-                        },
-                        style: TextButton.styleFrom(foregroundColor: Colors.red),
-                        child: const Text('Delete'),
-                      ),
-                    ],
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Account deletion is coming soon. Email us to request removal in the meantime.',
+                    ),
                   ),
                 );
               },
-              child: Text('Delete Account',
+              child: Text('Delete Account (Coming Soon)',
                   style: TextStyle(color: Colors.red.shade300, fontSize: 14)),
             ),
           ),
 
           const SizedBox(height: 32),
         ],
-      ),
+      ),),
     );
   }
 }

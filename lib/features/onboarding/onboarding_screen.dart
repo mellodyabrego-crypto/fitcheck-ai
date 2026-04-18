@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../main.dart';
+import '../../providers/user_providers.dart';
 
 import '../../core/theme.dart';
+import '../../widgets/decorative_symbols.dart';
 import 'widgets/goal_picker.dart';
 import 'widgets/age_picker.dart';
 import 'widgets/aesthetic_picker.dart';
@@ -25,6 +27,35 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _pageController = PageController();
   int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-skip if already complete, UNLESS user explicitly navigated here
+    // to retake the quiz (`/onboarding?retake=true`).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final retake = GoRouterState.of(context).uri.queryParameters['retake'] == 'true';
+      if (!kDemoMode && !retake) _skipIfAlreadyOnboarded();
+    });
+  }
+
+  Future<void> _skipIfAlreadyOnboarded() async {
+    try {
+      final client = Supabase.instance.client;
+      final userId = client.auth.currentUser?.id;
+      if (userId == null) return;
+      final profile = await client
+          .from('user_profiles')
+          .select('onboarding_complete')
+          .eq('user_id', userId)
+          .maybeSingle();
+      if ((profile?['onboarding_complete'] as bool? ?? false) && mounted) {
+        context.go('/home');
+      }
+    } catch (_) {
+      // Table doesn't exist yet or other error — stay on onboarding
+    }
+  }
 
   // Page 0 — Goals
   final Set<String> _selectedGoals = {};
@@ -72,6 +103,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _finishOnboarding() async {
+    bool saveFailed = false;
+    String? saveError;
+
     if (!kDemoMode) {
       try {
         final client = Supabase.instance.client;
@@ -92,12 +126,41 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             'onboarding_complete': true,
             'updated_at': DateTime.now().toIso8601String(),
           }, onConflict: 'user_id');
+        } else {
+          saveFailed = true;
+          saveError = 'Not signed in — preferences saved on this device only.';
         }
-      } catch (_) {
-        // Don't block navigation on save failure
+      } catch (e) {
+        saveFailed = true;
+        saveError = 'Could not save to cloud: $e. Preferences saved on this device only.';
       }
     }
-    if (mounted) context.go('/home');
+
+    // Push user preferences to providers so the rest of the app reflects them immediately.
+    if (_topSize != null) ref.read(topSizeProvider.notifier).state = _topSize;
+    if (_bottomSize != null) ref.read(bottomSizeProvider.notifier).state = _bottomSize;
+    if (_shoeSize != null) ref.read(shoeSizeProvider.notifier).state = _shoeSize;
+    if (_selectedColors.isNotEmpty) {
+      ref.read(favoriteColorsProvider.notifier).state = _selectedColors.toList();
+    }
+    // The skin-tone picker writes the AI-detected season to the undertone field.
+    // Map it to the four-season palette so Palette Picks can use it.
+    final season = _mapUndertoneToSeason(_skinToneUndertone);
+    if (season != null) {
+      ref.read(colorSeasonProvider.notifier).state = season;
+    }
+
+    if (!mounted) return;
+    if (saveFailed && saveError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(saveError),
+          duration: const Duration(seconds: 4),
+          backgroundColor: Colors.orange.shade700,
+        ),
+      );
+    }
+    context.go('/home');
   }
 
   bool get _canProceed {
@@ -114,6 +177,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     };
   }
 
+  String? _mapUndertoneToSeason(String? u) {
+    if (u == null || u.isEmpty) return null;
+    final v = u.toLowerCase();
+    if (v.contains('spring')) return 'Spring';
+    if (v.contains('summer')) return 'Summer';
+    if (v.contains('autumn') || v.contains('fall')) return 'Autumn';
+    if (v.contains('winter')) return 'Winter';
+    return null;
+  }
+
   static const _pageTitles = [
     'Goals',
     'Age',
@@ -128,7 +201,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: WithDecorations(
+        sparse: true,
+        child: SafeArea(
         child: Column(
           children: [
             // Progress bar + nav
@@ -151,9 +226,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             height: 4,
                             margin: const EdgeInsets.symmetric(horizontal: 2),
                             decoration: BoxDecoration(
+                              gradient: i <= _currentPage
+                                  ? AppTheme.primaryGradient
+                                  : null,
                               color: i <= _currentPage
-                                  ? AppTheme.primary
-                                  : Colors.grey.shade300,
+                                  ? null
+                                  : Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
@@ -306,6 +384,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

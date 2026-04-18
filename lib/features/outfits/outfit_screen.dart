@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme.dart';
 import '../../main.dart';
+import '../../widgets/decorative_symbols.dart';
 import '../../models/category.dart';
 import '../../models/outfit.dart';
 import '../../models/wardrobe_item.dart';
 import '../../services/share_service.dart';
 import '../../services/supabase_service.dart';
+import 'outfit_controller.dart';
 
 final outfitDetailProvider =
     FutureProvider.family<_OutfitDetail, String>((ref, outfitId) async {
+  // Check local in-memory store first (for locally generated outfits)
+  final localStore = ref.read(localOutfitStoreProvider);
+  final local = findLocalOutfit(localStore, outfitId);
+  if (local != null) {
+    return _OutfitDetail(
+      outfit: local.outfit,
+      items: local.items
+          .map((wi) => _OutfitItemDetail(slot: wi.category.name, wardrobeItem: wi))
+          .toList(),
+    );
+  }
+
   if (kDemoMode) {
     return _OutfitDetail(
       outfit: Outfit(
@@ -35,20 +50,27 @@ final outfitDetailProvider =
     );
   }
 
-  final supabase = ref.read(supabaseServiceProvider);
-  final outfits = await supabase.getOutfits();
-  final outfit = outfits.firstWhere((o) => o.id == outfitId);
-  final outfitItems = await supabase.getOutfitItems(outfitId);
-  final wardrobeItems = await supabase.getWardrobeItems();
+  try {
+    final supabase = ref.read(supabaseServiceProvider);
+    if (supabase == null) throw StateError('Supabase not configured');
+    final outfits = await supabase.getOutfits();
+    final outfit = outfits.firstWhere((o) => o.id == outfitId);
+    final outfitItems = await supabase.getOutfitItems(outfitId);
+    final wardrobeItems = await supabase.getWardrobeItems();
 
-  final itemsWithDetails = outfitItems.map((oi) {
-    final wardrobeItem = wardrobeItems
-        .where((wi) => wi.id == oi.wardrobeItemId)
-        .firstOrNull;
-    return _OutfitItemDetail(slot: oi.slot, wardrobeItem: wardrobeItem);
-  }).toList();
+    final itemsWithDetails = outfitItems.map((oi) {
+      final wardrobeItem = wardrobeItems
+          .where((wi) => wi.id == oi.wardrobeItemId)
+          .firstOrNull;
+      return _OutfitItemDetail(slot: oi.slot, wardrobeItem: wardrobeItem);
+    }).toList();
 
-  return _OutfitDetail(outfit: outfit, items: itemsWithDetails);
+    return _OutfitDetail(outfit: outfit, items: itemsWithDetails);
+  } catch (e) {
+    // Surface the real error to the caller — the UI's FutureProvider error
+    // state will render a proper message instead of a fake "Outfit not found".
+    rethrow;
+  }
 });
 
 class OutfitScreen extends ConsumerWidget {
@@ -66,22 +88,30 @@ class OutfitScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {
+            onPressed: () async {
               final detail = ref.read(outfitDetailProvider(outfitId)).value;
               if (detail == null) return;
               final items = detail.items
                   .where((i) => i.wardrobeItem != null)
                   .map((i) => i.wardrobeItem!)
                   .toList();
-              ref.read(shareServiceProvider).shareOutfitCard(
+              final shared = await ref.read(shareServiceProvider).shareOutfitCard(
                     occasion: detail.outfit.occasion ?? 'outfit',
                     items: items,
                   );
+              if (!shared && context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Outfit copied to clipboard!'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
             },
           ),
         ],
       ),
-      body: detailAsync.when(
+      body: WithDecorations(sparse: true, child: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (detail) => SingleChildScrollView(
@@ -177,7 +207,7 @@ class OutfitScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
+      ),),
     );
   }
 }
@@ -189,78 +219,176 @@ class _OutfitItemCard extends StatelessWidget {
 
   Color _colorFromName(String? colorName) {
     return switch (colorName?.toLowerCase()) {
-      'white' => Colors.blueGrey.shade200,
+      'white' || 'ivory' || 'champagne' => Colors.blueGrey.shade200,
       'black' => Colors.grey.shade800,
       'dark blue' || 'navy' => Colors.indigo.shade400,
       'light blue' => Colors.lightBlue.shade300,
-      'khaki' || 'beige' => Colors.amber.shade300,
-      'brown' => Colors.brown.shade400,
+      'khaki' || 'beige' || 'camel' => Colors.amber.shade300,
+      'brown' || 'tan' => Colors.brown.shade400,
       'silver' || 'grey' || 'gray' => Colors.blueGrey.shade300,
+      'pink' || 'hot pink' || 'coral' => Colors.pink.shade300,
+      'red' => Colors.red.shade400,
+      'green' || 'emerald' => Colors.green.shade400,
+      'gold' || 'yellow' => Colors.amber.shade600,
+      'purple' || 'violet' => Colors.purple.shade400,
+      'floral' => AppTheme.accent,
       _ => AppTheme.primary.withValues(alpha: 0.6),
+    };
+  }
+
+  // Shop URL based on category/name
+  String _shopUrl(WardrobeItem? wi) {
+    if (wi == null) return 'https://fashionnova.com';
+    return switch (wi.category) {
+      ClothingCategory.dresses     => 'https://fashionnova.com/collections/dresses',
+      ClothingCategory.tops        => 'https://fashionnova.com/collections/tops',
+      ClothingCategory.bottoms     => 'https://fashionnova.com/collections/bottoms',
+      ClothingCategory.shoes       => 'https://stevemadden.com',
+      ClothingCategory.bags        => 'https://fashionnova.com/collections/bags',
+      ClothingCategory.accessories => 'https://mejuri.com',
+      ClothingCategory.outerwear   => 'https://zara.com',
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    final wi = item.wardrobeItem;
+    final wi      = item.wardrobeItem;
+    final hasUrl  = wi?.imagePath.startsWith('http') ?? false;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
-              child: Container(
-                width: double.infinity,
-                color: _colorFromName(wi?.color),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        wi?.category.icon ?? Icons.checkroom,
-                        size: 32,
-                        color: Colors.white.withValues(alpha: 0.9),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        wi?.name ?? item.slot,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.85),
-                          fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: () async {
+        final url = wi?.imagePath.startsWith('http') == true
+            ? _shopUrl(wi)
+            : _shopUrl(wi);
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Show real Unsplash photo if available, else color swatch
+                    if (hasUrl)
+                      Image.network(
+                        wi!.imagePath,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: _colorFromName(wi.color),
+                          child: Center(
+                            child: Icon(wi.category.icon ?? Icons.checkroom,
+                                size: 32, color: Colors.white70),
+                          ),
+                        ),
+                        loadingBuilder: (ctx, child, prog) {
+                          if (prog == null) return child;
+                          return Container(
+                            color: Colors.grey.shade100,
+                            child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2)),
+                          );
+                        },
+                      )
+                    else
+                      Container(
+                        color: _colorFromName(wi?.color),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                wi?.category.icon ?? Icons.checkroom,
+                                size: 32,
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                wi?.name ?? item.slot,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.85),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    // "Shop" overlay badge
+                    Positioned(
+                      bottom: 0, left: 0, right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.6),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shopping_bag_outlined,
+                                color: Colors.white70, size: 11),
+                            SizedBox(width: 3),
+                            Text('Shop',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              item.slot.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textSecondary,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Column(
+                children: [
+                  Text(
+                    wi?.name ?? item.slot,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    item.slot.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -9,7 +9,7 @@ final authControllerProvider =
     AsyncNotifierProvider<AuthController, void>(AuthController.new);
 
 class AuthController extends AsyncNotifier<void> {
-  late SupabaseService _supabase;
+  SupabaseService? _supabase;
 
   @override
   FutureOr<void> build() {
@@ -17,20 +17,22 @@ class AuthController extends AsyncNotifier<void> {
   }
 
   Future<void> signInWithApple() async {
+    if (_supabase == null) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await _supabase.signInWithApple();
+      await _supabase!.signInWithApple();
     });
   }
 
   Future<void> signInWithGoogle() async {
+    if (_supabase == null) return;
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await _supabase.signInWithGoogle();
+      await _supabase!.signInWithGoogle();
     });
   }
 
   Future<void> signOut() async {
-    await _supabase.signOut();
+    await _supabase?.signOut();
   }
 }

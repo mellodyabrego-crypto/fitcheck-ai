@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme.dart';
 import '../../core/extensions.dart';
+import '../../widgets/decorative_symbols.dart';
 import '../../services/usage_tracker.dart';
 import '../../widgets/score_dial.dart';
 
@@ -74,7 +75,7 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Fit Check')),
-      body: _isLoading
+      body: WithDecorations(sparse: true, child: _isLoading
           ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +91,7 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
             )
           : _error != null
               ? Center(child: Text('Error: $_error'))
-              : _buildResult(),
+              : _buildResult()),
     );
   }
 
@@ -106,7 +107,29 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          const SizedBox(height: 12),
+          // Demo banner — tells the truth: this is a preview, not a real AI score
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.orange.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, size: 16, color: Colors.orange.shade800),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Demo score — real AI analysis coming soon.',
+                    style: TextStyle(fontSize: 12, color: Colors.orange.shade900, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
 
           // Animated score dial
           ScoreDial(score: result.score, color: scoreColor, size: 180),
@@ -178,7 +201,7 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                   children: [
                     Icon(Icons.lightbulb, color: AppTheme.primary, size: 20),
                     SizedBox(width: 8),
-                    Text('AI Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    Text('Style Notes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   ],
                 ),
                 const SizedBox(height: 12),

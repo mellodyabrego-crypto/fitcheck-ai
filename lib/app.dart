@@ -12,10 +12,12 @@ class GRWMApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'GRWM',
+      title: 'Her Style Co.',
       theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      // Force light theme on every device — the "dark" theme isn't styled for
+      // Her Style Co. and caused text-on-background contrast bugs on phones set
+      // to system dark mode.
+      themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

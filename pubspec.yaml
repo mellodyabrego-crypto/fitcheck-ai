@@ -1,5 +1,5 @@
 name: grwm
-description: "GRWM - Get Ready With Me. AI-powered wardrobe stylist."
+description: "The Candy Shop - AI-powered wardrobe stylist."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -62,6 +62,9 @@ dependencies:
   # App info
   package_info_plus: ^8.1.0
 
+  # Fonts
+  google_fonts: ^6.2.1
+
   # Location
   geolocator: ^13.0.1
 
@@ -78,6 +81,9 @@ flutter:
   uses-material-design: true
 
   assets:
+    # WARNING: .env is bundled as an asset for local dev only. For production web
+    # builds, rely on --dart-define to inject credentials; never rely on the asset
+    # being served. Ideally all API secrets should move to a server-side proxy.
     - .env
     - assets/images/
     - assets/models/

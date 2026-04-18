@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme.dart';
 import '../../core/extensions.dart';
+import '../../widgets/decorative_symbols.dart';
 import '../../models/wardrobe_item.dart';
 import 'wardrobe_controller.dart';
 
@@ -47,7 +48,7 @@ class ItemDetailScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: WithDecorations(sparse: true, child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +136,7 @@ class ItemDetailScreen extends ConsumerWidget {
             ],
           ],
         ),
-      ),
+      ),),
     );
   }
 

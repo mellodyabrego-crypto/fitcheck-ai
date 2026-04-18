@@ -6,13 +6,36 @@
   to     = "/index.html"
   status = 200
 
+# Flutter's top-level bootstrap files are NOT content-hashed.
+# They must revalidate on every load — otherwise browsers serve stale JS forever.
 [[headers]]
-  for = "*.js"
+  for = "/main.dart.js"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+  for = "/flutter_bootstrap.js"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+  for = "/flutter_service_worker.js"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+  for = "/flutter.js"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+# Hashed assets (canvaskit wasm, font files with hashes) can be cached long-term
+[[headers]]
+  for = "/canvaskit/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "*.wasm"
+  for = "/assets/fonts/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 

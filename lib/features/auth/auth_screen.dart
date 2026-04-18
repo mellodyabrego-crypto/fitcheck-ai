@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/theme.dart';
 import '../../core/extensions.dart';
+import '../../widgets/decorative_symbols.dart';
 import 'auth_controller.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -26,6 +28,28 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _oauth(OAuthProvider provider, String label) async {
+    setState(() { _isLoading = true; _error = null; });
+    try {
+      await Supabase.instance.client.auth.signInWithOAuth(provider);
+      // signInWithOAuth on web redirects the whole page — control usually doesn't return here.
+    } on AuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = '$label sign-in failed: ${e.message}\n\n'
+              'The $label OAuth provider may not be configured in Supabase yet. '
+              'Enable it in the Supabase dashboard → Authentication → Providers.';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _error = '$label sign-in error: $e');
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _signInWithEmail() async {
@@ -57,7 +81,25 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           email: email,
           password: password,
         );
-        if (mounted) context.go('/home');
+        if (!mounted) return;
+        // Check if onboarding was already completed — skip it on repeat logins
+        bool onboardingDone = false;
+        try {
+          final userId = Supabase.instance.client.auth.currentUser?.id;
+          if (userId != null) {
+            final profile = await Supabase.instance.client
+                .from('user_profiles')
+                .select('onboarding_complete')
+                .eq('user_id', userId)
+                .maybeSingle();
+            onboardingDone = profile?['onboarding_complete'] as bool? ?? false;
+          }
+        } catch (_) {
+          // Table not set up yet — go to onboarding
+        }
+        if (mounted) {
+          context.go(onboardingDone ? '/home' : '/onboarding');
+        }
       }
     } on AuthException catch (e) {
       setState(() => _error = e.message);
@@ -71,38 +113,90 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: WithDecorations(
+        child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             children: [
               const SizedBox(height: 60),
 
-              // Logo & Title
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: AppTheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: const Icon(
-                  Icons.checkroom,
-                  size: 48,
-                  color: AppTheme.primary,
+              // Logo — candy shop branded
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer glow ring
+                  Container(
+                    width: 118,
+                    height: 118,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const SweepGradient(colors: [
+                        Color(0xFFD8A7B1),
+                        Color(0xFFE8DED2),
+                        Color(0xFFC6A96B),
+                        Color(0xFFE8DED2),
+                        Color(0xFFD8A7B1),
+                      ]),
+                    ),
+                  ),
+                  // White ring separator
+                  Container(
+                    width: 108,
+                    height: 108,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                  ),
+                  // Inner gradient circle
+                  Container(
+                    width: 96,
+                    height: 96,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [Color(0xFFE6BFC7), Color(0xFFD8A7B1)],
+                        center: Alignment(-0.3, -0.3),
+                        radius: 1.1,
+                      ),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Sparkle stars
+                        Positioned(
+                          top: 10, right: 14,
+                          child: Icon(Icons.star, color: Colors.white.withValues(alpha: 0.6), size: 10),
+                        ),
+                        Positioned(
+                          bottom: 12, left: 12,
+                          child: Icon(Icons.star, color: Colors.white.withValues(alpha: 0.5), size: 8),
+                        ),
+                        // Fashion icon
+                        const Icon(Icons.auto_awesome, size: 42, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // "The Candy Shop" in script font
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFFD8A7B1), Color(0xFFC6A96B)],
+                ).createShader(bounds),
+                child: Text(
+                  'Her Style Co.',
+                  style: GoogleFonts.pacifico(
+                    fontSize: 32,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 6),
               Text(
-                'GRWM',
-                style: context.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Get Ready With Me',
+                'Your personal Stylist',
                 style: context.textTheme.bodyLarge?.copyWith(
                   color: AppTheme.textSecondary,
                 ),
@@ -198,40 +292,24 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   Expanded(child: Divider(color: Colors.grey.shade300)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('or', style: TextStyle(color: AppTheme.textSecondary)),
+                    child: Text('or',
+                        style: TextStyle(color: AppTheme.textSecondary)),
                   ),
                   Expanded(child: Divider(color: Colors.grey.shade300)),
                 ],
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Social sign in buttons
-              _SignInButton(
-                label: 'Continue with Apple',
-                icon: Icons.apple,
-                onPressed: () async {
-                  await ref
-                      .read(authControllerProvider.notifier)
-                      .signInWithApple();
-                  if (!context.mounted) return;
-                  context.go('/home');
-                },
-                isPrimary: true,
-              ),
-              const SizedBox(height: 12),
+              // Social sign-in — Google only for now (Apple requires a $99/yr developer account)
               _SignInButton(
                 label: 'Continue with Google',
                 icon: Icons.g_mobiledata,
-                onPressed: () async {
-                  await ref
-                      .read(authControllerProvider.notifier)
-                      .signInWithGoogle();
-                },
-                isPrimary: false,
+                onPressed: () => _oauth(OAuthProvider.google, 'Google'),
+                isPrimary: true,
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
               // Terms
               Text(
@@ -245,6 +323,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

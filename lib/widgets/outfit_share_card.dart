@@ -46,9 +46,9 @@ class OutfitShareCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'GRWM',
+                    'Her Style Co.',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: AppTheme.textPrimary,
                     ),
@@ -122,7 +122,7 @@ class OutfitShareCard extends StatelessWidget {
           if (showWatermark) ...[
             const SizedBox(height: 16),
             Text(
-              'Made with GRWM',
+              'Made with Her Style Co.',
               style: TextStyle(
                 fontSize: 12,
                 color: AppTheme.textSecondary.withValues(alpha: 0.5),

@@ -4,7 +4,7 @@ enum ClothingCategory {
   tops('Tops', Icons.checkroom),
   bottoms('Bottoms', Icons.straighten),
   dresses('Dresses', Icons.dry_cleaning),
-  shoes('Shoes', Icons.ice_skating),
+  shoes('Shoes', Icons.directions_walk),
   outerwear('Outerwear', Icons.umbrella),
   accessories('Accessories', Icons.watch),
   bags('Bags', Icons.shopping_bag);

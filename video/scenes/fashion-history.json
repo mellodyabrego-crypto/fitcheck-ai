@@ -1,0 +1,44 @@
+{
+  "name": "fashion-history",
+  "voice": "XB0fDUnXU5powFXDhCwa",
+  "dictionary": "her-style-co",
+  "character": "narrator",
+  "scenes": [
+    {
+      "id": "scene1",
+      "character": "dramatic",
+      "duration": 11,
+      "text": "Fashion didn't start on a runway. It started with a bone needle, an animal hide, and one very cold ancestor deciding she could do better."
+    },
+    {
+      "id": "scene2",
+      "character": "narrator",
+      "duration": 15,
+      "text": "Around twenty-five thousand years ago, humans learned to weave. Linen in Egypt. Silk in China. Wool in Mesopotamia. Clothes stopped being just warmth. They became identity."
+    },
+    {
+      "id": "scene3",
+      "character": "expert",
+      "duration": 15,
+      "text": "Then fashion got serious. Roman togas marked status. Medieval laws told peasants what they couldn't wear. Kings hoarded velvet. Your clothes were a walking resume."
+    },
+    {
+      "id": "scene4",
+      "character": "expert",
+      "duration": 15,
+      "text": "Everything changed in eighteen fifty-eight. A designer named Charles Worth opened the first Paris fashion house, put his name on labels, and invented the seasonal collection. Runways were born."
+    },
+    {
+      "id": "scene5",
+      "character": "narrator",
+      "duration": 14,
+      "text": "Then came ready-to-wear. Sewing machines. Magazines. Instagram. Fashion stopped being a club and became a conversation. Anyone can remix a trend. But knowing what to wear? Different story."
+    },
+    {
+      "id": "scene6",
+      "character": "calm",
+      "duration": 12,
+      "text": "That's where Her Style Co. comes in. Upload your closet. Your personal AI stylist turns thousands of years of fashion history into one perfect outfit, for today."
+    }
+  ]
+}

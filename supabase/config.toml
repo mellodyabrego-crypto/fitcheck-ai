@@ -1,0 +1,4 @@
+project_id = "fitcheck_ai"
+
+[functions.gemini-proxy]
+verify_jwt = false

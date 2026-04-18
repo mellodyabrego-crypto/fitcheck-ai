@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
+import '../../widgets/decorative_symbols.dart';
 
 class PaywallScreen extends StatelessWidget {
   const PaywallScreen({super.key});
@@ -8,7 +9,7 @@ class PaywallScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: WithDecorations(child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
@@ -46,13 +47,26 @@ class PaywallScreen extends StatelessWidget {
 
               const SizedBox(height: 24),
               const Text(
-                'Unlock Your Full GRWM',
+                'Unlock Pro — Coming Soon',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  'Subscriptions aren\'t live yet. The features below preview what Pro will unlock.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppTheme.textSecondary,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
 
               // Features
               const _FeatureRow(
@@ -100,30 +114,22 @@ class PaywallScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: RevenueCat purchase
-                  },
+                  onPressed: null, // Disabled until payments ship
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primary,
+                    disabledBackgroundColor: AppTheme.primary.withValues(alpha: 0.5),
+                    disabledForegroundColor: Colors.white,
                   ),
                   child: const Text(
-                    'Start Free Trial',
+                    'Coming Soon',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () {
-                  // TODO: Restore purchases
-                },
-                child: const Text('Restore Purchases'),
-              ),
-
               const SizedBox(height: 8),
               Text(
-                'Cancel anytime. No commitment.',
+                'Want early access? Email us when Pro is ready.',
                 style: TextStyle(
                   fontSize: 12,
                   color: AppTheme.textSecondary,
@@ -132,7 +138,7 @@ class PaywallScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      ),),
     );
   }
 }

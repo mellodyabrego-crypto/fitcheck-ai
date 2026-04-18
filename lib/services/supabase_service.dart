@@ -8,8 +8,13 @@ import '../models/outfit.dart';
 import '../models/fit_check.dart';
 import '../core/constants.dart';
 
-final supabaseServiceProvider = Provider<SupabaseService>((ref) {
-  return SupabaseService(Supabase.instance.client);
+final supabaseServiceProvider = Provider<SupabaseService?>((ref) {
+  try {
+    return SupabaseService(Supabase.instance.client);
+  } catch (_) {
+    // Supabase wasn't initialized (missing env) — return null so callers can skip
+    return null;
+  }
 });
 
 class SupabaseService {
@@ -19,7 +24,8 @@ class SupabaseService {
 
   SupabaseClient get client => _client;
   User? get currentUser => _client.auth.currentUser;
-  String get userId => currentUser!.id;
+  // Safe getter — returns empty string when no user (queries just return empty)
+  String get userId => currentUser?.id ?? '';
 
   // ── Auth ──────────────────────────────────────────────
   Future<bool> signInWithApple() =>
@@ -51,7 +57,15 @@ class SupabaseService {
         .getPublicUrl(path);
   }
 
-  Future<void> deleteImage(String path) async {
+  Future<void> deleteImage(String pathOrUrl) async {
+    // Accept both bucket paths ('user-id/item.png') and full public URLs.
+    // Public URL format: https://<project>.supabase.co/storage/v1/object/public/<bucket>/<path>
+    var path = pathOrUrl;
+    final marker = '/storage/v1/object/public/${AppConstants.wardrobeBucket}/';
+    final i = pathOrUrl.indexOf(marker);
+    if (i != -1) {
+      path = pathOrUrl.substring(i + marker.length);
+    }
     await _client.storage.from(AppConstants.wardrobeBucket).remove([path]);
   }
 
