@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Create placeholder .env
+        # pubspec.yaml lists `.env` as an asset for local dev. It's gitignored,
+        # so CI has to create an empty one before `flutter build` will succeed.
+        # Real credentials are injected via --dart-define in the next step.
+        run: touch .env
+
       - name: Build web
         # Credentials are injected at compile time via --dart-define so they
         # end up in the JS bundle (the .env asset is NOT reliable in prod).
