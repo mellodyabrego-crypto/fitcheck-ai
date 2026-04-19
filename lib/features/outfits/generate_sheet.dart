@@ -147,7 +147,7 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
             const SizedBox(height: 18),
 
             // ── Color Season ──
-            const Text('My Color Season',
+            const Text('My Color Palette',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Wrap(

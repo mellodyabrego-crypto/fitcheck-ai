@@ -202,7 +202,7 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
               const SizedBox(height: 24),
 
               // Color Season
-              const Text('My Color Season',
+              const Text('My Color Palette',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
               const SizedBox(height: 10),
               Wrap(

@@ -13,6 +13,8 @@ class ClothingGridTile extends StatelessWidget {
 
   const ClothingGridTile({super.key, required this.item, this.onTap});
 
+  String get _heroTag => 'wardrobe_item_${item.id}';
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -35,7 +37,10 @@ class ClothingGridTile extends StatelessWidget {
             child: ClipRRect(
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(14)),
-              child: _buildImage(),
+              child: Hero(
+                tag: _heroTag,
+                child: WardrobeItemImage(item: item),
+              ),
             ),
           ),
           Padding(
@@ -57,12 +62,129 @@ class ClothingGridTile extends StatelessWidget {
     );
   }
 
-  Widget _buildImage() {
-    // Direct network URL (sample/example items)
+}
+
+Future<void> showExpandedWardrobeImage(
+  BuildContext context,
+  WardrobeItem item, {
+  VoidCallback? onViewDetails,
+}) {
+  return Navigator.of(context).push(
+    PageRouteBuilder(
+      opaque: false,
+      barrierColor: Colors.black.withValues(alpha: 0.92),
+      transitionDuration: const Duration(milliseconds: 220),
+      reverseTransitionDuration: const Duration(milliseconds: 180),
+      pageBuilder: (_, __, ___) => _ExpandedImageView(
+        item: item,
+        onViewDetails: onViewDetails,
+      ),
+      transitionsBuilder: (_, animation, __, child) =>
+          FadeTransition(opacity: animation, child: child),
+    ),
+  );
+}
+
+class _ExpandedImageView extends StatelessWidget {
+  final WardrobeItem item;
+  final VoidCallback? onViewDetails;
+
+  const _ExpandedImageView({required this.item, this.onViewDetails});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Center(
+              child: Hero(
+                tag: 'wardrobe_item_${item.id}',
+                child: InteractiveViewer(
+                  minScale: 1,
+                  maxScale: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: WardrobeItemImage(
+                        item: item,
+                        fit: BoxFit.contain,
+                        useThumbnail: false,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 16,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    item.name ?? item.category.label,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (onViewDetails != null) ...[
+                    const SizedBox(height: 12),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        onViewDetails!();
+                      },
+                      icon: const Icon(Icons.info_outline,
+                          color: Colors.white),
+                      label: const Text(
+                        'View Details',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WardrobeItemImage extends StatelessWidget {
+  final WardrobeItem item;
+  final BoxFit fit;
+  final bool useThumbnail;
+
+  const WardrobeItemImage({
+    super.key,
+    required this.item,
+    this.fit = BoxFit.cover,
+    this.useThumbnail = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     if (item.imagePath.startsWith('http')) {
       return CachedNetworkImage(
         imageUrl: item.imagePath,
-        fit: BoxFit.cover,
+        fit: fit,
         width: double.infinity,
         placeholder: (_, __) => Container(
           color: Colors.grey.shade100,
@@ -79,7 +201,6 @@ class ClothingGridTile extends StatelessWidget {
       );
     }
 
-    // Legacy demo placeholder
     if (kDemoMode || item.imagePath == 'demo') {
       return Container(
         width: double.infinity,
@@ -101,15 +222,14 @@ class ClothingGridTile extends StatelessWidget {
       );
     }
 
-    // Real mode: load from Supabase storage
-    final path = item.thumbnailPath ?? item.imagePath;
+    final path = (useThumbnail ? item.thumbnailPath : null) ?? item.imagePath;
     final url = Supabase.instance.client.storage
         .from(AppConstants.wardrobeBucket)
         .getPublicUrl(path);
 
     return CachedNetworkImage(
       imageUrl: url,
-      fit: BoxFit.cover,
+      fit: fit,
       width: double.infinity,
       placeholder: (_, __) => Container(
         color: Colors.grey.shade100,

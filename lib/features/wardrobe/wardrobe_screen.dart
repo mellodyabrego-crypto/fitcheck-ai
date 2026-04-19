@@ -36,12 +36,6 @@ class WardrobeScreen extends ConsumerWidget {
                   ref.read(_showingFolderView.notifier).state = true;
                 },
               ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_a_photo),
-            onPressed: () => context.push('/wardrobe/add'),
-          ),
-        ],
       ),
       body: WithDecorations(
         sparse: true,
@@ -55,10 +49,19 @@ class WardrobeScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'wardrobe_fab',
         onPressed: () => context.push('/wardrobe/add'),
-        icon: const Icon(Icons.add),
-        label: const Text('Add Item'),
+        icon: const Icon(Icons.add, size: 22),
+        label: const Text(
+          'Add Item',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
+          ),
+        ),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
+        extendedPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 4),
+        extendedIconLabelSpacing: 10,
       ),
     );
   }
@@ -346,13 +349,18 @@ class _ItemsGrid extends ConsumerWidget {
                   final item = filtered[index];
                   return ClothingGridTile(
                     item: item,
-                    onTap: isSample
-                        ? null
-                        : () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ItemDetailScreen(item: item),
+                    onTap: () => showExpandedWardrobeImage(
+                      context,
+                      item,
+                      onViewDetails: isSample
+                          ? null
+                          : () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ItemDetailScreen(item: item),
+                                ),
                               ),
-                            ),
+                    ),
                   );
                 },
               ),

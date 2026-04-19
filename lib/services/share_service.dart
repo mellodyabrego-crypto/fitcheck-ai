@@ -46,6 +46,17 @@ class ShareService {
     }
   }
 
+  /// Share an arbitrary block of text. Falls back to clipboard on web.
+  Future<bool> shareText(String text, {String? subject}) async {
+    try {
+      await Share.share(text, subject: subject);
+      return true;
+    } catch (_) {
+      await Clipboard.setData(ClipboardData(text: text));
+      return false;
+    }
+  }
+
   // Keep for API compatibility
   Future<Uint8List?> renderToBytes(Widget widget) async => null;
 }

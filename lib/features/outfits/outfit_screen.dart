@@ -11,6 +11,7 @@ import '../../models/wardrobe_item.dart';
 import '../../services/share_service.dart';
 import '../../services/supabase_service.dart';
 import 'outfit_controller.dart';
+import 'outfit_history_screen.dart';
 
 final outfitDetailProvider =
     FutureProvider.family<_OutfitDetail, String>((ref, outfitId) async {
@@ -73,19 +74,51 @@ final outfitDetailProvider =
   }
 });
 
-class OutfitScreen extends ConsumerWidget {
+class OutfitScreen extends ConsumerStatefulWidget {
   final String outfitId;
 
   const OutfitScreen({super.key, required this.outfitId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OutfitScreen> createState() => _OutfitScreenState();
+}
+
+class _OutfitScreenState extends ConsumerState<OutfitScreen> {
+  bool _isRegenerating = false;
+
+  String get outfitId => widget.outfitId;
+
+  Future<void> _generateAgain(String occasion) async {
+    setState(() => _isRegenerating = true);
+    try {
+      final newOutfit = await ref
+          .read(outfitControllerProvider.notifier)
+          .generateOutfit(occasion);
+      if (!mounted) return;
+      context.pushReplacement('/outfit/${newOutfit.id}');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to regenerate: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isRegenerating = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final detailAsync = ref.watch(outfitDetailProvider(outfitId));
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Outfit'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_add_outlined),
+            tooltip: 'Save to Collection',
+            onPressed: () => pickCollectionAndAdd(context, ref, outfitId),
+          ),
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: () async {
@@ -193,6 +226,34 @@ class OutfitScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
               ],
+
+              // Generate Again button
+              OutlinedButton.icon(
+                onPressed: _isRegenerating
+                    ? null
+                    : () => _generateAgain(detail.outfit.occasion ?? 'casual'),
+                icon: _isRegenerating
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: AppTheme.primary),
+                      )
+                    : const Icon(Icons.refresh),
+                label: Text(_isRegenerating
+                    ? 'Generating…'
+                    : 'Generate Again'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppTheme.primary,
+                  side: const BorderSide(color: AppTheme.primary, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
 
               // Fit Check button
               ElevatedButton.icon(
