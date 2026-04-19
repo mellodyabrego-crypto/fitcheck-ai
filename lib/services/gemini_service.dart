@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../core/constants.dart';
 
@@ -28,16 +29,82 @@ class GeminiService {
 
   /// POST a Gemini request through the Supabase edge function.
   /// `body` should include {'model': '...', 'contents': [...], ...}.
+  /// Adds a 25s timeout, exponential backoff on 5xx/network errors, and
+  /// surfaces 401/429 as typed exceptions so callers can act on them.
   Future<http.Response> _postToGemini(Map<String, dynamic> body) async {
-    return http.post(
-      Uri.parse(_proxyUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${AppConstants.supabaseAnonKey}',
-        'apikey': AppConstants.supabaseAnonKey,
-      },
-      body: jsonEncode(body),
+    // Use the user's session JWT when available so the edge function can
+    // enforce per-user quota. Falls back to the anon key for unauthed paths.
+    String authToken = AppConstants.supabaseAnonKey;
+    try {
+      final session = sb.Supabase.instance.client.auth.currentSession;
+      if (session?.accessToken != null && session!.accessToken.isNotEmpty) {
+        authToken = session.accessToken;
+      }
+    } catch (_) {
+      // Supabase not initialized — fall back to anon key.
+    }
+
+    Object? lastError;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      try {
+        final response = await http
+            .post(
+              Uri.parse(_proxyUrl),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $authToken',
+                'apikey': AppConstants.supabaseAnonKey,
+              },
+              body: jsonEncode(body),
+            )
+            .timeout(const Duration(seconds: 25));
+
+        // Don't retry user-fixable errors.
+        if (response.statusCode == 401) {
+          throw const GeminiAuthException(
+            'Your session has expired. Please sign out and sign back in.',
+          );
+        }
+        if (response.statusCode == 429) {
+          throw GeminiRateLimitException(_extractErrorMessage(response.body) ??
+              'You have hit today\'s AI usage limit. It resets at midnight UTC.');
+        }
+        if (response.statusCode == 413) {
+          throw const GeminiInputTooLargeException(
+            'That image or prompt is too large. Try a smaller photo.',
+          );
+        }
+        if (response.statusCode >= 500 && attempt < 2) {
+          // Retryable server error: wait + retry
+          await Future.delayed(Duration(milliseconds: 400 * (1 << attempt)));
+          continue;
+        }
+        return response;
+      } on GeminiRateLimitException {
+        rethrow;
+      } on GeminiAuthException {
+        rethrow;
+      } on GeminiInputTooLargeException {
+        rethrow;
+      } catch (e) {
+        lastError = e;
+        if (attempt < 2) {
+          await Future.delayed(Duration(milliseconds: 400 * (1 << attempt)));
+          continue;
+        }
+      }
+    }
+    throw GeminiNetworkException(
+      'Could not reach the AI service. Check your connection and try again. ($lastError)',
     );
+  }
+
+  String? _extractErrorMessage(String body) {
+    try {
+      final j = jsonDecode(body);
+      if (j is Map && j['error'] is String) return j['error'] as String;
+    } catch (_) {}
+    return null;
   }
 
   Future<ColorSeasonResult> analyzeColorSeason(Uint8List selfieImage) async {
@@ -360,6 +427,27 @@ class GeminiRateLimitException implements Exception {
 class GeminiApiKeyException implements Exception {
   final String message;
   const GeminiApiKeyException(this.message);
+  @override
+  String toString() => message;
+}
+
+class GeminiAuthException implements Exception {
+  final String message;
+  const GeminiAuthException(this.message);
+  @override
+  String toString() => message;
+}
+
+class GeminiInputTooLargeException implements Exception {
+  final String message;
+  const GeminiInputTooLargeException(this.message);
+  @override
+  String toString() => message;
+}
+
+class GeminiNetworkException implements Exception {
+  final String message;
+  const GeminiNetworkException(this.message);
   @override
   String toString() => message;
 }

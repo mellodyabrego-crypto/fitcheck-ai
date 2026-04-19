@@ -9,6 +9,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
 import 'core/constants.dart';
+import 'services/analytics_service.dart';
+import 'services/observability_service.dart';
 
 /// Set to true to run without Supabase (UI preview mode)
 const bool kDemoMode = false;
@@ -19,50 +21,64 @@ const String kAppName = 'Her Style Co.';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runZonedGuarded(() async {
-    try {
+  // Sentry wraps runApp so unhandled framework + zone errors are captured.
+  // No-op when SENTRY_DSN dart-define isn't set.
+  await Observability.bootstrap(() async {
+    runZonedGuarded(() async {
       try {
-        await dotenv.load(fileName: '.env');
-      } catch (_) {
-        // .env not available (e.g. web production) — dart-define values will be used
-      }
-
-      // Supabase init is isolated so a failure here cannot crash the whole
-      // app. The rest of the code is null-safe when Supabase is missing.
-      final supabaseUrl = AppConstants.supabaseUrl;
-      final supabaseKey = AppConstants.supabaseAnonKey;
-      if (!kDemoMode && supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {
-        // Users who visited the app when it pointed at a different Supabase
-        // project may have stale auth tokens in localStorage. Those tokens
-        // belong to a different JWT issuer and can crash the SDK when it
-        // tries to decode them. Proactively clear anything that isn't for
-        // the current project.
-        _clearStaleSupabaseSessions(supabaseUrl);
         try {
-          await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
-        } catch (e, st) {
-          debugPrint('SUPABASE INIT FAILED (continuing): $e\n$st');
-          // Nuke every Supabase-looking key and try one more time.
-          _nukeSupabaseLocalStorage();
+          await dotenv.load(fileName: '.env');
+        } catch (_) {
+          // .env not available (e.g. web production) — dart-define values will be used
+        }
+
+        // Supabase init is isolated so a failure here cannot crash the whole
+        // app. The rest of the code is null-safe when Supabase is missing.
+        final supabaseUrl = AppConstants.supabaseUrl;
+        final supabaseKey = AppConstants.supabaseAnonKey;
+        if (!kDemoMode && supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {
+          _clearStaleSupabaseSessions(supabaseUrl);
           try {
             await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
-          } catch (_) {
-            // Give up — auth features will show login; DB calls degrade.
+          } catch (e, st) {
+            debugPrint('SUPABASE INIT FAILED (continuing): $e\n$st');
+            await Observability.capture(e, st, tags: {'phase': 'supabase_init'});
+            _nukeSupabaseLocalStorage();
+            try {
+              await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
+            } catch (e2, st2) {
+              await Observability.capture(e2, st2, tags: {'phase': 'supabase_init_retry'});
+            }
           }
         }
-      }
 
-      runApp(
-        const ProviderScope(
-          child: GRWMApp(),
-        ),
-      );
-    } catch (e, st) {
-      runApp(_ErrorApp(message: '$e', stack: st.toString()));
-      debugPrint('STARTUP ERROR: $e\n$st');
-    }
-  }, (error, stack) {
-    debugPrint('ZONE ERROR: $error\n$stack');
+        // PostHog init — no-op if POSTHOG_API_KEY isn't set.
+        await Analytics.setup();
+
+        // Identify the signed-in user with both Sentry + PostHog if a session
+        // exists at boot. Auth controller should also call these on sign-in.
+        try {
+          final user = Supabase.instance.client.auth.currentUser;
+          if (user != null) {
+            await Observability.setUser(id: user.id, email: user.email);
+            await Analytics.identify(user.id);
+          }
+        } catch (_) {}
+
+        runApp(
+          const ProviderScope(
+            child: GRWMApp(),
+          ),
+        );
+      } catch (e, st) {
+        await Observability.capture(e, st, tags: {'phase': 'startup'});
+        runApp(_ErrorApp(message: '$e', stack: st.toString()));
+        debugPrint('STARTUP ERROR: $e\n$st');
+      }
+    }, (error, stack) {
+      Observability.capture(error, stack, tags: {'phase': 'zone'});
+      debugPrint('ZONE ERROR: $error\n$stack');
+    });
   });
 }
 

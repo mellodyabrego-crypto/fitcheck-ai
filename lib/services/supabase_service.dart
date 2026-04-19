@@ -44,11 +44,66 @@ class SupabaseService {
   Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
 
   // ── Storage ───────────────────────────────────────────
+  /// Hard limits for any image we accept into storage. Server-side resize
+  /// happens in image_service; this is the last-line guard before Supabase.
+  static const int _maxImageBytes = 2 * 1024 * 1024; // 2 MB
+
   Future<String> uploadImage(String path, Uint8List bytes) async {
-    await _client.storage
-        .from(AppConstants.wardrobeBucket)
-        .uploadBinary(path, bytes, fileOptions: const FileOptions(upsert: true));
+    if (bytes.lengthInBytes > _maxImageBytes) {
+      throw UploadValidationException(
+        'Image too large (${(bytes.lengthInBytes / 1024 / 1024).toStringAsFixed(1)} MB). '
+        'Max is ${(_maxImageBytes / 1024 / 1024).toStringAsFixed(0)} MB.',
+      );
+    }
+    final mime = _sniffImageMime(bytes);
+    if (mime == null) {
+      throw const UploadValidationException(
+        'That file isn\'t a recognized image (only JPEG / PNG / WebP allowed).',
+      );
+    }
+    await _client.storage.from(AppConstants.wardrobeBucket).uploadBinary(
+          path,
+          bytes,
+          fileOptions: FileOptions(
+            upsert: true,
+            contentType: mime,
+          ),
+        );
     return path;
+  }
+
+  /// Inspect the magic bytes of [bytes] and return one of:
+  ///   - 'image/jpeg', 'image/png', 'image/webp'
+  /// Returns null if no known image header is present.
+  String? _sniffImageMime(Uint8List bytes) {
+    if (bytes.length < 12) return null;
+    // JPEG: FF D8 FF
+    if (bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) {
+      return 'image/jpeg';
+    }
+    // PNG: 89 50 4E 47 0D 0A 1A 0A
+    if (bytes[0] == 0x89 &&
+        bytes[1] == 0x50 &&
+        bytes[2] == 0x4E &&
+        bytes[3] == 0x47 &&
+        bytes[4] == 0x0D &&
+        bytes[5] == 0x0A &&
+        bytes[6] == 0x1A &&
+        bytes[7] == 0x0A) {
+      return 'image/png';
+    }
+    // WebP: "RIFF" .... "WEBP"
+    if (bytes[0] == 0x52 &&
+        bytes[1] == 0x49 &&
+        bytes[2] == 0x46 &&
+        bytes[3] == 0x46 &&
+        bytes[8] == 0x57 &&
+        bytes[9] == 0x45 &&
+        bytes[10] == 0x42 &&
+        bytes[11] == 0x50) {
+      return 'image/webp';
+    }
+    return null;
   }
 
   String getPublicUrl(String path) {
@@ -143,4 +198,11 @@ class SupabaseService {
         .order('created_at', ascending: false);
     return data.map((json) => FitCheck.fromJson(json)).toList();
   }
+}
+
+class UploadValidationException implements Exception {
+  final String message;
+  const UploadValidationException(this.message);
+  @override
+  String toString() => message;
 }

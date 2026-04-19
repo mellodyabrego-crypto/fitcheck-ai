@@ -1,11 +1,11 @@
 {
-    "name": "fitcheck_ai",
-    "short_name": "fitcheck_ai",
+    "name": "Her Style Co.",
+    "short_name": "Her Style Co.",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#EDE5DB",
+    "theme_color": "#C48A96",
+    "description": "Her Style Co. — your AI personal stylist. Upload your wardrobe, get outfit ideas, log your looks.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

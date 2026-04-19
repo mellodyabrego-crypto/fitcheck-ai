@@ -76,14 +76,14 @@ class SettingsScreen extends ConsumerWidget {
           _SettingsTile(
             icon: Icons.description_outlined,
             title: 'Terms of Service',
-            subtitle: 'Coming soon',
-            onTap: null,
+            subtitle: 'How you and we agree to use the app',
+            onTap: () => context.push('/terms'),
           ),
           _SettingsTile(
             icon: Icons.shield_outlined,
             title: 'Privacy Policy',
-            subtitle: 'Coming soon',
-            onTap: null,
+            subtitle: 'What we collect, how we use it, your rights',
+            onTap: () => context.push('/privacy'),
           ),
           _SettingsTile(
             icon: Icons.info_outline,

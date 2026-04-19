@@ -2,14 +2,42 @@ name: Build & Deploy to Cloudflare Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
-  deploy:
+  # ── Quality gate: format + analyze + test on every push/PR ─────────────
+  verify:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6'
+          channel: 'stable'
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Format check
+        # Fails the build if any file isn't formatted.
+        run: dart format --set-exit-if-changed .
+
+      - name: Static analysis
+        # Fails the build on analyzer errors. Warnings still surface in logs.
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        # Skip if no tests exist yet — `flutter test` exits 0 in that case.
+        run: flutter test --no-pub
+
+  # ── Build + deploy. Only runs after verify passes. ─────────────────────
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -32,15 +60,27 @@ jobs:
       - name: Build web
         # Credentials are injected at compile time via --dart-define so they
         # end up in the JS bundle (the .env asset is NOT reliable in prod).
+        # SENTRY_DSN and POSTHOG_API_KEY are optional — services no-op if
+        # blank.
         run: |
           flutter build web --release \
             --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
-            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} \
+            --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+            --dart-define=POSTHOG_API_KEY=${{ secrets.POSTHOG_API_KEY }} \
+            --dart-define=APP_ENV=production
 
       - name: Add Cloudflare Pages config
         run: |
           echo '/*    /index.html    200' > build/web/_redirects
           cat > build/web/_headers << 'HEADERS'
+          /*
+            Strict-Transport-Security: max-age=31536000; includeSubDomains
+            X-Content-Type-Options: nosniff
+            X-Frame-Options: DENY
+            Referrer-Policy: strict-origin-when-cross-origin
+            Permissions-Policy: camera=(self), microphone=(), geolocation=(self), payment=()
+            Content-Security-Policy: default-src 'self'; img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.unsplash.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://us.i.posthog.com https://us-assets.i.posthog.com https://*.ingest.sentry.io https://geocoding-api.open-meteo.com https://api.open-meteo.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
           /main.dart.js
             Cache-Control: no-cache, must-revalidate
           /flutter_bootstrap.js
@@ -58,7 +98,7 @@ jobs:
           HEADERS
 
       - name: Deploy to Cloudflare Pages (Production)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name == 'push'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

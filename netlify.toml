@@ -6,6 +6,23 @@
   to     = "/index.html"
   status = 200
 
+# ── Security headers (apply to every response) ───────────────────────────────
+# CSP must allow:
+#   - Supabase (auth, storage, edge functions, realtime)
+#   - Google Fonts (CSS + font files; needed by GoogleFonts package)
+#   - PostHog (analytics ingest)
+#   - Sentry (error ingest)
+#   - data: + blob: for Flutter canvaskit images
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options    = "nosniff"
+    X-Frame-Options           = "DENY"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(self), microphone=(), geolocation=(self), payment=()"
+    Content-Security-Policy   = "default-src 'self'; img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.unsplash.com; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com https://us.i.posthog.com https://us-assets.i.posthog.com https://*.ingest.sentry.io https://geocoding-api.open-meteo.com https://api.open-meteo.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+
 # Flutter's top-level bootstrap files are NOT content-hashed.
 # They must revalidate on every load — otherwise browsers serve stale JS forever.
 [[headers]]

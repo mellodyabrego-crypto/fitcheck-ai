@@ -5,6 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../main.dart';
 import '../../widgets/walkthrough_overlay.dart';
+import '../../widgets/lazy_indexed_stack.dart';
+import '../../services/analytics_service.dart';
 import '../wardrobe/wardrobe_screen.dart';
 import '../outfits/outfit_history_screen.dart';
 import '../shop/shop_screen.dart';
@@ -67,7 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return WalkthroughOverlay(
       child: Scaffold(
-      body: IndexedStack(
+      body: LazyIndexedStack(
         index: currentTab,
         children: _screens,
       ),
@@ -87,13 +89,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         child: BottomNavigationBar(
           currentIndex: currentTab,
-          onTap: (index) => ref.read(homeTabProvider.notifier).state = index,
+          onTap: (index) {
+            ref.read(homeTabProvider.notifier).state = index;
+            const tabNames = [
+              'closet', 'outfits', 'shop', 'network', 'calendar', 'fashion', 'profile',
+            ];
+            Analytics.screen('home_tab', props: {'tab': tabNames[index]});
+          },
           selectedFontSize: 10,
           unselectedFontSize: 10,
           iconSize: 22,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          selectedItemColor: AppTheme.primary,
+          // primaryDeep meets WCAG AA contrast vs white; primary (#C48A96)
+          // does not (3.2:1).
+          selectedItemColor: AppTheme.primaryDeep,
           unselectedItemColor: AppTheme.textSecondary,
           type: BottomNavigationBarType.fixed,
           items: const [

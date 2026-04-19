@@ -20,6 +20,19 @@ class GRWMApp extends ConsumerWidget {
       themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      // Honor the user's OS-level text scaling, but clamp it so layouts don't
+      // blow up at extreme settings (a11y best practice — never ignore it).
+      builder: (context, child) {
+        final media = MediaQuery.of(context);
+        final clamped = media.textScaler.clamp(
+          minScaleFactor: 0.85,
+          maxScaleFactor: 1.4,
+        );
+        return MediaQuery(
+          data: media.copyWith(textScaler: clamped),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

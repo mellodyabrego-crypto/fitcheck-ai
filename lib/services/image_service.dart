@@ -162,26 +162,28 @@ class ImageService {
     }
   }
 
-  /// Compress and resize image to target dimensions
-  Uint8List compressImage(Uint8List bytes, {int maxSize = 512}) {
+  /// Resize the longest edge to [maxSize] (default 800px) and re-encode as
+  /// JPEG quality 85. Use this for anything that hits Supabase storage —
+  /// keeps bytes-on-disk predictable and strips EXIF.
+  Uint8List compressImage(Uint8List bytes, {int maxSize = 800}) {
     final image = img.decodeImage(bytes);
     if (image == null) return bytes;
-
-    final resized = img.copyResize(
-      image,
-      width: image.width > image.height ? maxSize : null,
-      height: image.height >= image.width ? maxSize : null,
-    );
-
-    return Uint8List.fromList(img.encodePng(resized));
+    final needsResize = image.width > maxSize || image.height > maxSize;
+    final resized = needsResize
+        ? img.copyResize(
+            image,
+            width: image.width >= image.height ? maxSize : null,
+            height: image.height > image.width ? maxSize : null,
+          )
+        : image;
+    return Uint8List.fromList(img.encodeJpg(resized, quality: 85));
   }
 
-  /// Create a thumbnail version
+  /// Create a square thumbnail. Encoded as JPEG to keep storage cheap.
   Uint8List createThumbnail(Uint8List bytes, {int size = 200}) {
     final image = img.decodeImage(bytes);
     if (image == null) return bytes;
-
     final thumb = img.copyResizeCropSquare(image, size: size);
-    return Uint8List.fromList(img.encodePng(thumb));
+    return Uint8List.fromList(img.encodeJpg(thumb, quality: 80));
   }
 }

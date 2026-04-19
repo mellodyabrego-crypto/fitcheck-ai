@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme.dart';
+import '../services/analytics_service.dart';
 
 const _walkthroughStorageKey = 'fitcheck_walkthrough_seen';
 
@@ -46,12 +47,29 @@ class _WalkthroughOverlayState extends ConsumerState<WalkthroughOverlay> {
   }
 
   void _showWalkthrough() {
-    ref.read(walkthroughSeenProvider.notifier).state = true;
-    _saveWalkthroughSeen();
+    Analytics.track(AnalyticsEvents.walkthroughShown);
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // Allow dismissing via barrier tap — but we still mark "seen" only on
+      // explicit completion or skip below.
+      barrierDismissible: true,
       builder: (_) => const _WalkthroughDialog(),
+    ).then((_) {
+      // If the user dismissed via barrier we treat it as a skip.
+      if (!ref.read(walkthroughSeenProvider)) {
+        _markSeen(reason: 'dismissed');
+      }
+    });
+  }
+
+  void _markSeen({required String reason}) {
+    ref.read(walkthroughSeenProvider.notifier).state = true;
+    _saveWalkthroughSeen();
+    Analytics.track(
+      reason == 'completed'
+          ? AnalyticsEvents.walkthroughCompleted
+          : AnalyticsEvents.walkthroughSkipped,
+      props: {'reason': reason},
     );
   }
 
@@ -59,13 +77,13 @@ class _WalkthroughOverlayState extends ConsumerState<WalkthroughOverlay> {
   Widget build(BuildContext context) => widget.child;
 }
 
-class _WalkthroughDialog extends StatefulWidget {
+class _WalkthroughDialog extends ConsumerStatefulWidget {
   const _WalkthroughDialog();
   @override
-  State<_WalkthroughDialog> createState() => _WalkthroughDialogState();
+  ConsumerState<_WalkthroughDialog> createState() => _WalkthroughDialogState();
 }
 
-class _WalkthroughDialogState extends State<_WalkthroughDialog> {
+class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
   int _step = 0;
 
   static const _steps = [
@@ -114,6 +132,33 @@ class _WalkthroughDialogState extends State<_WalkthroughDialog> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    Analytics.track(AnalyticsEvents.walkthroughStepReached, props: {'step': 0});
+  }
+
+  void _goToStep(int next) {
+    setState(() => _step = next);
+    Analytics.track(AnalyticsEvents.walkthroughStepReached, props: {'step': next});
+  }
+
+  void _complete() {
+    ref.read(walkthroughSeenProvider.notifier).state = true;
+    _saveWalkthroughSeen();
+    Analytics.track(AnalyticsEvents.walkthroughCompleted,
+        props: {'final_step': _step});
+    Navigator.pop(context);
+  }
+
+  void _skip() {
+    ref.read(walkthroughSeenProvider.notifier).state = true;
+    _saveWalkthroughSeen();
+    Analytics.track(AnalyticsEvents.walkthroughSkipped,
+        props: {'step_when_skipped': _step});
+    Navigator.pop(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final step = _steps[_step];
     final isLast = _step == _steps.length - 1;
@@ -121,10 +166,24 @@ class _WalkthroughDialogState extends State<_WalkthroughDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Padding(
-        padding: const EdgeInsets.all(28),
+        padding: const EdgeInsets.fromLTRB(28, 16, 28, 28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Top row: skip-tour close icon (always visible)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Semantics(
+                label: 'Close walkthrough',
+                button: true,
+                child: IconButton(
+                  icon: const Icon(Icons.close, size: 20),
+                  color: AppTheme.textSecondary,
+                  onPressed: _skip,
+                  tooltip: 'Skip tour',
+                ),
+              ),
+            ),
             // Progress dots
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -153,11 +212,14 @@ class _WalkthroughDialogState extends State<_WalkthroughDialog> {
             const SizedBox(height: 18),
 
             // Title
-            Text(step.title,
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: step.color)),
+            Semantics(
+              header: true,
+              child: Text(step.title,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: step.color)),
+            ),
             const SizedBox(height: 12),
 
             // Body
@@ -175,7 +237,7 @@ class _WalkthroughDialogState extends State<_WalkthroughDialog> {
                 if (_step > 0)
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => setState(() => _step--),
+                      onPressed: () => _goToStep(_step - 1),
                       child: const Text('Back'),
                     ),
                   ),
@@ -185,9 +247,9 @@ class _WalkthroughDialogState extends State<_WalkthroughDialog> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (isLast) {
-                        Navigator.pop(context);
+                        _complete();
                       } else {
-                        setState(() => _step++);
+                        _goToStep(_step + 1);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -198,14 +260,14 @@ class _WalkthroughDialogState extends State<_WalkthroughDialog> {
               ],
             ),
 
-            if (!isLast) ...[
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Skip tour',
-                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
-              ),
-            ],
+            // Persistent skip — visible on every step including the last so
+            // users always have a low-friction way out.
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: _skip,
+              child: const Text('Skip tour',
+                  style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+            ),
           ],
         ),
       ),

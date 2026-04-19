@@ -1,5 +1,5 @@
 name: grwm
-description: "The Candy Shop - AI-powered wardrobe stylist."
+description: "Her Style Co. — AI-powered personal stylist."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -67,6 +67,12 @@ dependencies:
 
   # Location
   geolocator: ^13.0.1
+
+  # Observability
+  sentry_flutter: ^8.10.1
+
+  # Analytics (web-supported)
+  posthog_flutter: ^4.10.0
 
 dev_dependencies:
   flutter_test:

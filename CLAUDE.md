@@ -100,3 +100,12 @@ A lot of UI exists that's deliberately marked as preview until the backend/featu
 
 ## Dev server
 - Port 3003 is the current dev port: `flutter run -d web-server --web-port 3003 --web-hostname 0.0.0.0`
+
+## Session start — ALWAYS ASK FIRST
+Before doing any work in this project, ask Ben/Mellody:
+> "Where are we on the user roadmap today — still pre-200, climbing to 1K, 5K, 10K, 25K, or 100K? And what's the top number you're watching this week (retention, signups, cost, something else)?"
+
+Use their answer to pick the right advice tier in `ROADMAP.md`. Do not skip this step, even for small tasks — a tiny refactor can conflict with a scale-tier priority.
+
+## Roadmap
+See [ROADMAP.md](ROADMAP.md) for the 1K / 5K / 10K / 25K / 100K tier checklists and what breaks at each level.

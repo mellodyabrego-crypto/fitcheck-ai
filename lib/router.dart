@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -5,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'main.dart';
 import 'features/auth/auth_screen.dart';
 import 'features/home/home_screen.dart';
+import 'features/legal/legal_screen.dart';
 import 'features/wardrobe/add_item_screen.dart';
 import 'features/outfits/outfit_screen.dart';
 import 'features/outfits/generate_screen.dart';
@@ -14,9 +16,33 @@ import 'features/settings/settings_screen.dart';
 import 'features/profile/edit_profile_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 
+// Routes that don't require authentication — kept in sync with the redirect.
+const _publicRoutes = {'/auth', '/terms', '/privacy'};
+
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/home',
+    errorBuilder: (context, state) => Scaffold(
+      appBar: AppBar(title: const Text('Page not found')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.search_off, size: 56),
+            const SizedBox(height: 12),
+            Text(
+              'We couldn\'t find ${state.uri.path}',
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => context.go('/home'),
+              child: const Text('Go home'),
+            ),
+          ],
+        ),
+      ),
+    ),
     redirect: (context, state) {
       if (kDemoMode) return null;
 
@@ -30,8 +56,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = session != null;
       final location = state.matchedLocation;
 
-      // Not logged in — send to auth
-      if (!isLoggedIn && location != '/auth') return '/auth';
+      // Not logged in — allow public routes; otherwise send to auth
+      if (!isLoggedIn && !_publicRoutes.contains(location)) return '/auth';
 
       // Logged in but stuck on auth — go to onboarding (onboarding will skip to home if already done)
       if (isLoggedIn && location == '/auth') return '/onboarding';
@@ -82,6 +108,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/terms',
+        builder: (context, state) => LegalScreen.terms(),
+      ),
+      GoRoute(
+        path: '/privacy',
+        builder: (context, state) => LegalScreen.privacy(),
       ),
     ],
   );
