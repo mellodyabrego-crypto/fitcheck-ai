@@ -11,7 +11,8 @@ import 'wardrobe_controller.dart';
 import 'item_detail_screen.dart';
 
 // null = folder view, a category = filtered items view
-final selectedCategoryProvider = StateProvider<ClothingCategory?>((ref) => null);
+final selectedCategoryProvider =
+    StateProvider<ClothingCategory?>((ref) => null);
 final _showingFolderView = StateProvider<bool>((ref) => true);
 
 class WardrobeScreen extends ConsumerWidget {
@@ -60,7 +61,8 @@ class WardrobeScreen extends ConsumerWidget {
         ),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
-        extendedPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 4),
+        extendedPadding:
+            const EdgeInsets.symmetric(horizontal: 22, vertical: 4),
         extendedIconLabelSpacing: 10,
       ),
     );
@@ -165,13 +167,13 @@ class _FolderGrid extends ConsumerWidget {
 
   String _categoryEmoji(ClothingCategory cat) {
     return switch (cat) {
-      ClothingCategory.tops        => '👚',
-      ClothingCategory.bottoms     => '👖',
-      ClothingCategory.dresses     => '👗',
-      ClothingCategory.shoes       => '👠',
-      ClothingCategory.outerwear   => '🧥',
+      ClothingCategory.tops => '👚',
+      ClothingCategory.bottoms => '👖',
+      ClothingCategory.dresses => '👗',
+      ClothingCategory.shoes => '👠',
+      ClothingCategory.outerwear => '🧥',
       ClothingCategory.accessories => '💍',
-      ClothingCategory.bags        => '👜',
+      ClothingCategory.bags => '👜',
     };
   }
 
@@ -224,7 +226,8 @@ class _FolderTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.10),
                 shape: BoxShape.circle,
-                border: Border.all(color: color.withValues(alpha: 0.30), width: 1),
+                border:
+                    Border.all(color: color.withValues(alpha: 0.30), width: 1),
               ),
               alignment: Alignment.center,
               child: emoji != null
@@ -253,7 +256,9 @@ class _FolderTile extends StatelessWidget {
                 ),
                 child: Text(badge!,
                     style: TextStyle(
-                        fontSize: 9, color: color, fontWeight: FontWeight.w700)),
+                        fontSize: 9,
+                        color: color,
+                        fontWeight: FontWeight.w700)),
               )
             else
               Text(
@@ -292,7 +297,8 @@ class _ItemsGrid extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(category?.icon ?? Icons.checkroom, size: 64,
+                Icon(category?.icon ?? Icons.checkroom,
+                    size: 64,
                     color: AppTheme.textSecondary.withValues(alpha: 0.4)),
                 const SizedBox(height: 16),
                 Text(
@@ -313,15 +319,18 @@ class _ItemsGrid extends ConsumerWidget {
             if (isSample)
               Container(
                 margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: AppTheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+                  border: Border.all(
+                      color: AppTheme.primary.withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.auto_awesome, size: 16, color: AppTheme.primary),
+                    const Icon(Icons.auto_awesome,
+                        size: 16, color: AppTheme.primary),
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
@@ -356,8 +365,7 @@ class _ItemsGrid extends ConsumerWidget {
                           ? null
                           : () => Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) =>
-                                      ItemDetailScreen(item: item),
+                                  builder: (_) => ItemDetailScreen(item: item),
                                 ),
                               ),
                     ),

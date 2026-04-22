@@ -16,15 +16,20 @@ class ClaudeService {
     required String occasion,
     String? weather,
   }) async {
-    final itemsList = wardrobeItems.map((item) => {
-      'id': item.id,
-      'category': item.category.name,
-      'subcategory': item.subcategory ?? 'unknown',
-      'color': item.color ?? 'unknown',
-      'name': item.name ?? '${item.color ?? ''} ${item.subcategory ?? item.category.label}'.trim(),
-    }).toList();
+    final itemsList = wardrobeItems
+        .map((item) => {
+              'id': item.id,
+              'category': item.category.name,
+              'subcategory': item.subcategory ?? 'unknown',
+              'color': item.color ?? 'unknown',
+              'name': item.name ??
+                  '${item.color ?? ''} ${item.subcategory ?? item.category.label}'
+                      .trim(),
+            })
+        .toList();
 
-    final prompt = '''You are an expert fashion stylist. Given a user's wardrobe items, suggest one complete outfit for the occasion: "$occasion".
+    final prompt =
+        '''You are an expert fashion stylist. Given a user's wardrobe items, suggest one complete outfit for the occasion: "$occasion".
 ${weather != null ? 'Current weather: $weather' : ''}
 
 Wardrobe items (JSON):
@@ -62,7 +67,8 @@ Respond with ONLY valid JSON in this exact format:
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Claude API error: ${response.statusCode} ${response.body}');
+      throw Exception(
+          'Claude API error: ${response.statusCode} ${response.body}');
     }
 
     final body = jsonDecode(response.body);
@@ -85,7 +91,8 @@ Respond with ONLY valid JSON in this exact format:
 
   String _extractJson(String text) {
     // Try to find JSON in code blocks first
-    final codeBlockMatch = RegExp(r'```(?:json)?\s*([\s\S]*?)```').firstMatch(text);
+    final codeBlockMatch =
+        RegExp(r'```(?:json)?\s*([\s\S]*?)```').firstMatch(text);
     if (codeBlockMatch != null) return codeBlockMatch.group(1)!.trim();
 
     // Otherwise find the first { ... } block

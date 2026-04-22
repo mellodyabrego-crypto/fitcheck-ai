@@ -22,7 +22,8 @@ final outfitDetailProvider =
     return _OutfitDetail(
       outfit: local.outfit,
       items: local.items
-          .map((wi) => _OutfitItemDetail(slot: wi.category.name, wardrobeItem: wi))
+          .map((wi) =>
+              _OutfitItemDetail(slot: wi.category.name, wardrobeItem: wi))
           .toList(),
     );
   }
@@ -30,23 +31,47 @@ final outfitDetailProvider =
   if (kDemoMode) {
     return _OutfitDetail(
       outfit: Outfit(
-        id: outfitId, userId: 'demo', occasion: 'casual',
-        reasoning: 'The white tee and slim jeans create a timeless casual look. White sneakers keep everything cohesive and clean.',
+        id: outfitId,
+        userId: 'demo',
+        occasion: 'casual',
+        reasoning:
+            'The white tee and slim jeans create a timeless casual look. White sneakers keep everything cohesive and clean.',
         createdAt: DateTime.now(),
       ),
       items: [
-        _OutfitItemDetail(slot: 'top', wardrobeItem: WardrobeItem(
-          id: '1', userId: 'demo', category: ClothingCategory.tops,
-          color: 'White', imagePath: 'demo', name: 'White Tee', createdAt: DateTime.now(),
-        )),
-        _OutfitItemDetail(slot: 'bottom', wardrobeItem: WardrobeItem(
-          id: '3', userId: 'demo', category: ClothingCategory.bottoms,
-          color: 'Dark Blue', imagePath: 'demo', name: 'Slim Jeans', createdAt: DateTime.now(),
-        )),
-        _OutfitItemDetail(slot: 'shoes', wardrobeItem: WardrobeItem(
-          id: '5', userId: 'demo', category: ClothingCategory.shoes,
-          color: 'White', imagePath: 'demo', name: 'White Sneakers', createdAt: DateTime.now(),
-        )),
+        _OutfitItemDetail(
+            slot: 'top',
+            wardrobeItem: WardrobeItem(
+              id: '1',
+              userId: 'demo',
+              category: ClothingCategory.tops,
+              color: 'White',
+              imagePath: 'demo',
+              name: 'White Tee',
+              createdAt: DateTime.now(),
+            )),
+        _OutfitItemDetail(
+            slot: 'bottom',
+            wardrobeItem: WardrobeItem(
+              id: '3',
+              userId: 'demo',
+              category: ClothingCategory.bottoms,
+              color: 'Dark Blue',
+              imagePath: 'demo',
+              name: 'Slim Jeans',
+              createdAt: DateTime.now(),
+            )),
+        _OutfitItemDetail(
+            slot: 'shoes',
+            wardrobeItem: WardrobeItem(
+              id: '5',
+              userId: 'demo',
+              category: ClothingCategory.shoes,
+              color: 'White',
+              imagePath: 'demo',
+              name: 'White Sneakers',
+              createdAt: DateTime.now(),
+            )),
       ],
     );
   }
@@ -60,9 +85,8 @@ final outfitDetailProvider =
     final wardrobeItems = await supabase.getWardrobeItems();
 
     final itemsWithDetails = outfitItems.map((oi) {
-      final wardrobeItem = wardrobeItems
-          .where((wi) => wi.id == oi.wardrobeItemId)
-          .firstOrNull;
+      final wardrobeItem =
+          wardrobeItems.where((wi) => wi.id == oi.wardrobeItemId).firstOrNull;
       return _OutfitItemDetail(slot: oi.slot, wardrobeItem: wardrobeItem);
     }).toList();
 
@@ -128,10 +152,11 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                   .where((i) => i.wardrobeItem != null)
                   .map((i) => i.wardrobeItem!)
                   .toList();
-              final shared = await ref.read(shareServiceProvider).shareOutfitCard(
-                    occasion: detail.outfit.occasion ?? 'outfit',
-                    items: items,
-                  );
+              final shared =
+                  await ref.read(shareServiceProvider).shareOutfitCard(
+                        occasion: detail.outfit.occasion ?? 'outfit',
+                        items: items,
+                      );
               if (!shared && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -144,131 +169,134 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
           ),
         ],
       ),
-      body: WithDecorations(sparse: true, child: detailAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-        data: (detail) => SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Occasion badge
-              if (detail.outfit.occasion != null)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      detail.outfit.occasion!.toUpperCase(),
-                      style: const TextStyle(
-                        color: AppTheme.primary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
+      body: WithDecorations(
+        sparse: true,
+        child: detailAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Error: $e')),
+          data: (detail) => SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Occasion badge
+                if (detail.outfit.occasion != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ),
-                  ),
-                ),
-
-              const SizedBox(height: 20),
-
-              // Outfit items grid
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.8,
-                ),
-                itemCount: detail.items.length,
-                itemBuilder: (context, index) {
-                  final item = detail.items[index];
-                  return _OutfitItemCard(item: item);
-                },
-              ),
-
-              const SizedBox(height: 24),
-
-              // Reasoning
-              if (detail.outfit.reasoning != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primary.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: AppTheme.primary.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.auto_awesome,
-                          color: AppTheme.primary, size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          detail.outfit.reasoning!,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            height: 1.5,
-                          ),
+                      child: Text(
+                        detail.outfit.occasion!.toUpperCase(),
+                        style: const TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
                         ),
                       ),
-                    ],
+                    ),
                   ),
+
+                const SizedBox(height: 20),
+
+                // Outfit items grid
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: detail.items.length,
+                  itemBuilder: (context, index) {
+                    final item = detail.items[index];
+                    return _OutfitItemCard(item: item);
+                  },
                 ),
+
                 const SizedBox(height: 24),
-              ],
 
-              // Generate Again button
-              OutlinedButton.icon(
-                onPressed: _isRegenerating
-                    ? null
-                    : () => _generateAgain(detail.outfit.occasion ?? 'casual'),
-                icon: _isRegenerating
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: AppTheme.primary),
-                      )
-                    : const Icon(Icons.refresh),
-                label: Text(_isRegenerating
-                    ? 'Generating…'
-                    : 'Generate Again'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppTheme.primary,
-                  side: const BorderSide(color: AppTheme.primary, width: 1.5),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                // Reasoning
+                if (detail.outfit.reasoning != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppTheme.primary.withValues(alpha: 0.1),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.auto_awesome,
+                            color: AppTheme.primary, size: 20),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            detail.outfit.reasoning!,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+
+                // Generate Again button
+                OutlinedButton.icon(
+                  onPressed: _isRegenerating
+                      ? null
+                      : () =>
+                          _generateAgain(detail.outfit.occasion ?? 'casual'),
+                  icon: _isRegenerating
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: AppTheme.primary),
+                        )
+                      : const Icon(Icons.refresh),
+                  label:
+                      Text(_isRegenerating ? 'Generating…' : 'Generate Again'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.primary,
+                    side: const BorderSide(color: AppTheme.primary, width: 1.5),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // Fit Check button
-              ElevatedButton.icon(
-                onPressed: () => context.push('/fit-check/$outfitId'),
-                icon: const Icon(Icons.star),
-                label: const Text('Get Fit Check Score'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.accent,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                // Fit Check button
+                ElevatedButton.icon(
+                  onPressed: () => context.push('/fit-check/$outfitId'),
+                  icon: const Icon(Icons.star),
+                  label: const Text('Get Fit Check Score'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accent,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),),
+      ),
     );
   }
 }
@@ -301,20 +329,20 @@ class _OutfitItemCard extends StatelessWidget {
   String _shopUrl(WardrobeItem? wi) {
     if (wi == null) return 'https://fashionnova.com';
     return switch (wi.category) {
-      ClothingCategory.dresses     => 'https://fashionnova.com/collections/dresses',
-      ClothingCategory.tops        => 'https://fashionnova.com/collections/tops',
-      ClothingCategory.bottoms     => 'https://fashionnova.com/collections/bottoms',
-      ClothingCategory.shoes       => 'https://stevemadden.com',
-      ClothingCategory.bags        => 'https://fashionnova.com/collections/bags',
+      ClothingCategory.dresses => 'https://fashionnova.com/collections/dresses',
+      ClothingCategory.tops => 'https://fashionnova.com/collections/tops',
+      ClothingCategory.bottoms => 'https://fashionnova.com/collections/bottoms',
+      ClothingCategory.shoes => 'https://stevemadden.com',
+      ClothingCategory.bags => 'https://fashionnova.com/collections/bags',
       ClothingCategory.accessories => 'https://mejuri.com',
-      ClothingCategory.outerwear   => 'https://zara.com',
+      ClothingCategory.outerwear => 'https://zara.com',
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    final wi      = item.wardrobeItem;
-    final hasUrl  = wi?.imagePath.startsWith('http') ?? false;
+    final wi = item.wardrobeItem;
+    final hasUrl = wi?.imagePath.startsWith('http') ?? false;
 
     return GestureDetector(
       onTap: () async {
@@ -322,7 +350,8 @@ class _OutfitItemCard extends StatelessWidget {
             ? _shopUrl(wi)
             : _shopUrl(wi);
         final uri = Uri.parse(url);
-        if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
+        if (await canLaunchUrl(uri))
+          launchUrl(uri, mode: LaunchMode.externalApplication);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -362,7 +391,8 @@ class _OutfitItemCard extends StatelessWidget {
                           return Container(
                             color: Colors.grey.shade100,
                             child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2)),
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2)),
                           );
                         },
                       )
@@ -393,7 +423,9 @@ class _OutfitItemCard extends StatelessWidget {
                       ),
                     // "Shop" overlay badge
                     Positioned(
-                      bottom: 0, left: 0, right: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(

@@ -63,10 +63,9 @@ class UserProfile {
       location: json['location'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
-      goals: (json['goals'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
+      goals:
+          (json['goals'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              [],
       ageRange: json['age_range'] as String?,
       brands: (json['brands'] as List<dynamic>?)
               ?.map((e) => e as String)

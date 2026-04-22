@@ -134,14 +134,14 @@ class OutfitController extends AsyncNotifier<void> {
 
     // Persist in local store
     ref.read(localOutfitStoreProvider.notifier).update(
-          (list) => [...list, LocalOutfitStore(outfit: outfit, items: selectedItems)],
+          (list) =>
+              [...list, LocalOutfitStore(outfit: outfit, items: selectedItems)],
         );
 
     // Auto-save to My Photos (AI-generated card with first item's image)
-    final firstWithUrl = selectedItems
-        .cast<WardrobeItem?>()
-        .firstWhere((i) => i?.imagePath.startsWith('http') ?? false,
-            orElse: () => null);
+    final firstWithUrl = selectedItems.cast<WardrobeItem?>().firstWhere(
+        (i) => i?.imagePath.startsWith('http') ?? false,
+        orElse: () => null);
     final photo = RatedPhoto(
       networkUrl: firstWithUrl?.imagePath,
       isAiGenerated: true,
@@ -162,13 +162,19 @@ class OutfitController extends AsyncNotifier<void> {
 
   /// Ensure an outfit has the essentials: (top+bottom OR dress) + shoes + bag + accessory.
   /// If a slot is missing, pull the first matching item from sourceItems.
-  List<WardrobeItem> _topUpMissingSlots(
-      List<WardrobeItem> current,
-      List<WardrobeItem> sourceItems,
-      String occasion) {
+  List<WardrobeItem> _topUpMissingSlots(List<WardrobeItem> current,
+      List<WardrobeItem> sourceItems, String occasion) {
     final result = List<WardrobeItem>.from(current);
     final has = <String, bool>{
-      for (final c in ['tops', 'bottoms', 'dresses', 'shoes', 'bags', 'accessories', 'outerwear'])
+      for (final c in [
+        'tops',
+        'bottoms',
+        'dresses',
+        'shoes',
+        'bags',
+        'accessories',
+        'outerwear'
+      ])
         c: result.any((i) => i.category.name == c),
     };
 
@@ -211,18 +217,21 @@ class OutfitController extends AsyncNotifier<void> {
   /// Always returns 5–6 items: top/dress + bottom + shoes + bag + 1-2 accessories.
   List<WardrobeItem> _pickDefaultItems(
       List<WardrobeItem> items, String occasion, String? colorSeason) {
-    final tops        = items.where((i) => i.category.name == 'tops').toList();
-    final bottoms     = items.where((i) => i.category.name == 'bottoms').toList();
-    final shoes       = items.where((i) => i.category.name == 'shoes').toList();
-    final dresses     = items.where((i) => i.category.name == 'dresses').toList();
-    final bags        = items.where((i) => i.category.name == 'bags').toList();
-    final accessories = items.where((i) => i.category.name == 'accessories').toList();
-    final outerwear   = items.where((i) => i.category.name == 'outerwear').toList();
+    final tops = items.where((i) => i.category.name == 'tops').toList();
+    final bottoms = items.where((i) => i.category.name == 'bottoms').toList();
+    final shoes = items.where((i) => i.category.name == 'shoes').toList();
+    final dresses = items.where((i) => i.category.name == 'dresses').toList();
+    final bags = items.where((i) => i.category.name == 'bags').toList();
+    final accessories =
+        items.where((i) => i.category.name == 'accessories').toList();
+    final outerwear =
+        items.where((i) => i.category.name == 'outerwear').toList();
 
     final result = <WardrobeItem>[];
 
     // Base: dress for dressy occasions, otherwise top + bottom
-    final isDressy = occasion == 'date_night' || occasion == 'formal' || occasion == 'party';
+    final isDressy =
+        occasion == 'date_night' || occasion == 'formal' || occasion == 'party';
     if (isDressy && dresses.isNotEmpty) {
       result.add(dresses.first);
     } else {
@@ -242,7 +251,8 @@ class OutfitController extends AsyncNotifier<void> {
     }
 
     // Outerwear for cold-weather occasions
-    if (outerwear.isNotEmpty && result.length < 6 &&
+    if (outerwear.isNotEmpty &&
+        result.length < 6 &&
         (occasion == 'work' || occasion == 'casual')) {
       result.add(outerwear.first);
     }

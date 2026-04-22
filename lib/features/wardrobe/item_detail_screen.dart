@@ -26,9 +26,12 @@ class ItemDetailScreen extends ConsumerWidget {
                 context: context,
                 builder: (ctx) => AlertDialog(
                   title: const Text('Delete Item?'),
-                  content: const Text('This will permanently remove this item from your wardrobe.'),
+                  content: const Text(
+                      'This will permanently remove this item from your wardrobe.'),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                    TextButton(
+                        onPressed: () => Navigator.pop(ctx, false),
+                        child: const Text('Cancel')),
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, true),
                       style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -38,7 +41,9 @@ class ItemDetailScreen extends ConsumerWidget {
                 ),
               );
               if (confirmed == true && context.mounted) {
-                await ref.read(wardrobeControllerProvider.notifier).deleteItem(item);
+                await ref
+                    .read(wardrobeControllerProvider.notifier)
+                    .deleteItem(item);
                 if (context.mounted) {
                   context.showSnackBar('Item deleted');
                   context.pop();
@@ -48,95 +53,102 @@ class ItemDetailScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: WithDecorations(sparse: true, child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            Center(
-              child: Container(
-                width: 220,
-                height: 220,
-                decoration: BoxDecoration(
-                  color: _colorFromName(item.color),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(item.category.icon, size: 56,
-                          color: Colors.white.withValues(alpha: 0.9)),
-                      const SizedBox(height: 8),
-                      Text(
-                        item.color ?? '',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+      body: WithDecorations(
+        sparse: true,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image
+              Center(
+                child: Container(
+                  width: 220,
+                  height: 220,
+                  decoration: BoxDecoration(
+                    color: _colorFromName(item.color),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(item.category.icon,
+                            size: 56,
+                            color: Colors.white.withValues(alpha: 0.9)),
+                        const SizedBox(height: 8),
+                        Text(
+                          item.color ?? '',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-            // Details
-            _DetailRow(label: 'Category', value: item.category.label),
-            if (item.subcategory != null)
-              _DetailRow(label: 'Type', value: item.subcategory!),
-            if (item.color != null)
-              _DetailRow(label: 'Color', value: item.color!),
-            if (item.brand != null)
-              _DetailRow(label: 'Brand', value: item.brand!),
-            if (item.season != null)
-              _DetailRow(label: 'Season', value: item.season!),
+              // Details
+              _DetailRow(label: 'Category', value: item.category.label),
+              if (item.subcategory != null)
+                _DetailRow(label: 'Type', value: item.subcategory!),
+              if (item.color != null)
+                _DetailRow(label: 'Color', value: item.color!),
+              if (item.brand != null)
+                _DetailRow(label: 'Brand', value: item.brand!),
+              if (item.season != null)
+                _DetailRow(label: 'Season', value: item.season!),
 
-            const SizedBox(height: 24),
-
-            // Stats
-            Row(
-              children: [
-                _StatChip(
-                  icon: Icons.repeat,
-                  value: '${item.wearCount}',
-                  label: 'Times Worn',
-                ),
-                const SizedBox(width: 12),
-                if (item.purchasePrice != null)
-                  _StatChip(
-                    icon: Icons.attach_money,
-                    value: '\$${item.purchasePrice!.toStringAsFixed(0)}',
-                    label: 'Price',
-                  ),
-                if (item.costPerWear != null) ...[
-                  const SizedBox(width: 12),
-                  _StatChip(
-                    icon: Icons.trending_down,
-                    value: '\$${item.costPerWear!.toStringAsFixed(2)}',
-                    label: 'Cost/Wear',
-                  ),
-                ],
-              ],
-            ),
-
-            if (item.tags != null && item.tags!.isNotEmpty) ...[
               const SizedBox(height: 24),
-              const Text('Tags', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: item.tags!.map((t) => Chip(label: Text(t))).toList(),
+
+              // Stats
+              Row(
+                children: [
+                  _StatChip(
+                    icon: Icons.repeat,
+                    value: '${item.wearCount}',
+                    label: 'Times Worn',
+                  ),
+                  const SizedBox(width: 12),
+                  if (item.purchasePrice != null)
+                    _StatChip(
+                      icon: Icons.attach_money,
+                      value: '\$${item.purchasePrice!.toStringAsFixed(0)}',
+                      label: 'Price',
+                    ),
+                  if (item.costPerWear != null) ...[
+                    const SizedBox(width: 12),
+                    _StatChip(
+                      icon: Icons.trending_down,
+                      value: '\$${item.costPerWear!.toStringAsFixed(2)}',
+                      label: 'Cost/Wear',
+                    ),
+                  ],
+                ],
               ),
+
+              if (item.tags != null && item.tags!.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                const Text('Tags',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children:
+                      item.tags!.map((t) => Chip(label: Text(t))).toList(),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),),
+      ),
     );
   }
 
@@ -167,8 +179,11 @@ class _DetailRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: AppTheme.textSecondary, fontSize: 15)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+          Text(label,
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 15)),
+          Text(value,
+              style:
+                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
         ],
       ),
     );
@@ -180,7 +195,8 @@ class _StatChip extends StatelessWidget {
   final String value;
   final String label;
 
-  const _StatChip({required this.icon, required this.value, required this.label});
+  const _StatChip(
+      {required this.icon, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -196,8 +212,11 @@ class _StatChip extends StatelessWidget {
           children: [
             Icon(icon, size: 20, color: AppTheme.primary),
             const SizedBox(height: 4),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-            Text(label, style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+            Text(value,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+            Text(label,
+                style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
           ],
         ),
       ),

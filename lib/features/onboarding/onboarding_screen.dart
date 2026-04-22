@@ -34,7 +34,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     // Auto-skip if already complete, UNLESS user explicitly navigated here
     // to retake the quiz (`/onboarding?retake=true`).
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final retake = GoRouterState.of(context).uri.queryParameters['retake'] == 'true';
+      final retake =
+          GoRouterState.of(context).uri.queryParameters['retake'] == 'true';
       if (!kDemoMode && !retake) _skipIfAlreadyOnboarded();
     });
   }
@@ -132,16 +133,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         }
       } catch (e) {
         saveFailed = true;
-        saveError = 'Could not save to cloud: $e. Preferences saved on this device only.';
+        saveError =
+            'Could not save to cloud: $e. Preferences saved on this device only.';
       }
     }
 
     // Push user preferences to providers so the rest of the app reflects them immediately.
     if (_topSize != null) ref.read(topSizeProvider.notifier).state = _topSize;
-    if (_bottomSize != null) ref.read(bottomSizeProvider.notifier).state = _bottomSize;
-    if (_shoeSize != null) ref.read(shoeSizeProvider.notifier).state = _shoeSize;
+    if (_bottomSize != null)
+      ref.read(bottomSizeProvider.notifier).state = _bottomSize;
+    if (_shoeSize != null)
+      ref.read(shoeSizeProvider.notifier).state = _shoeSize;
     if (_selectedColors.isNotEmpty) {
-      ref.read(favoriteColorsProvider.notifier).state = _selectedColors.toList();
+      ref.read(favoriteColorsProvider.notifier).state =
+          _selectedColors.toList();
     }
     // The skin-tone picker writes the AI-detected season to the undertone field.
     // Map it to the four-season palette so Palette Picks can use it.
@@ -204,187 +209,187 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       body: WithDecorations(
         sparse: true,
         child: SafeArea(
-        child: Column(
-          children: [
-            // Progress bar + nav
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Row(
-                children: [
-                  if (_currentPage > 0)
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: _prevPage,
-                    )
-                  else
-                    const SizedBox(width: 48),
-                  Expanded(
-                    child: Row(
-                      children: List.generate(_totalPages, (i) {
-                        return Expanded(
-                          child: Container(
-                            height: 4,
-                            margin: const EdgeInsets.symmetric(horizontal: 2),
-                            decoration: BoxDecoration(
-                              gradient: i <= _currentPage
-                                  ? AppTheme.primaryGradient
-                                  : null,
-                              color: i <= _currentPage
-                                  ? null
-                                  : Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(2),
+          child: Column(
+            children: [
+              // Progress bar + nav
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Row(
+                  children: [
+                    if (_currentPage > 0)
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: _prevPage,
+                      )
+                    else
+                      const SizedBox(width: 48),
+                    Expanded(
+                      child: Row(
+                        children: List.generate(_totalPages, (i) {
+                          return Expanded(
+                            child: Container(
+                              height: 4,
+                              margin: const EdgeInsets.symmetric(horizontal: 2),
+                              decoration: BoxDecoration(
+                                gradient: i <= _currentPage
+                                    ? AppTheme.primaryGradient
+                                    : null,
+                                color: i <= _currentPage
+                                    ? null
+                                    : Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => context.go('/home'),
-                    child: Text('Skip',
-                        style: TextStyle(color: AppTheme.textSecondary)),
-                  ),
-                ],
-              ),
-            ),
-
-            // Step label
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
-              child: Row(
-                children: [
-                  Text(
-                    '${_currentPage + 1} of $_totalPages  •  ${_pageTitles[_currentPage]}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.textSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  if (_currentPage == 4 || _currentPage == 6)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Text('Optional',
-                            style: TextStyle(fontSize: 11)),
+                          );
+                        }),
                       ),
                     ),
-                ],
+                    TextButton(
+                      onPressed: () => context.go('/home'),
+                      child: Text('Skip',
+                          style: TextStyle(color: AppTheme.textSecondary)),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // Pages
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (i) => setState(() => _currentPage = i),
-                children: [
-                  // Page 0 — Goals
-                  GoalPicker(
-                    selected: _selectedGoals,
-                    onChanged: (v) => setState(() {
-                      if (_selectedGoals.contains(v)) {
-                        _selectedGoals.remove(v);
-                      } else {
-                        _selectedGoals.add(v);
-                      }
-                    }),
-                  ),
-
-                  // Page 1 — Age
-                  AgePicker(
-                    selected: _selectedAge,
-                    onChanged: (v) => setState(() => _selectedAge = v),
-                  ),
-
-                  // Page 2 — Body type
-                  BodyTypePicker(
-                    selected: _selectedBodyType,
-                    onChanged: (v) => setState(() => _selectedBodyType = v),
-                  ),
-
-                  // Page 3 — Aesthetics
-                  AestheticPicker(
-                    selected: _selectedAesthetics,
-                    onChanged: (v) => setState(() {
-                      if (_selectedAesthetics.contains(v)) {
-                        _selectedAesthetics.remove(v);
-                      } else {
-                        _selectedAesthetics.add(v);
-                      }
-                    }),
-                  ),
-
-                  // Page 4 — Brands (optional)
-                  BrandsPicker(
-                    selected: _selectedBrands,
-                    onChanged: (v) => setState(() {
-                      _selectedBrands
-                        ..clear()
-                        ..addAll(v);
-                    }),
-                  ),
-
-                  // Page 5 — Sizes
-                  SizesPicker(
-                    topSize: _topSize,
-                    bottomSize: _bottomSize,
-                    shoeSize: _shoeSize,
-                    onTopChanged: (v) => setState(() => _topSize = v),
-                    onBottomChanged: (v) => setState(() => _bottomSize = v),
-                    onShoeChanged: (v) => setState(() => _shoeSize = v),
-                  ),
-
-                  // Page 6 — Skin tone (optional)
-                  SkinTonePicker(
-                    selectedUndertone: _skinToneUndertone,
-                    onUndertoneChanged: (v) =>
-                        setState(() => _skinToneUndertone = v),
-                  ),
-
-                  // Page 7 — Color preferences
-                  ColorPreferencePicker(
-                    selected: _selectedColors,
-                    onChanged: (v) => setState(() {
-                      if (_selectedColors.contains(v)) {
-                        _selectedColors.remove(v);
-                      } else {
-                        _selectedColors.add(v);
-                      }
-                    }),
-                  ),
-                ],
+              // Step label
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 6, 24, 0),
+                child: Row(
+                  children: [
+                    Text(
+                      '${_currentPage + 1} of $_totalPages  •  ${_pageTitles[_currentPage]}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (_currentPage == 4 || _currentPage == 6)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Text('Optional',
+                              style: TextStyle(fontSize: 11)),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
 
-            // Continue button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _canProceed ? _nextPage : null,
-                  child: Text(
-                    _currentPage == _totalPages - 1
-                        ? 'Get Started'
-                        : 'Continue',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600),
+              // Pages
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (i) => setState(() => _currentPage = i),
+                  children: [
+                    // Page 0 — Goals
+                    GoalPicker(
+                      selected: _selectedGoals,
+                      onChanged: (v) => setState(() {
+                        if (_selectedGoals.contains(v)) {
+                          _selectedGoals.remove(v);
+                        } else {
+                          _selectedGoals.add(v);
+                        }
+                      }),
+                    ),
+
+                    // Page 1 — Age
+                    AgePicker(
+                      selected: _selectedAge,
+                      onChanged: (v) => setState(() => _selectedAge = v),
+                    ),
+
+                    // Page 2 — Body type
+                    BodyTypePicker(
+                      selected: _selectedBodyType,
+                      onChanged: (v) => setState(() => _selectedBodyType = v),
+                    ),
+
+                    // Page 3 — Aesthetics
+                    AestheticPicker(
+                      selected: _selectedAesthetics,
+                      onChanged: (v) => setState(() {
+                        if (_selectedAesthetics.contains(v)) {
+                          _selectedAesthetics.remove(v);
+                        } else {
+                          _selectedAesthetics.add(v);
+                        }
+                      }),
+                    ),
+
+                    // Page 4 — Brands (optional)
+                    BrandsPicker(
+                      selected: _selectedBrands,
+                      onChanged: (v) => setState(() {
+                        _selectedBrands
+                          ..clear()
+                          ..addAll(v);
+                      }),
+                    ),
+
+                    // Page 5 — Sizes
+                    SizesPicker(
+                      topSize: _topSize,
+                      bottomSize: _bottomSize,
+                      shoeSize: _shoeSize,
+                      onTopChanged: (v) => setState(() => _topSize = v),
+                      onBottomChanged: (v) => setState(() => _bottomSize = v),
+                      onShoeChanged: (v) => setState(() => _shoeSize = v),
+                    ),
+
+                    // Page 6 — Skin tone (optional)
+                    SkinTonePicker(
+                      selectedUndertone: _skinToneUndertone,
+                      onUndertoneChanged: (v) =>
+                          setState(() => _skinToneUndertone = v),
+                    ),
+
+                    // Page 7 — Color preferences
+                    ColorPreferencePicker(
+                      selected: _selectedColors,
+                      onChanged: (v) => setState(() {
+                        if (_selectedColors.contains(v)) {
+                          _selectedColors.remove(v);
+                        } else {
+                          _selectedColors.add(v);
+                        }
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Continue button
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _canProceed ? _nextPage : null,
+                    child: Text(
+                      _currentPage == _totalPages - 1
+                          ? 'Get Started'
+                          : 'Continue',
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

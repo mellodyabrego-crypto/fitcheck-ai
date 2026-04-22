@@ -16,15 +16,22 @@ import '../../providers/user_providers.dart';
 
 // ─── LocalStorage helpers (web-only) ────────────────────────────────────────
 String? _lsGet(String k) {
-  try { return html.window.localStorage[k]; } catch (_) { return null; }
-}
-void _lsSet(String k, String v) {
-  try { html.window.localStorage[k] = v; } catch (_) {/* quota */}
+  try {
+    return html.window.localStorage[k];
+  } catch (_) {
+    return null;
+  }
 }
 
-const _kBrands     = 'fitcheck_brands';
-const _kSocials    = 'fitcheck_socials';
-const _kShops      = 'fitcheck_shops';
+void _lsSet(String k, String v) {
+  try {
+    html.window.localStorage[k] = v;
+  } catch (_) {/* quota */}
+}
+
+const _kBrands = 'fitcheck_brands';
+const _kSocials = 'fitcheck_socials';
+const _kShops = 'fitcheck_shops';
 const _kProfilePic = 'fitcheck_profile_pic';
 
 // Providers for profile data (persisted across reloads via localStorage)
@@ -43,12 +50,14 @@ final favoriteShopsProvider = StateProvider<List<_ShopLink>>((ref) {
   if (raw != null && raw.isNotEmpty) {
     try {
       initial = (jsonDecode(raw) as List)
-          .map((e) => _ShopLink(name: e['name'] as String, url: e['url'] as String))
+          .map((e) =>
+              _ShopLink(name: e['name'] as String, url: e['url'] as String))
           .toList();
     } catch (_) {}
   }
   ref.listenSelf((prev, next) {
-    _lsSet(_kShops, jsonEncode(next.map((s) => {'name': s.name, 'url': s.url}).toList()));
+    _lsSet(_kShops,
+        jsonEncode(next.map((s) => {'name': s.name, 'url': s.url}).toList()));
   });
   return initial;
 });
@@ -79,39 +88,39 @@ final favoriteBrandsProvider = StateProvider<List<String>>((ref) {
 
 // Well-known shop URL lookup for auto-fill
 const _knownShopUrls = {
-  'fashion nova':       'https://fashionnova.com',
-  'fashionnova':        'https://fashionnova.com',
-  'zara':               'https://zara.com',
-  'asos':               'https://asos.com',
-  'h&m':                'https://hm.com',
-  'hm':                 'https://hm.com',
-  'revolve':            'https://revolve.com',
-  'nordstrom':          'https://nordstrom.com',
-  'prettylittlething':  'https://prettylittlething.com',
-  'plt':                'https://prettylittlething.com',
-  'boohoo':             'https://boohoo.com',
-  'shein':              'https://shein.com',
-  'free people':        'https://freepeople.com',
-  'urban outfitters':   'https://urbanoutfitters.com',
-  'nike':               'https://nike.com',
-  'adidas':             'https://adidas.com',
-  'lululemon':          'https://lululemon.com',
-  'skims':              'https://skims.com',
-  'good american':      'https://goodamerican.com',
-  'anthropologie':      'https://anthropologie.com',
-  'forever 21':         'https://forever21.com',
-  'target':             'https://target.com',
-  'amazon':             'https://amazon.com/fashion',
-  'mango':              'https://mango.com',
-  'coach':              'https://coach.com',
-  'coach outlet':       'https://coachoutlet.com',
-  'windsor':            'https://windsorstore.com',
-  'express':            'https://express.com',
-  'banana republic':    'https://bananarepublic.gap.com',
-  'gap':                'https://gap.com',
-  'old navy':           'https://oldnavy.gap.com',
-  'j.crew':             'https://jcrew.com',
-  'ralph lauren':       'https://ralphlauren.com',
+  'fashion nova': 'https://fashionnova.com',
+  'fashionnova': 'https://fashionnova.com',
+  'zara': 'https://zara.com',
+  'asos': 'https://asos.com',
+  'h&m': 'https://hm.com',
+  'hm': 'https://hm.com',
+  'revolve': 'https://revolve.com',
+  'nordstrom': 'https://nordstrom.com',
+  'prettylittlething': 'https://prettylittlething.com',
+  'plt': 'https://prettylittlething.com',
+  'boohoo': 'https://boohoo.com',
+  'shein': 'https://shein.com',
+  'free people': 'https://freepeople.com',
+  'urban outfitters': 'https://urbanoutfitters.com',
+  'nike': 'https://nike.com',
+  'adidas': 'https://adidas.com',
+  'lululemon': 'https://lululemon.com',
+  'skims': 'https://skims.com',
+  'good american': 'https://goodamerican.com',
+  'anthropologie': 'https://anthropologie.com',
+  'forever 21': 'https://forever21.com',
+  'target': 'https://target.com',
+  'amazon': 'https://amazon.com/fashion',
+  'mango': 'https://mango.com',
+  'coach': 'https://coach.com',
+  'coach outlet': 'https://coachoutlet.com',
+  'windsor': 'https://windsorstore.com',
+  'express': 'https://express.com',
+  'banana republic': 'https://bananarepublic.gap.com',
+  'gap': 'https://gap.com',
+  'old navy': 'https://oldnavy.gap.com',
+  'j.crew': 'https://jcrew.com',
+  'ralph lauren': 'https://ralphlauren.com',
 };
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -124,8 +133,8 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final photo       = ref.watch(profilePhotoProvider);
-    final username    = ref.watch(usernameProvider);
+    final photo = ref.watch(profilePhotoProvider);
+    final username = ref.watch(usernameProvider);
     final displayName = ref.watch(displayNameProvider);
 
     return Scaffold(
@@ -152,20 +161,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     CircleAvatar(
                       radius: 52,
                       backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
-                      backgroundImage: photo != null ? MemoryImage(photo) : null,
+                      backgroundImage:
+                          photo != null ? MemoryImage(photo) : null,
                       child: photo == null
-                          ? const Icon(Icons.person, size: 52, color: AppTheme.primary)
+                          ? const Icon(Icons.person,
+                              size: 52, color: AppTheme.primary)
                           : null,
                     ),
                     Positioned(
-                      bottom: 0, right: 0,
+                      bottom: 0,
+                      right: 0,
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: const BoxDecoration(
                           color: AppTheme.primary,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                        child: const Icon(Icons.camera_alt,
+                            size: 16, color: Colors.white),
                       ),
                     ),
                   ],
@@ -176,7 +189,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 kDemoMode
                     ? 'Demo User'
                     : (displayName.isNotEmpty ? displayName : 'Your Name'),
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 6),
 
@@ -187,7 +201,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   onTap: () => _editUsername(username),
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
                       color: username.isEmpty
                           ? Colors.grey.shade100
@@ -203,21 +218,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          username.isEmpty ? Icons.add_circle_outline : Icons.alternate_email,
+                          username.isEmpty
+                              ? Icons.add_circle_outline
+                              : Icons.alternate_email,
                           size: 14,
-                          color: username.isEmpty ? AppTheme.textSecondary : AppTheme.primary,
+                          color: username.isEmpty
+                              ? AppTheme.textSecondary
+                              : AppTheme.primary,
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          username.isEmpty ? 'Set your @username' : '@${username.replaceFirst(RegExp(r'^@+'), '')}',
+                          username.isEmpty
+                              ? 'Set your @username'
+                              : '@${username.replaceFirst(RegExp(r'^@+'), '')}',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: username.isEmpty ? AppTheme.textSecondary : AppTheme.primary,
+                            color: username.isEmpty
+                                ? AppTheme.textSecondary
+                                : AppTheme.primary,
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Icon(Icons.edit, size: 12,
+                        Icon(Icons.edit,
+                            size: 12,
                             color: username.isEmpty
                                 ? AppTheme.textSecondary
                                 : AppTheme.primary.withValues(alpha: 0.6)),
@@ -229,7 +253,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(12),
@@ -252,7 +277,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   onPressed: () => context.push('/onboarding?retake=true'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.primary,
-                    side: BorderSide(color: AppTheme.primary.withValues(alpha: 0.4)),
+                    side: BorderSide(
+                        color: AppTheme.primary.withValues(alpha: 0.4)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14)),
@@ -290,7 +316,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 title: 'Favorite Shops',
                 icon: Icons.shopping_bag,
                 trailing: IconButton(
-                  icon: const Icon(Icons.add, color: AppTheme.primary, size: 20),
+                  icon:
+                      const Icon(Icons.add, color: AppTheme.primary, size: 20),
                   onPressed: () => _showAddShopDialog(),
                 ),
                 child: _FavoriteShopsSection(),
@@ -350,7 +377,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _editUsername(String current) {
     // Strip any leading @ so the field only holds the bare handle
     final bare = current.replaceAll('@', '');
-    final ctrl  = TextEditingController(text: bare);
+    final ctrl = TextEditingController(text: bare);
     String? error;
 
     showDialog(
@@ -375,7 +402,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     padding: EdgeInsets.only(left: 14, right: 4),
                     child: Text('@',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                             color: AppTheme.primary)),
                   ),
                   prefixIconConstraints:
@@ -447,7 +475,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Future<void> _showAddShopDialog() async {
     final nameCtrl = TextEditingController();
-    final urlCtrl  = TextEditingController();
+    final urlCtrl = TextEditingController();
     String? suggestion;
 
     await showDialog(
@@ -479,10 +507,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   labelText: 'Website URL',
                   hintText: 'https://...',
                   suffixIcon: suggestion != null
-                      ? const Icon(Icons.check_circle, color: Colors.green, size: 18)
+                      ? const Icon(Icons.check_circle,
+                          color: Colors.green, size: 18)
                       : null,
-                  helperText: suggestion != null ? 'Auto-filled from known stores' : null,
-                  helperStyle: const TextStyle(color: Colors.green, fontSize: 11),
+                  helperText: suggestion != null
+                      ? 'Auto-filled from known stores'
+                      : null,
+                  helperStyle:
+                      const TextStyle(color: Colors.green, fontSize: 11),
                 ),
                 keyboardType: TextInputType.url,
               ),
@@ -497,7 +529,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 if (nameCtrl.text.isNotEmpty) {
                   final shops = [...ref.read(favoriteShopsProvider)];
                   if (shops.length < 5) {
-                    shops.add(_ShopLink(name: nameCtrl.text, url: urlCtrl.text));
+                    shops
+                        .add(_ShopLink(name: nameCtrl.text, url: urlCtrl.text));
                     ref.read(favoriteShopsProvider.notifier).state = shops;
                   }
                   Navigator.pop(ctx);
@@ -516,25 +549,45 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
 class _SizesSection extends ConsumerWidget {
   static const _clothingSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  static const _shoeSizes     = ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11'];
+  static const _shoeSizes = [
+    '6',
+    '6.5',
+    '7',
+    '7.5',
+    '8',
+    '8.5',
+    '9',
+    '9.5',
+    '10',
+    '10.5',
+    '11'
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final topSize    = ref.watch(topSizeProvider);
+    final topSize = ref.watch(topSizeProvider);
     final bottomSize = ref.watch(bottomSizeProvider);
-    final shoeSize   = ref.watch(shoeSizeProvider);
+    final shoeSize = ref.watch(shoeSizeProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SizeRow(label: 'Tops',    sizes: _clothingSizes, selected: topSize,
+        _SizeRow(
+            label: 'Tops',
+            sizes: _clothingSizes,
+            selected: topSize,
             onChanged: (v) => ref.read(topSizeProvider.notifier).state = v),
         const SizedBox(height: 16),
-        _SizeRow(label: 'Bottoms', sizes: _clothingSizes, selected: bottomSize,
+        _SizeRow(
+            label: 'Bottoms',
+            sizes: _clothingSizes,
+            selected: bottomSize,
             onChanged: (v) => ref.read(bottomSizeProvider.notifier).state = v),
         const SizedBox(height: 16),
         const Text('Shoes (US)',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondary)),
         const SizedBox(height: 8),
         SizedBox(
@@ -556,7 +609,7 @@ class _SizesSection extends ConsumerWidget {
                     color: sel ? AppTheme.primary : Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: sel ? AppTheme.primary : Colors.grey.shade300),
+                        color: sel ? AppTheme.primary : Colors.grey.shade300),
                   ),
                   child: Text(s,
                       style: TextStyle(
@@ -580,8 +633,11 @@ class _SizeRow extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onChanged;
 
-  const _SizeRow({required this.label, required this.sizes,
-      required this.selected, required this.onChanged});
+  const _SizeRow(
+      {required this.label,
+      required this.sizes,
+      required this.selected,
+      required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -590,7 +646,8 @@ class _SizeRow extends StatelessWidget {
       children: [
         Text(label,
             style: const TextStyle(
-                fontSize: 13, fontWeight: FontWeight.w600,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondary)),
         const SizedBox(height: 8),
         Row(
@@ -609,7 +666,7 @@ class _SizeRow extends StatelessWidget {
                       color: sel ? AppTheme.primary : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: sel ? AppTheme.primary : Colors.grey.shade300),
+                          color: sel ? AppTheme.primary : Colors.grey.shade300),
                     ),
                     child: Text(s,
                         style: TextStyle(
@@ -634,22 +691,50 @@ class _ColorPaletteSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final seasons = [
-      _SeasonPalette('Spring', [
-        const Color(0xFFF9A8D4), const Color(0xFFFDE68A), const Color(0xFF86EFAC),
-        const Color(0xFFFCA5A5), const Color(0xFFFED7AA), const Color(0xFFBFDBFE),
-      ], const Color(0xFFF9A8D4)),
-      _SeasonPalette('Summer', [
-        const Color(0xFFC4B5FD), const Color(0xFF93C5FD), const Color(0xFFA5F3FC),
-        const Color(0xFFF9A8D4), const Color(0xFFE2E8F0), const Color(0xFF6EE7B7),
-      ], const Color(0xFFC4B5FD)),
-      _SeasonPalette('Autumn', [
-        const Color(0xFFB45309), const Color(0xFFD97706), const Color(0xFF92400E),
-        const Color(0xFF78350F), const Color(0xFFDC8A32), const Color(0xFF6B7280),
-      ], const Color(0xFFD97706)),
-      _SeasonPalette('Winter', [
-        const Color(0xFF1E40AF), const Color(0xFF7C3AED), const Color(0xFF111827),
-        const Color(0xFFDC2626), const Color(0xFFF9FAFB), const Color(0xFF065F46),
-      ], const Color(0xFF7C3AED)),
+      _SeasonPalette(
+          'Spring',
+          [
+            const Color(0xFFF9A8D4),
+            const Color(0xFFFDE68A),
+            const Color(0xFF86EFAC),
+            const Color(0xFFFCA5A5),
+            const Color(0xFFFED7AA),
+            const Color(0xFFBFDBFE),
+          ],
+          const Color(0xFFF9A8D4)),
+      _SeasonPalette(
+          'Summer',
+          [
+            const Color(0xFFC4B5FD),
+            const Color(0xFF93C5FD),
+            const Color(0xFFA5F3FC),
+            const Color(0xFFF9A8D4),
+            const Color(0xFFE2E8F0),
+            const Color(0xFF6EE7B7),
+          ],
+          const Color(0xFFC4B5FD)),
+      _SeasonPalette(
+          'Autumn',
+          [
+            const Color(0xFFB45309),
+            const Color(0xFFD97706),
+            const Color(0xFF92400E),
+            const Color(0xFF78350F),
+            const Color(0xFFDC8A32),
+            const Color(0xFF6B7280),
+          ],
+          const Color(0xFFD97706)),
+      _SeasonPalette(
+          'Winter',
+          [
+            const Color(0xFF1E40AF),
+            const Color(0xFF7C3AED),
+            const Color(0xFF111827),
+            const Color(0xFFDC2626),
+            const Color(0xFFF9FAFB),
+            const Color(0xFF065F46),
+          ],
+          const Color(0xFF7C3AED)),
     ];
 
     return Column(
@@ -660,30 +745,39 @@ class _ColorPaletteSection extends ConsumerWidget {
               child: Row(
                 children: [
                   Container(
-                    width: 10, height: 10,
-                    decoration: BoxDecoration(color: s.accent, shape: BoxShape.circle),
+                    width: 10,
+                    height: 10,
+                    decoration:
+                        BoxDecoration(color: s.accent, shape: BoxShape.circle),
                   ),
                   const SizedBox(width: 8),
                   SizedBox(
                     width: 56,
                     child: Text(s.name,
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w600)),
                   ),
                   const SizedBox(width: 8),
                   Row(
-                    children: s.colors.map((c) => Container(
-                          width: 22, height: 22,
-                          margin: const EdgeInsets.only(right: 4),
-                          decoration: BoxDecoration(
-                            color: c, shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 1.5),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 2)
-                            ],
-                          ),
-                        )).toList(),
+                    children: s.colors
+                        .map((c) => Container(
+                              width: 22,
+                              height: 22,
+                              margin: const EdgeInsets.only(right: 4),
+                              decoration: BoxDecoration(
+                                color: c,
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.white, width: 1.5),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.1),
+                                      blurRadius: 2)
+                                ],
+                              ),
+                            ))
+                        .toList(),
                   ),
                 ],
               ),
@@ -717,10 +811,23 @@ class _SeasonPalette {
 
 class _BrandsSection extends ConsumerWidget {
   static const _allBrands = [
-    'Zara', 'H&M', 'Fashion Nova', 'SHEIN', 'ASOS',
-    'Nordstrom', 'Revolve', 'PrettyLittleThing', 'Boohoo',
-    'Free People', 'Anthropologie', 'Urban Outfitters',
-    'Nike', 'Adidas', 'Lululemon', 'Skims', 'Good American',
+    'Zara',
+    'H&M',
+    'Fashion Nova',
+    'SHEIN',
+    'ASOS',
+    'Nordstrom',
+    'Revolve',
+    'PrettyLittleThing',
+    'Boohoo',
+    'Free People',
+    'Anthropologie',
+    'Urban Outfitters',
+    'Nike',
+    'Adidas',
+    'Lululemon',
+    'Skims',
+    'Good American',
   ];
 
   @override
@@ -728,7 +835,8 @@ class _BrandsSection extends ConsumerWidget {
     final selected = ref.watch(favoriteBrandsProvider);
 
     return Wrap(
-      spacing: 8, runSpacing: 8,
+      spacing: 8,
+      runSpacing: 8,
       children: _allBrands.map((b) {
         final isSelected = selected.contains(b);
         return FilterChip(
@@ -736,7 +844,10 @@ class _BrandsSection extends ConsumerWidget {
           selected: isSelected,
           onSelected: (_) {
             final updated = [...selected];
-            if (isSelected) updated.remove(b); else updated.add(b);
+            if (isSelected)
+              updated.remove(b);
+            else
+              updated.add(b);
             ref.read(favoriteBrandsProvider.notifier).state = updated;
           },
           selectedColor: AppTheme.primary.withValues(alpha: 0.15),
@@ -765,38 +876,43 @@ class _FavoriteShopsSection extends ConsumerWidget {
     }
 
     return Column(
-      children: shops.map((shop) => ListTile(
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            leading: Container(
-              width: 36, height: 36,
-              decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.store, color: AppTheme.primary, size: 18),
-            ),
-            title: Text(shop.name,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-            subtitle: shop.url.isNotEmpty
-                ? Text(shop.url,
+      children: shops
+          .map((shop) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.store,
+                      color: AppTheme.primary, size: 18),
+                ),
+                title: Text(shop.name,
                     style: const TextStyle(
-                        fontSize: 11, color: AppTheme.textSecondary),
-                    overflow: TextOverflow.ellipsis)
-                : null,
-            trailing: shop.url.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.open_in_new,
-                        size: 16, color: AppTheme.primary),
-                    onPressed: () async {
-                      final uri = Uri.parse(shop.url.startsWith('http')
-                          ? shop.url
-                          : 'https://${shop.url}');
-                      if (await canLaunchUrl(uri)) launchUrl(uri);
-                    },
-                  )
-                : null,
-          )).toList(),
+                        fontWeight: FontWeight.w600, fontSize: 14)),
+                subtitle: shop.url.isNotEmpty
+                    ? Text(shop.url,
+                        style: const TextStyle(
+                            fontSize: 11, color: AppTheme.textSecondary),
+                        overflow: TextOverflow.ellipsis)
+                    : null,
+                trailing: shop.url.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.open_in_new,
+                            size: 16, color: AppTheme.primary),
+                        onPressed: () async {
+                          final uri = Uri.parse(shop.url.startsWith('http')
+                              ? shop.url
+                              : 'https://${shop.url}');
+                          if (await canLaunchUrl(uri)) launchUrl(uri);
+                        },
+                      )
+                    : null,
+              ))
+          .toList(),
     );
   }
 }
@@ -805,10 +921,14 @@ class _FavoriteShopsSection extends ConsumerWidget {
 
 class _SocialMediaSection extends ConsumerWidget {
   static const _platforms = [
-    _SocialPlatform('Instagram', Icons.camera_alt,  Color(0xFFE1306C), 'https://instagram.com'),
-    _SocialPlatform('TikTok',    Icons.music_note,  Color(0xFF000000), 'https://tiktok.com'),
-    _SocialPlatform('Snapchat',  Icons.camera,      Color(0xFFFFFC00), 'https://snapchat.com'),
-    _SocialPlatform('Facebook',  Icons.facebook,    Color(0xFF1877F2), 'https://facebook.com'),
+    _SocialPlatform('Instagram', Icons.camera_alt, Color(0xFFE1306C),
+        'https://instagram.com'),
+    _SocialPlatform(
+        'TikTok', Icons.music_note, Color(0xFF000000), 'https://tiktok.com'),
+    _SocialPlatform(
+        'Snapchat', Icons.camera, Color(0xFFFFFC00), 'https://snapchat.com'),
+    _SocialPlatform(
+        'Facebook', Icons.facebook, Color(0xFF1877F2), 'https://facebook.com'),
   ];
 
   @override
@@ -823,7 +943,8 @@ class _SocialMediaSection extends ConsumerWidget {
           child: Row(
             children: [
               Container(
-                width: 36, height: 36,
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
                   color: p.color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),

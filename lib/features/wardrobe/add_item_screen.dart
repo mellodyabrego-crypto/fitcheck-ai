@@ -31,13 +31,62 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
   final _nameController = TextEditingController();
 
   static const _categoryExamples = {
-    ClothingCategory.tops:        ['T-Shirt', 'Blouse', 'Crop Top', 'Tank Top', 'Hoodie', 'Sweater'],
-    ClothingCategory.bottoms:     ['Jeans', 'Leggings', 'Mini Skirt', 'Midi Skirt', 'Shorts', 'Trousers'],
-    ClothingCategory.dresses:     ['Maxi Dress', 'Mini Dress', 'Wrap Dress', 'Sundress', 'Bodycon', 'Midi Dress'],
-    ClothingCategory.shoes:       ['Sneakers', 'Heels', 'Sandals', 'Boots', 'Flats', 'Mules'],
-    ClothingCategory.outerwear:   ['Denim Jacket', 'Blazer', 'Trench Coat', 'Puffer', 'Cardigan', 'Leather Jacket'],
-    ClothingCategory.accessories: ['Belt', 'Scarf', 'Hat', 'Sunglasses', 'Hair Clip', 'Necklace'],
-    ClothingCategory.bags:        ['Tote Bag', 'Crossbody', 'Clutch', 'Mini Bag', 'Backpack', 'Shoulder Bag'],
+    ClothingCategory.tops: [
+      'T-Shirt',
+      'Blouse',
+      'Crop Top',
+      'Tank Top',
+      'Hoodie',
+      'Sweater'
+    ],
+    ClothingCategory.bottoms: [
+      'Jeans',
+      'Leggings',
+      'Mini Skirt',
+      'Midi Skirt',
+      'Shorts',
+      'Trousers'
+    ],
+    ClothingCategory.dresses: [
+      'Maxi Dress',
+      'Mini Dress',
+      'Wrap Dress',
+      'Sundress',
+      'Bodycon',
+      'Midi Dress'
+    ],
+    ClothingCategory.shoes: [
+      'Sneakers',
+      'Heels',
+      'Sandals',
+      'Boots',
+      'Flats',
+      'Mules'
+    ],
+    ClothingCategory.outerwear: [
+      'Denim Jacket',
+      'Blazer',
+      'Trench Coat',
+      'Puffer',
+      'Cardigan',
+      'Leather Jacket'
+    ],
+    ClothingCategory.accessories: [
+      'Belt',
+      'Scarf',
+      'Hat',
+      'Sunglasses',
+      'Hair Clip',
+      'Necklace'
+    ],
+    ClothingCategory.bags: [
+      'Tote Bag',
+      'Crossbody',
+      'Clutch',
+      'Mini Bag',
+      'Backpack',
+      'Shoulder Bag'
+    ],
   };
 
   @override
@@ -56,172 +105,179 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: WithDecorations(sparse: true, child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Larger landscape image preview (4:3)
-            AspectRatio(
-              aspectRatio: 4 / 3,
-              child: GestureDetector(
-                onTap: _imageBytes == null ? _pickImage : null,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: _imageBytes != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.memory(
-                            _imageBytes!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
+      body: WithDecorations(
+        sparse: true,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Larger landscape image preview (4:3)
+              AspectRatio(
+                aspectRatio: 4 / 3,
+                child: GestureDetector(
+                  onTap: _imageBytes == null ? _pickImage : null,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: _imageBytes != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.memory(
+                              _imageBytes!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_a_photo,
+                                  size: 56, color: AppTheme.textSecondary),
+                              const SizedBox(height: 14),
+                              Text('Tap to add a photo',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                              const SizedBox(height: 4),
+                              Text('Photos fit best in landscape (4:3).',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary
+                                        .withValues(alpha: 0.7),
+                                    fontSize: 12,
+                                  )),
+                            ],
                           ),
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.add_a_photo,
-                                size: 56, color: AppTheme.textSecondary),
-                            const SizedBox(height: 14),
-                            Text('Tap to add a photo',
-                                style: TextStyle(
-                                  color: AppTheme.textSecondary,
-                                  fontSize: 17, fontWeight: FontWeight.w600,
-                                )),
-                            const SizedBox(height: 4),
-                            Text('Photos fit best in landscape (4:3).',
-                                style: TextStyle(
-                                  color: AppTheme.textSecondary.withValues(alpha: 0.7),
-                                  fontSize: 12,
-                                )),
-                          ],
-                        ),
+                  ),
                 ),
               ),
-            ),
 
-            if (_imageBytes != null) ...[
+              if (_imageBytes != null) ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: const Text('Retake'),
+                        onPressed: _pickImage,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.edit, size: 18),
+                        label: const Text('Edit'),
+                        onPressed: _openEditor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+
+              const SizedBox(height: 24),
+
+              // Category selector
+              Text('Category', style: context.textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: ClothingCategory.values.map((cat) {
+                  final isSelected = _category == cat;
+                  return ChoiceChip(
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(cat.icon, size: 16),
+                        const SizedBox(width: 4),
+                        Text(cat.label),
+                      ],
+                    ),
+                    selected: isSelected,
+                    onSelected: (_) => setState(() => _category = cat),
+                    selectedColor: AppTheme.primary.withValues(alpha: 0.2),
+                  );
+                }).toList(),
+              ),
+
               const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.refresh, size: 18),
-                      label: const Text('Retake'),
-                      onPressed: _pickImage,
-                    ),
+
+              // Quick-fill name examples for selected category
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: (_categoryExamples[_category] ?? []).map((example) {
+                  return ActionChip(
+                    label: Text(example, style: const TextStyle(fontSize: 12)),
+                    onPressed: () {
+                      setState(() => _name = example);
+                      _nameController.text = example;
+                    },
+                    backgroundColor: AppTheme.primary.withValues(alpha: 0.07),
+                    side: BorderSide(
+                        color: AppTheme.primary.withValues(alpha: 0.2)),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Color input
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Color (optional)',
+                  hintText: 'e.g. Navy Blue',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.edit, size: 18),
-                      label: const Text('Edit'),
-                      onPressed: _openEditor,
-                    ),
+                ),
+                onChanged: (v) => _color = v.isEmpty ? null : v,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Name input
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name (optional)',
+                  hintText: 'e.g. My favorite denim jacket',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
+                ),
+                onChanged: (v) => _name = v.isEmpty ? null : v,
+              ),
+
+              const SizedBox(height: 32),
+
+              // Save button
+              ElevatedButton(
+                onPressed:
+                    _imageBytes != null && !_isUploading ? _saveItem : null,
+                child: _isUploading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('Save to Wardrobe'),
               ),
             ],
-
-            const SizedBox(height: 24),
-
-            // Category selector
-            Text('Category', style: context.textTheme.titleMedium),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: ClothingCategory.values.map((cat) {
-                final isSelected = _category == cat;
-                return ChoiceChip(
-                  label: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(cat.icon, size: 16),
-                      const SizedBox(width: 4),
-                      Text(cat.label),
-                    ],
-                  ),
-                  selected: isSelected,
-                  onSelected: (_) => setState(() => _category = cat),
-                  selectedColor: AppTheme.primary.withValues(alpha: 0.2),
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Quick-fill name examples for selected category
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: (_categoryExamples[_category] ?? []).map((example) {
-                return ActionChip(
-                  label: Text(example, style: const TextStyle(fontSize: 12)),
-                  onPressed: () {
-                    setState(() => _name = example);
-                    _nameController.text = example;
-                  },
-                  backgroundColor: AppTheme.primary.withValues(alpha: 0.07),
-                  side: BorderSide(color: AppTheme.primary.withValues(alpha: 0.2)),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Color input
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Color (optional)',
-                hintText: 'e.g. Navy Blue',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (v) => _color = v.isEmpty ? null : v,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Name input
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Name (optional)',
-                hintText: 'e.g. My favorite denim jacket',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (v) => _name = v.isEmpty ? null : v,
-            ),
-
-            const SizedBox(height: 32),
-
-            // Save button
-            ElevatedButton(
-              onPressed: _imageBytes != null && !_isUploading ? _saveItem : null,
-              child: _isUploading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text('Save to Wardrobe'),
-            ),
-          ],
+          ),
         ),
-      ),),
+      ),
     );
   }
 
@@ -263,11 +319,13 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Crop to aspect ratio',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.crop_landscape, color: AppTheme.primary),
+              leading:
+                  const Icon(Icons.crop_landscape, color: AppTheme.primary),
               title: const Text('Landscape (4:3)'),
               subtitle: const Text('Best for full outfit photos'),
               onTap: () => Navigator.pop(ctx, 'landscape'),
@@ -293,8 +351,8 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
 
     final ratio = switch (choice) {
       'landscape' => 4 / 3,
-      'portrait'  => 3 / 4,
-      _           => 1.0, // square
+      'portrait' => 3 / 4,
+      _ => 1.0, // square
     };
     final cropped = _centerCrop(_imageBytes!, ratio);
     if (cropped != null) setState(() => _imageBytes = cropped);
@@ -317,7 +375,8 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       }
       final x = ((w - cropW) / 2).round();
       final y = ((h - cropH) / 2).round();
-      final out = img.copyCrop(decoded, x: x, y: y, width: cropW, height: cropH);
+      final out =
+          img.copyCrop(decoded, x: x, y: y, width: cropW, height: cropH);
       return Uint8List.fromList(img.encodeJpg(out, quality: 85));
     } catch (_) {
       return null;
@@ -339,8 +398,8 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       final supabase = ref.read(supabaseServiceProvider);
       if (supabase == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign in to save items to your wardrobe.')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Sign in to save items to your wardrobe.')));
         }
         setState(() => _isUploading = false);
         return;
@@ -451,7 +510,8 @@ class _ImageEditorScreenState extends State<_ImageEditorScreen> {
         final zh = (h / zoom).round();
         final zx = ((w - zw) / 2).round();
         final zy = ((h - zh) / 2).round();
-        final zoomed = img.copyCrop(decoded, x: zx, y: zy, width: zw, height: zh);
+        final zoomed =
+            img.copyCrop(decoded, x: zx, y: zy, width: zw, height: zh);
         return _finalize(zoomed, aspect);
       }
       return _finalize(decoded, aspect);
@@ -492,7 +552,8 @@ class _ImageEditorScreenState extends State<_ImageEditorScreen> {
           TextButton(
             onPressed: _saveAsIs,
             child: const Text('Save',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -569,7 +630,8 @@ class _EditorBtn extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _EditorBtn({required this.icon, required this.label, required this.onTap});
+  const _EditorBtn(
+      {required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

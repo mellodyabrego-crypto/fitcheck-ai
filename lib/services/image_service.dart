@@ -65,7 +65,8 @@ class ImageService {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 36, height: 4,
+                width: 36,
+                height: 4,
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
@@ -87,7 +88,8 @@ class ImageService {
               ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Color(0xFFC6A96B),
-                  child: Icon(Icons.photo_library, color: Colors.white, size: 20),
+                  child:
+                      Icon(Icons.photo_library, color: Colors.white, size: 20),
                 ),
                 title: const Text('Upload from Device',
                     style: TextStyle(fontWeight: FontWeight.w600)),
@@ -134,7 +136,8 @@ class ImageService {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.info_outline, color: Colors.white, size: 18),
+                    const Icon(Icons.info_outline,
+                        color: Colors.white, size: 18),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(

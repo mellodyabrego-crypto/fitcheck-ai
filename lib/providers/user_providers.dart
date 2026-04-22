@@ -29,12 +29,13 @@ void _lsWrite(String key, String? value) {
 }
 
 // Keys
-const _kUsername     = 'fitcheck_username';
-const _kTopSize      = 'fitcheck_top_size';
-const _kBottomSize   = 'fitcheck_bottom_size';
-const _kShoeSize     = 'fitcheck_shoe_size';
-const _kColorSeason  = 'fitcheck_color_season';   // 'Spring'|'Summer'|'Autumn'|'Winter'
-const _kFavColors    = 'fitcheck_favorite_colors'; // JSON array of strings
+const _kUsername = 'fitcheck_username';
+const _kTopSize = 'fitcheck_top_size';
+const _kBottomSize = 'fitcheck_bottom_size';
+const _kShoeSize = 'fitcheck_shoe_size';
+const _kColorSeason =
+    'fitcheck_color_season'; // 'Spring'|'Summer'|'Autumn'|'Winter'
+const _kFavColors = 'fitcheck_favorite_colors'; // JSON array of strings
 
 // ─── Providers ──────────────────────────────────────────────────────────────
 

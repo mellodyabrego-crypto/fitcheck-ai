@@ -64,20 +64,36 @@ final _activeHashtagProvider = StateProvider<String?>((ref) => null);
 
 List<_Post> _buildSamplePosts() => [
       _Post(
-        id: '1', username: 'styledbyjaz', avatar: 'J',
-        caption: 'Obsessed with this coral set for summer! 🌸 Anyone else living in two-piece sets this season?',
-        imageUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80',
-        likes: 247, tags: ['#SummerVibes', '#OOTD', '#TwoPieceSet'],
+        id: '1',
+        username: 'styledbyjaz',
+        avatar: 'J',
+        caption:
+            'Obsessed with this coral set for summer! 🌸 Anyone else living in two-piece sets this season?',
+        imageUrl:
+            'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80',
+        likes: 247,
+        tags: ['#SummerVibes', '#OOTD', '#TwoPieceSet'],
         comments: [
-          _Comment(username: 'fashionbymia', text: 'Obsessed!! Where is this from?', timeAgo: '1h'),
-          _Comment(username: 'kurvedbykira', text: 'You\'re so right, living in sets rn 🔥', timeAgo: '30m'),
+          _Comment(
+              username: 'fashionbymia',
+              text: 'Obsessed!! Where is this from?',
+              timeAgo: '1h'),
+          _Comment(
+              username: 'kurvedbykira',
+              text: 'You\'re so right, living in sets rn 🔥',
+              timeAgo: '30m'),
         ],
       ),
       _Post(
-        id: '2', username: 'fashionbymia', avatar: 'M',
-        caption: 'Would this bag work for both casual and office? 👜 Vote below!',
-        imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80',
-        likes: 89, tags: ['#BagAddict', '#StyleAdvice'],
+        id: '2',
+        username: 'fashionbymia',
+        avatar: 'M',
+        caption:
+            'Would this bag work for both casual and office? 👜 Vote below!',
+        imageUrl:
+            'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80',
+        likes: 89,
+        tags: ['#BagAddict', '#StyleAdvice'],
         comments: [],
         pollOptions: [
           _PollOption(label: 'Yes, perfect for both!', votes: 143),
@@ -86,19 +102,32 @@ List<_Post> _buildSamplePosts() => [
         ],
       ),
       _Post(
-        id: '3', username: 'kurvedbykira', avatar: 'K',
-        caption: 'Found these heels for \$35 at Zara! They look SO much more expensive 😍',
-        imageUrl: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80',
-        likes: 412, tags: ['#ShoeLover', '#ZaraFinds', '#BudgetFashion'],
+        id: '3',
+        username: 'kurvedbykira',
+        avatar: 'K',
+        caption:
+            'Found these heels for \$35 at Zara! They look SO much more expensive 😍',
+        imageUrl:
+            'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80',
+        likes: 412,
+        tags: ['#ShoeLover', '#ZaraFinds', '#BudgetFashion'],
         comments: [
-          _Comment(username: 'styledbyjaz', text: 'NEED THESE. Linking please!', timeAgo: '3h'),
+          _Comment(
+              username: 'styledbyjaz',
+              text: 'NEED THESE. Linking please!',
+              timeAgo: '3h'),
         ],
       ),
       _Post(
-        id: '4', username: 'thestylediva', avatar: 'T',
-        caption: 'The blazer era is NOT over. Styling tip: go one size up for that effortless oversized look ✨',
-        imageUrl: 'https://images.unsplash.com/photo-1598522325074-042db73aa4e6?w=500&q=80',
-        likes: 331, tags: ['#BlazerSzn', '#StylingTips'],
+        id: '4',
+        username: 'thestylediva',
+        avatar: 'T',
+        caption:
+            'The blazer era is NOT over. Styling tip: go one size up for that effortless oversized look ✨',
+        imageUrl:
+            'https://images.unsplash.com/photo-1598522325074-042db73aa4e6?w=500&q=80',
+        likes: 331,
+        tags: ['#BlazerSzn', '#StylingTips'],
         comments: [],
       ),
     ];
@@ -161,7 +190,8 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
               padding: const EdgeInsets.only(right: 8),
               child: Chip(
                 label: Text(activeTag,
-                    style: const TextStyle(fontSize: 12, color: AppTheme.primary)),
+                    style:
+                        const TextStyle(fontSize: 12, color: AppTheme.primary)),
                 deleteIcon: const Icon(Icons.close, size: 14),
                 onDeleted: () =>
                     ref.read(_activeHashtagProvider.notifier).state = null,
@@ -181,8 +211,8 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.tag, size: 48,
-                            color: AppTheme.textSecondary),
+                        const Icon(Icons.tag,
+                            size: 48, color: AppTheme.textSecondary),
                         const SizedBox(height: 12),
                         Text('No posts with $activeTag',
                             style: const TextStyle(fontSize: 16)),
@@ -203,15 +233,18 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                         // Sample-community banner — tells the truth.
                         return Container(
                           margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
                             color: AppTheme.primary.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppTheme.primary.withValues(alpha: 0.2)),
+                            border: Border.all(
+                                color: AppTheme.primary.withValues(alpha: 0.2)),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.info_outline, size: 16, color: AppTheme.primary),
+                              const Icon(Icons.info_outline,
+                                  size: 16, color: AppTheme.primary),
                               const SizedBox(width: 8),
                               const Expanded(
                                 child: Text(
@@ -238,8 +271,10 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                             .state = tag,
                         onVote: (optionIndex) =>
                             _castVote(realIndex, optionIndex),
-                        onReport: () => ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Post reported. Thank you!'),
+                        onReport: () =>
+                            ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Post reported. Thank you!'),
                               behavior: SnackBarBehavior.floating),
                         ),
                       );
@@ -253,8 +288,8 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text('Share Your Look',
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w700)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 16),
 
                   // Photo
@@ -327,8 +362,8 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                           ),
                         )),
                     TextButton.icon(
-                      onPressed: () => setState(() => _pollOptionCtrl
-                          .add(TextEditingController())),
+                      onPressed: () => setState(
+                          () => _pollOptionCtrl.add(TextEditingController())),
                       icon: const Icon(Icons.add, size: 16),
                       label: const Text('Add option'),
                     ),
@@ -354,11 +389,18 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
     final posts = [...ref.read(_postsProvider)];
     final p = posts[index];
     posts[index] = _Post(
-      id: p.id, username: p.username, avatar: p.avatar,
-      caption: p.caption, imageUrl: p.imageUrl, imageBytes: p.imageBytes,
+      id: p.id,
+      username: p.username,
+      avatar: p.avatar,
+      caption: p.caption,
+      imageUrl: p.imageUrl,
+      imageBytes: p.imageBytes,
       likes: p.liked ? p.likes - 1 : p.likes + 1,
-      tags: p.tags, comments: p.comments, pollOptions: p.pollOptions,
-      liked: !p.liked, userVote: p.userVote,
+      tags: p.tags,
+      comments: p.comments,
+      pollOptions: p.pollOptions,
+      liked: !p.liked,
+      userVote: p.userVote,
     );
     ref.read(_postsProvider.notifier).state = posts;
   }
@@ -372,16 +414,22 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
         .entries
         .map((e) => _PollOption(
               label: e.value.label,
-              votes: e.key == optionIndex
-                  ? e.value.votes + 1
-                  : e.value.votes,
+              votes: e.key == optionIndex ? e.value.votes + 1 : e.value.votes,
             ))
         .toList();
     posts[postIndex] = _Post(
-      id: p.id, username: p.username, avatar: p.avatar,
-      caption: p.caption, imageUrl: p.imageUrl, imageBytes: p.imageBytes,
-      likes: p.likes, tags: p.tags, comments: p.comments,
-      pollOptions: options, liked: p.liked, userVote: optionIndex,
+      id: p.id,
+      username: p.username,
+      avatar: p.avatar,
+      caption: p.caption,
+      imageUrl: p.imageUrl,
+      imageBytes: p.imageBytes,
+      likes: p.likes,
+      tags: p.tags,
+      comments: p.comments,
+      pollOptions: options,
+      liked: p.liked,
+      userVote: optionIndex,
     );
     ref.read(_postsProvider.notifier).state = posts;
   }
@@ -397,13 +445,16 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
         builder: (ctx, setLocalState) => Padding(
           padding: EdgeInsets.only(
               bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
-              left: 20, right: 20, top: 20),
+              left: 20,
+              right: 20,
+              top: 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Comments (${post.comments.length})',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w700)),
               const SizedBox(height: 12),
               if (post.comments.isEmpty)
                 Padding(
@@ -443,8 +494,7 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                         ),
                         Text(c.timeAgo,
                             style: const TextStyle(
-                                fontSize: 11,
-                                color: AppTheme.textSecondary)),
+                                fontSize: 11, color: AppTheme.textSecondary)),
                       ],
                     ),
                   )),
@@ -457,8 +507,8 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                       decoration: const InputDecoration(
                         hintText: 'Add a comment...',
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       ),
                     ),
                   ),
@@ -471,10 +521,10 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                       final uname = username.isNotEmpty ? username : 'you';
                       final posts = [...ref.read(_postsProvider)];
                       posts[index].comments.add(_Comment(
-                        username: uname,
-                        text: commentCtrl.text,
-                        timeAgo: 'Just now',
-                      ));
+                            username: uname,
+                            text: commentCtrl.text,
+                            timeAgo: 'Just now',
+                          ));
                       ref.read(_postsProvider.notifier).state =
                           List.from(posts);
                       setLocalState(() {});
@@ -492,8 +542,7 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
   }
 
   Future<void> _sharePost(_Post post) async {
-    final text =
-        '@${post.username}: ${post.caption}\n\n${post.tags.join(' ')}';
+    final text = '@${post.username}: ${post.caption}\n\n${post.tags.join(' ')}';
     await Share.share(text, subject: 'Check out this outfit on Her Style Co.!');
   }
 
@@ -616,7 +665,8 @@ class _PostCard extends StatelessWidget {
                   backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
                   child: Text(post.avatar,
                       style: const TextStyle(
-                          color: AppTheme.primary, fontWeight: FontWeight.w700)),
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w700)),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -625,8 +675,10 @@ class _PostCard extends StatelessWidget {
                           fontWeight: FontWeight.w700, fontSize: 14)),
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_horiz, color: AppTheme.textSecondary),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  icon: const Icon(Icons.more_horiz,
+                      color: AppTheme.textSecondary),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                   onSelected: (val) async {
                     if (val == 'report' && onReport != null) onReport!();
                     if (val == 'copy') {
@@ -634,29 +686,39 @@ class _PostCard extends StatelessWidget {
                       await Clipboard.setData(ClipboardData(text: text));
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Caption copied to clipboard'),
+                        const SnackBar(
+                            content: Text('Caption copied to clipboard'),
                             behavior: SnackBarBehavior.floating),
                       );
                     }
                     if (val == 'share') {
-                      final text = '@${post.username}: ${post.caption}\n\n${post.tags.join(' ')}';
-                      await Share.share(text, subject: 'Outfit from Her Style Co.');
+                      final text =
+                          '@${post.username}: ${post.caption}\n\n${post.tags.join(' ')}';
+                      await Share.share(text,
+                          subject: 'Outfit from Her Style Co.');
                     }
                   },
                   itemBuilder: (_) => const [
-                    PopupMenuItem(value: 'copy',
+                    PopupMenuItem(
+                        value: 'copy',
                         child: Row(children: [
-                          Icon(Icons.copy, size: 16), SizedBox(width: 8),
+                          Icon(Icons.copy, size: 16),
+                          SizedBox(width: 8),
                           Text('Copy caption'),
                         ])),
-                    PopupMenuItem(value: 'share',
+                    PopupMenuItem(
+                        value: 'share',
                         child: Row(children: [
-                          Icon(Icons.share_outlined, size: 16), SizedBox(width: 8),
+                          Icon(Icons.share_outlined, size: 16),
+                          SizedBox(width: 8),
                           Text('Share post'),
                         ])),
-                    PopupMenuItem(value: 'report',
+                    PopupMenuItem(
+                        value: 'report',
                         child: Row(children: [
-                          Icon(Icons.flag_outlined, size: 16, color: Colors.red), SizedBox(width: 8),
+                          Icon(Icons.flag_outlined,
+                              size: 16, color: Colors.red),
+                          SizedBox(width: 8),
                           Text('Report', style: TextStyle(color: Colors.red)),
                         ])),
                   ],
@@ -668,11 +730,14 @@ class _PostCard extends StatelessWidget {
           // Image
           if (post.imageUrl != null)
             Image.network(post.imageUrl!,
-                height: 280, width: double.infinity, fit: BoxFit.cover,
+                height: 280,
+                width: double.infinity,
+                fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                     height: 120,
                     color: AppTheme.primary.withValues(alpha: 0.1),
-                    child: const Center(child: Icon(Icons.image_not_supported))))
+                    child:
+                        const Center(child: Icon(Icons.image_not_supported))))
           else if (post.imageBytes != null)
             Image.memory(post.imageBytes!,
                 height: 280, width: double.infinity, fit: BoxFit.cover),
@@ -708,7 +773,8 @@ class _PostCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 4),
               child: _PollWidget(
-                  options: post.pollOptions!, userVote: post.userVote,
+                  options: post.pollOptions!,
+                  userVote: post.userVote,
                   onVote: onVote),
             ),
 
@@ -720,7 +786,8 @@ class _PostCard extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     post.liked ? Icons.favorite : Icons.favorite_border,
-                    color: post.liked ? AppTheme.primary : AppTheme.textSecondary,
+                    color:
+                        post.liked ? AppTheme.primary : AppTheme.textSecondary,
                     size: 22,
                   ),
                   onPressed: onLike,
@@ -759,7 +826,8 @@ class _PollWidget extends StatelessWidget {
   final int? userVote;
   final void Function(int) onVote;
 
-  const _PollWidget({required this.options, required this.userVote, required this.onVote});
+  const _PollWidget(
+      {required this.options, required this.userVote, required this.onVote});
 
   @override
   Widget build(BuildContext context) {
@@ -770,7 +838,9 @@ class _PollWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Poll',
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700,
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
                 color: AppTheme.textSecondary)),
         const SizedBox(height: 6),
         ...options.asMap().entries.map((e) {
@@ -782,9 +852,7 @@ class _PollWidget extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 6),
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: isChosen
-                        ? AppTheme.primary
-                        : Colors.grey.shade300),
+                    color: isChosen ? AppTheme.primary : Colors.grey.shade300),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Stack(
@@ -833,8 +901,8 @@ class _PollWidget extends StatelessWidget {
         }),
         if (voted)
           Text('$total votes',
-              style: const TextStyle(
-                  fontSize: 11, color: AppTheme.textSecondary)),
+              style:
+                  const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
       ],
     );
   }

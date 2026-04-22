@@ -64,7 +64,9 @@ class BodyTypePicker extends StatelessWidget {
                           : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected ? AppTheme.primary : Colors.grey.shade200,
+                        color: isSelected
+                            ? AppTheme.primary
+                            : Colors.grey.shade200,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -74,15 +76,20 @@ class BodyTypePicker extends StatelessWidget {
                         Icon(
                           icon,
                           size: 32,
-                          color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
+                          color: isSelected
+                              ? AppTheme.primary
+                              : AppTheme.textSecondary,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           label,
                           style: TextStyle(
                             fontSize: 15,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected ? AppTheme.primary : AppTheme.textPrimary,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected
+                                ? AppTheme.primary
+                                : AppTheme.textPrimary,
                           ),
                         ),
                       ],

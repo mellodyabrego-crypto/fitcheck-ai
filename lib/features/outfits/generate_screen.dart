@@ -25,14 +25,14 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
   bool _isGenerating = false;
 
   static const _occasions = [
-    ('casual',     'Casual',     Icons.weekend),
-    ('work',       'Work',       Icons.business_center),
+    ('casual', 'Casual', Icons.weekend),
+    ('work', 'Work', Icons.business_center),
     ('date_night', 'Date Night', Icons.favorite),
-    ('formal',     'Formal',     Icons.diamond),
-    ('workout',    'Workout',    Icons.fitness_center),
-    ('outdoor',    'Outdoor',    Icons.park),
-    ('brunch',     'Brunch',     Icons.local_cafe),
-    ('party',      'Party',      Icons.celebration),
+    ('formal', 'Formal', Icons.diamond),
+    ('workout', 'Workout', Icons.fitness_center),
+    ('outdoor', 'Outdoor', Icons.park),
+    ('brunch', 'Brunch', Icons.local_cafe),
+    ('party', 'Party', Icons.celebration),
   ];
 
   @override
@@ -341,8 +341,9 @@ class _ModeCard extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color:
-              selected ? AppTheme.primary.withValues(alpha: 0.08) : Colors.white,
+          color: selected
+              ? AppTheme.primary.withValues(alpha: 0.08)
+              : Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: selected ? AppTheme.primary : Colors.grey.shade200,

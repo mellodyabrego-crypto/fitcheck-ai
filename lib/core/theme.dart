@@ -3,29 +3,31 @@ import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppTheme {
   // ── Base (80%) ─────────────────────────────────────────────────────────────
-  static const Color background   = Color(0xFFEDE5DB); // main app background
-  static const Color surface      = Color(0xFFF5EDE6); // cards / overlays
-  static const Color beige        = Color(0xFFD9CAB8); // primary neutral
-  static const Color beigeDeep    = Color(0xFFC0A88C); // dividers / containers
+  static const Color background = Color(0xFFEDE5DB); // main app background
+  static const Color surface = Color(0xFFF5EDE6); // cards / overlays
+  static const Color beige = Color(0xFFD9CAB8); // primary neutral
+  static const Color beigeDeep = Color(0xFFC0A88C); // dividers / containers
 
   // ── Text / Icons ───────────────────────────────────────────────────────────
-  static const Color textPrimary   = Color(0xFF2F2F2F); // body text
+  static const Color textPrimary = Color(0xFF2F2F2F); // body text
   static const Color textSecondary = Color(0xFF4A4A4A); // secondary text
-  static const Color textHeader    = Color(0xFF1F1F1F); // headers / strong
+  static const Color textHeader = Color(0xFF1F1F1F); // headers / strong
 
   // ── Accent (15%) — Deeper Blush Rose ──────────────────────────────────────
-  static const Color primary       = Color(0xFFC48A96); // main accent (one shade deeper)
-  static const Color primaryLight  = Color(0xFFD8A7B1); // hover / highlight
-  static const Color primaryDeep   = Color(0xFFA96E7A); // active states
+  static const Color primary =
+      Color(0xFFC48A96); // main accent (one shade deeper)
+  static const Color primaryLight = Color(0xFFD8A7B1); // hover / highlight
+  static const Color primaryDeep = Color(0xFFA96E7A); // active states
 
   // ── Highlight (5%) — Deeper Matte Gold ────────────────────────────────────
-  static const Color accent        = Color(0xFFB89A5D); // primary gold (one shade deeper)
-  static const Color accentDeep    = Color(0xFF9E8248); // icons / accents
-  static const Color accentLight   = Color(0xFFC6A96B); // subtle glow
+  static const Color accent =
+      Color(0xFFB89A5D); // primary gold (one shade deeper)
+  static const Color accentDeep = Color(0xFF9E8248); // icons / accents
+  static const Color accentLight = Color(0xFFC6A96B); // subtle glow
 
   // ── Legacy aliases (used by decorative_symbols.dart) ──────────────────────
-  static const Color secondary     = beigeDeep;         // warm neutral
-  static const Color lightPink     = primaryLight;      // light blush
+  static const Color secondary = beigeDeep; // warm neutral
+  static const Color lightPink = primaryLight; // light blush
 
   // ── Gradients ──────────────────────────────────────────────────────────────
   // Hero elements: blush → deep blush
@@ -43,25 +45,36 @@ abstract class AppTheme {
   );
 
   static TextTheme get _textTheme => TextTheme(
-    // Headlines — Dancing Script (feminine, readable cursive)
-    displayLarge:   GoogleFonts.dancingScript(color: textHeader,     fontWeight: FontWeight.w700),
-    displayMedium:  GoogleFonts.dancingScript(color: textHeader,     fontWeight: FontWeight.w700),
-    displaySmall:   GoogleFonts.dancingScript(color: textHeader,     fontWeight: FontWeight.w700),
-    headlineLarge:  GoogleFonts.dancingScript(color: textHeader,     fontWeight: FontWeight.w700),
-    headlineMedium: GoogleFonts.dancingScript(color: textHeader,     fontWeight: FontWeight.w700),
-    headlineSmall:  GoogleFonts.dancingScript(color: textHeader,     fontWeight: FontWeight.w700),
-    // Titles — Dancing Script
-    titleLarge:     GoogleFonts.dancingScript(color: textPrimary,    fontWeight: FontWeight.w700),
-    titleMedium:    GoogleFonts.dancingScript(color: textPrimary,    fontWeight: FontWeight.w700),
-    titleSmall:     GoogleFonts.dancingScript(color: textPrimary,    fontWeight: FontWeight.w700),
-    // Body / UI — Inter (stays clean and readable)
-    bodyLarge:      GoogleFonts.inter(color: textPrimary,  fontSize: 16),
-    bodyMedium:     GoogleFonts.inter(color: textPrimary,  fontSize: 14),
-    bodySmall:      GoogleFonts.inter(color: textSecondary, fontSize: 12),
-    labelLarge:     GoogleFonts.inter(color: textPrimary,  fontWeight: FontWeight.w600, fontSize: 14),
-    labelMedium:    GoogleFonts.inter(color: textPrimary,  fontWeight: FontWeight.w500, fontSize: 12),
-    labelSmall:     GoogleFonts.inter(color: textSecondary, fontSize: 11),
-  );
+        // Headlines — Dancing Script (feminine, readable cursive)
+        displayLarge: GoogleFonts.dancingScript(
+            color: textHeader, fontWeight: FontWeight.w700),
+        displayMedium: GoogleFonts.dancingScript(
+            color: textHeader, fontWeight: FontWeight.w700),
+        displaySmall: GoogleFonts.dancingScript(
+            color: textHeader, fontWeight: FontWeight.w700),
+        headlineLarge: GoogleFonts.dancingScript(
+            color: textHeader, fontWeight: FontWeight.w700),
+        headlineMedium: GoogleFonts.dancingScript(
+            color: textHeader, fontWeight: FontWeight.w700),
+        headlineSmall: GoogleFonts.dancingScript(
+            color: textHeader, fontWeight: FontWeight.w700),
+        // Titles — Dancing Script
+        titleLarge: GoogleFonts.dancingScript(
+            color: textPrimary, fontWeight: FontWeight.w700),
+        titleMedium: GoogleFonts.dancingScript(
+            color: textPrimary, fontWeight: FontWeight.w700),
+        titleSmall: GoogleFonts.dancingScript(
+            color: textPrimary, fontWeight: FontWeight.w700),
+        // Body / UI — Inter (stays clean and readable)
+        bodyLarge: GoogleFonts.inter(color: textPrimary, fontSize: 16),
+        bodyMedium: GoogleFonts.inter(color: textPrimary, fontSize: 14),
+        bodySmall: GoogleFonts.inter(color: textSecondary, fontSize: 12),
+        labelLarge: GoogleFonts.inter(
+            color: textPrimary, fontWeight: FontWeight.w600, fontSize: 14),
+        labelMedium: GoogleFonts.inter(
+            color: textPrimary, fontWeight: FontWeight.w500, fontSize: 12),
+        labelSmall: GoogleFonts.inter(color: textSecondary, fontSize: 11),
+      );
 
   static ThemeData get light => ThemeData(
         useMaterial3: true,

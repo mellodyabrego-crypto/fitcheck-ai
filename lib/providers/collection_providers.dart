@@ -61,7 +61,8 @@ class CollectionsNotifier extends StateNotifier<List<OutfitCollection>> {
     state = [
       for (final c in state)
         if (c.id == collectionId)
-          c.copyWith(outfitIds: c.outfitIds.where((id) => id != outfitId).toList())
+          c.copyWith(
+              outfitIds: c.outfitIds.where((id) => id != outfitId).toList())
         else
           c,
     ];

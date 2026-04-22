@@ -13,14 +13,86 @@ class ColorPreferencePicker extends StatelessWidget {
   });
 
   static const _colorGroups = [
-    ('neutrals', 'Neutrals', [Color(0xFF2D3436), Color(0xFF636E72), Color(0xFFDFE6E9), Color(0xFFFAFAFA)]),
-    ('earth_tones', 'Earth Tones', [Color(0xFF8B6914), Color(0xFFA0522D), Color(0xFF6B8E23), Color(0xFFC4A882)]),
-    ('pastels', 'Pastels', [Color(0xFFFFB5C5), Color(0xFFBFEFFF), Color(0xFFBDFCC9), Color(0xFFFFF0B5)]),
-    ('bold', 'Bold', [Color(0xFFE74C3C), Color(0xFF3498DB), Color(0xFFF39C12), Color(0xFF9B59B6)]),
-    ('monochrome', 'Monochrome', [Color(0xFF000000), Color(0xFF555555), Color(0xFFAAAAAA), Color(0xFFFFFFFF)]),
-    ('jewel_tones', 'Jewel Tones', [Color(0xFF1B4F72), Color(0xFF7D3C98), Color(0xFF196F3D), Color(0xFF922B21)]),
-    ('warm', 'Warm', [Color(0xFFFF6B6B), Color(0xFFFFA07A), Color(0xFFFFD93D), Color(0xFFFF8C42)]),
-    ('cool', 'Cool', [Color(0xFF74B9FF), Color(0xFFA29BFE), Color(0xFF81ECEC), Color(0xFF55EFC4)]),
+    (
+      'neutrals',
+      'Neutrals',
+      [
+        Color(0xFF2D3436),
+        Color(0xFF636E72),
+        Color(0xFFDFE6E9),
+        Color(0xFFFAFAFA)
+      ]
+    ),
+    (
+      'earth_tones',
+      'Earth Tones',
+      [
+        Color(0xFF8B6914),
+        Color(0xFFA0522D),
+        Color(0xFF6B8E23),
+        Color(0xFFC4A882)
+      ]
+    ),
+    (
+      'pastels',
+      'Pastels',
+      [
+        Color(0xFFFFB5C5),
+        Color(0xFFBFEFFF),
+        Color(0xFFBDFCC9),
+        Color(0xFFFFF0B5)
+      ]
+    ),
+    (
+      'bold',
+      'Bold',
+      [
+        Color(0xFFE74C3C),
+        Color(0xFF3498DB),
+        Color(0xFFF39C12),
+        Color(0xFF9B59B6)
+      ]
+    ),
+    (
+      'monochrome',
+      'Monochrome',
+      [
+        Color(0xFF000000),
+        Color(0xFF555555),
+        Color(0xFFAAAAAA),
+        Color(0xFFFFFFFF)
+      ]
+    ),
+    (
+      'jewel_tones',
+      'Jewel Tones',
+      [
+        Color(0xFF1B4F72),
+        Color(0xFF7D3C98),
+        Color(0xFF196F3D),
+        Color(0xFF922B21)
+      ]
+    ),
+    (
+      'warm',
+      'Warm',
+      [
+        Color(0xFFFF6B6B),
+        Color(0xFFFFA07A),
+        Color(0xFFFFD93D),
+        Color(0xFFFF8C42)
+      ]
+    ),
+    (
+      'cool',
+      'Cool',
+      [
+        Color(0xFF74B9FF),
+        Color(0xFFA29BFE),
+        Color(0xFF81ECEC),
+        Color(0xFF55EFC4)
+      ]
+    ),
   ];
 
   @override
@@ -66,7 +138,9 @@ class ColorPreferencePicker extends StatelessWidget {
                           : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected ? AppTheme.primary : Colors.grey.shade200,
+                        color: isSelected
+                            ? AppTheme.primary
+                            : Colors.grey.shade200,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -81,7 +155,8 @@ class ColorPreferencePicker extends StatelessWidget {
                               .map((c) => Container(
                                     width: 28,
                                     height: 28,
-                                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 3),
                                     decoration: BoxDecoration(
                                       color: c,
                                       shape: BoxShape.circle,

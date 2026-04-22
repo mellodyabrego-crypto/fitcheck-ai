@@ -31,7 +31,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _oauth(OAuthProvider provider, String label) async {
-    setState(() { _isLoading = true; _error = null; });
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
     try {
       await Supabase.instance.client.auth.signInWithOAuth(provider);
       // signInWithOAuth on web redirects the whole page — control usually doesn't return here.
@@ -115,215 +118,223 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     return Scaffold(
       body: WithDecorations(
         child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            children: [
-              const SizedBox(height: 60),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              children: [
+                const SizedBox(height: 60),
 
-              // Logo — candy shop branded
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Outer glow ring
-                  Container(
-                    width: 118,
-                    height: 118,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const SweepGradient(colors: [
-                        Color(0xFFD8A7B1),
-                        Color(0xFFE8DED2),
-                        Color(0xFFC6A96B),
-                        Color(0xFFE8DED2),
-                        Color(0xFFD8A7B1),
-                      ]),
+                // Logo — candy shop branded
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Outer glow ring
+                    Container(
+                      width: 118,
+                      height: 118,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const SweepGradient(colors: [
+                          Color(0xFFD8A7B1),
+                          Color(0xFFE8DED2),
+                          Color(0xFFC6A96B),
+                          Color(0xFFE8DED2),
+                          Color(0xFFD8A7B1),
+                        ]),
+                      ),
                     ),
-                  ),
-                  // White ring separator
-                  Container(
-                    width: 108,
-                    height: 108,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
+                    // White ring separator
+                    Container(
+                      width: 108,
+                      height: 108,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // Inner gradient circle
+                    Container(
+                      width: 96,
+                      height: 96,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [Color(0xFFE6BFC7), Color(0xFFD8A7B1)],
+                          center: Alignment(-0.3, -0.3),
+                          radius: 1.1,
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Sparkle stars
+                          Positioned(
+                            top: 10,
+                            right: 14,
+                            child: Icon(Icons.star,
+                                color: Colors.white.withValues(alpha: 0.6),
+                                size: 10),
+                          ),
+                          Positioned(
+                            bottom: 12,
+                            left: 12,
+                            child: Icon(Icons.star,
+                                color: Colors.white.withValues(alpha: 0.5),
+                                size: 8),
+                          ),
+                          // Fashion icon
+                          const Icon(Icons.auto_awesome,
+                              size: 42, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // "The Candy Shop" in script font
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Color(0xFFD8A7B1), Color(0xFFC6A96B)],
+                  ).createShader(bounds),
+                  child: Text(
+                    'Her Style Co.',
+                    style: GoogleFonts.pacifico(
+                      fontSize: 32,
                       color: Colors.white,
                     ),
                   ),
-                  // Inner gradient circle
-                  Container(
-                    width: 96,
-                    height: 96,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [Color(0xFFE6BFC7), Color(0xFFD8A7B1)],
-                        center: Alignment(-0.3, -0.3),
-                        radius: 1.1,
-                      ),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Sparkle stars
-                        Positioned(
-                          top: 10, right: 14,
-                          child: Icon(Icons.star, color: Colors.white.withValues(alpha: 0.6), size: 10),
-                        ),
-                        Positioned(
-                          bottom: 12, left: 12,
-                          child: Icon(Icons.star, color: Colors.white.withValues(alpha: 0.5), size: 8),
-                        ),
-                        // Fashion icon
-                        const Icon(Icons.auto_awesome, size: 42, color: Colors.white),
-                      ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Your personal Stylist',
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+
+                const SizedBox(height: 48),
+
+                // Email field
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'you@example.com',
+                    prefixIcon: const Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // "The Candy Shop" in script font
-              ShaderMask(
-                shaderCallback: (bounds) => const LinearGradient(
-                  colors: [Color(0xFFD8A7B1), Color(0xFFC6A96B)],
-                ).createShader(bounds),
-                child: Text(
-                  'Her Style Co.',
-                  style: GoogleFonts.pacifico(
-                    fontSize: 32,
-                    color: Colors.white,
-                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Your personal Stylist',
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.textSecondary,
-                ),
-              ),
+                const SizedBox(height: 14),
 
-              const SizedBox(height: 48),
-
-              // Email field
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'you@example.com',
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-
-              // Password field
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                textInputAction: TextInputAction.done,
-                onSubmitted: (_) => _signInWithEmail(),
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: _isSignUp ? 'Min 6 characters' : '',
-                  prefixIcon: const Icon(Icons.lock_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              ),
-
-              // Error message
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Text(
-                    _error!,
-                    style: TextStyle(color: Colors.red.shade700, fontSize: 14),
-                    textAlign: TextAlign.center,
+                // Password field
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _signInWithEmail(),
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    hintText: _isSignUp ? 'Min 6 characters' : '',
+                    prefixIcon: const Icon(Icons.lock_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                 ),
 
-              const SizedBox(height: 24),
-
-              // Sign in / Sign up button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _signInWithEmail,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(_isSignUp ? 'Create Account' : 'Sign In'),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Toggle sign in / sign up
-              TextButton(
-                onPressed: () => setState(() {
-                  _isSignUp = !_isSignUp;
-                  _error = null;
-                }),
-                child: Text(
-                  _isSignUp
-                      ? 'Already have an account? Sign in'
-                      : 'Don\'t have an account? Create one',
-                  style: TextStyle(color: AppTheme.textSecondary),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Divider
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
+                // Error message
+                if (_error != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('or',
-                        style: TextStyle(color: AppTheme.textSecondary)),
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      _error!,
+                      style:
+                          TextStyle(color: Colors.red.shade700, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
-                ],
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
-              // Social sign-in — Google only for now (Apple requires a $99/yr developer account)
-              _SignInButton(
-                label: 'Continue with Google',
-                icon: Icons.g_mobiledata,
-                onPressed: () => _oauth(OAuthProvider.google, 'Google'),
-                isPrimary: true,
-              ),
-
-              const SizedBox(height: 24),
-
-              // Terms
-              Text(
-                'By continuing, you agree to our Terms of Service and Privacy Policy',
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: AppTheme.textSecondary,
+                // Sign in / Sign up button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _signInWithEmail,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(_isSignUp ? 'Create Account' : 'Sign In'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-            ],
+
+                const SizedBox(height: 12),
+
+                // Toggle sign in / sign up
+                TextButton(
+                  onPressed: () => setState(() {
+                    _isSignUp = !_isSignUp;
+                    _error = null;
+                  }),
+                  child: Text(
+                    _isSignUp
+                        ? 'Already have an account? Sign in'
+                        : 'Don\'t have an account? Create one',
+                    style: TextStyle(color: AppTheme.textSecondary),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Divider
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('or',
+                          style: TextStyle(color: AppTheme.textSecondary)),
+                    ),
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // Social sign-in — Google only for now (Apple requires a $99/yr developer account)
+                _SignInButton(
+                  label: 'Continue with Google',
+                  icon: Icons.g_mobiledata,
+                  onPressed: () => _oauth(OAuthProvider.google, 'Google'),
+                  isPrimary: true,
+                ),
+
+                const SizedBox(height: 24),
+
+                // Terms
+                Text(
+                  'By continuing, you agree to our Terms of Service and Privacy Policy',
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

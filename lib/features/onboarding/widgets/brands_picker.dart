@@ -18,18 +18,48 @@ class _BrandsPickerState extends State<BrandsPicker> {
   String _query = '';
 
   static const _suggestions = [
-    'Zara', 'H&M', 'Uniqlo', 'Nike', 'Adidas', "Levi's", 'Gap', 'ASOS',
-    'Free People', 'Anthropologie', 'Madewell', 'J.Crew', 'Ralph Lauren',
-    'Tommy Hilfiger', 'Calvin Klein', 'Gucci', 'Louis Vuitton', 'Prada',
-    'Balenciaga', 'Off-White', 'Forever 21', 'Target', 'Urban Outfitters',
-    'Reformation', 'Everlane', 'Patagonia', 'Supreme', 'Jordan', 'New Balance',
-    'Shein', 'Princess Polly', 'Revolve', 'Nordstrom', 'Banana Republic',
+    'Zara',
+    'H&M',
+    'Uniqlo',
+    'Nike',
+    'Adidas',
+    "Levi's",
+    'Gap',
+    'ASOS',
+    'Free People',
+    'Anthropologie',
+    'Madewell',
+    'J.Crew',
+    'Ralph Lauren',
+    'Tommy Hilfiger',
+    'Calvin Klein',
+    'Gucci',
+    'Louis Vuitton',
+    'Prada',
+    'Balenciaga',
+    'Off-White',
+    'Forever 21',
+    'Target',
+    'Urban Outfitters',
+    'Reformation',
+    'Everlane',
+    'Patagonia',
+    'Supreme',
+    'Jordan',
+    'New Balance',
+    'Shein',
+    'Princess Polly',
+    'Revolve',
+    'Nordstrom',
+    'Banana Republic',
   ];
 
   void _add(String brand) {
     final trimmed = brand.trim();
     if (trimmed.isEmpty || widget.selected.length >= 5) return;
-    if (widget.selected.map((b) => b.toLowerCase()).contains(trimmed.toLowerCase())) return;
+    if (widget.selected
+        .map((b) => b.toLowerCase())
+        .contains(trimmed.toLowerCase())) return;
     widget.onChanged([...widget.selected, trimmed]);
     _controller.clear();
     setState(() => _query = '');
@@ -49,8 +79,7 @@ class _BrandsPickerState extends State<BrandsPicker> {
   Widget build(BuildContext context) {
     final filtered = _suggestions
         .where((b) =>
-            _query.isEmpty ||
-            b.toLowerCase().contains(_query.toLowerCase()))
+            _query.isEmpty || b.toLowerCase().contains(_query.toLowerCase()))
         .where((b) => !widget.selected
             .map((s) => s.toLowerCase())
             .contains(b.toLowerCase()))
@@ -119,8 +148,8 @@ class _BrandsPickerState extends State<BrandsPicker> {
                         onPressed: () => _add(_query),
                       )
                     : null,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),
@@ -157,15 +186,13 @@ class _BrandsPickerState extends State<BrandsPicker> {
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                    color: Colors.grey.shade300),
+                                border: Border.all(color: Colors.grey.shade300),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Icon(Icons.add,
-                                      size: 14,
-                                      color: AppTheme.textSecondary),
+                                      size: 14, color: AppTheme.textSecondary),
                                   const SizedBox(width: 4),
                                   Text(brand,
                                       style: const TextStyle(fontSize: 13)),

@@ -24,7 +24,7 @@ class _SeasonInfo {
   final List<String> paletteNames;
   final List<Color> avoidColors;
   final List<String> avoidNames;
-  final String traits;       // physical description
+  final String traits; // physical description
   final List<String> celebs; // celebrity examples
 
   const _SeasonInfo({
@@ -62,13 +62,25 @@ const _seasons = {
       Color(0xFF8A9A5B), // Moss Green
     ],
     paletteNames: [
-      'Peach', 'Coral', 'Warm Pink', 'Golden Yellow',
-      'Ivory', 'Camel', 'Warm Tan', 'Moss Green',
+      'Peach',
+      'Coral',
+      'Warm Pink',
+      'Golden Yellow',
+      'Ivory',
+      'Camel',
+      'Warm Tan',
+      'Moss Green',
     ],
     avoidColors: [Color(0xFF708090), Color(0xFF4B0082), Color(0xFF000000)],
     avoidNames: ['Slate Grey', 'Indigo', 'Black'],
-    traits: 'Warm peachy or golden skin · Golden blonde, strawberry blonde or light auburn hair · Blue, green or hazel eyes with gold flecks · Freckles common',
-    celebs: ['Jennifer Aniston', 'Blake Lively', 'Cameron Diaz', 'Sienna Miller'],
+    traits:
+        'Warm peachy or golden skin · Golden blonde, strawberry blonde or light auburn hair · Blue, green or hazel eyes with gold flecks · Freckles common',
+    celebs: [
+      'Jennifer Aniston',
+      'Blake Lively',
+      'Cameron Diaz',
+      'Sienna Miller'
+    ],
   ),
   'summer': _SeasonInfo(
     label: 'Summer',
@@ -89,13 +101,25 @@ const _seasons = {
       Color(0xFF3B4F6E), // Light Navy
     ],
     paletteNames: [
-      'Dusty Rose', 'Lavender', 'Soft Blue', 'Periwinkle',
-      'Mauve', 'Powder Blue', 'Soft Grey', 'Light Navy',
+      'Dusty Rose',
+      'Lavender',
+      'Soft Blue',
+      'Periwinkle',
+      'Mauve',
+      'Powder Blue',
+      'Soft Grey',
+      'Light Navy',
     ],
     avoidColors: [Color(0xFFFF4500), Color(0xFFDAA520), Color(0xFF000000)],
     avoidNames: ['Orange-Red', 'Gold', 'Black'],
-    traits: 'Pink or rosy cool-toned skin · Ash blonde, mousy or cool light brown hair · Grey-blue, soft grey or muted brown eyes · Skin may flush easily',
-    celebs: ['Gwyneth Paltrow', 'Cate Blanchett', 'Reese Witherspoon', 'Taylor Swift'],
+    traits:
+        'Pink or rosy cool-toned skin · Ash blonde, mousy or cool light brown hair · Grey-blue, soft grey or muted brown eyes · Skin may flush easily',
+    celebs: [
+      'Gwyneth Paltrow',
+      'Cate Blanchett',
+      'Reese Witherspoon',
+      'Taylor Swift'
+    ],
   ),
   'autumn': _SeasonInfo(
     label: 'Autumn',
@@ -116,12 +140,19 @@ const _seasons = {
       Color(0xFF7B3F00), // Chocolate
     ],
     paletteNames: [
-      'Rust', 'Burnt Orange', 'Olive', 'Terracotta',
-      'Forest Green', 'Mustard', 'Camel', 'Chocolate',
+      'Rust',
+      'Burnt Orange',
+      'Olive',
+      'Terracotta',
+      'Forest Green',
+      'Mustard',
+      'Camel',
+      'Chocolate',
     ],
     avoidColors: [Color(0xFFFF69B4), Color(0xFF000080), Color(0xFFE0E0E0)],
     avoidNames: ['Hot Pink', 'Navy Blue', 'Light Grey'],
-    traits: 'Golden, olive, bronze or warm medium-to-deep skin · Auburn, chestnut, warm brown or dark brown hair · Brown, hazel or olive-green eyes · Rich & earthy overall',
+    traits:
+        'Golden, olive, bronze or warm medium-to-deep skin · Auburn, chestnut, warm brown or dark brown hair · Brown, hazel or olive-green eyes · Rich & earthy overall',
     celebs: ['Jennifer Lopez', 'Jessica Alba', 'Beyoncé', 'Tyra Banks'],
   ),
   'winter': _SeasonInfo(
@@ -143,12 +174,19 @@ const _seasons = {
       Color(0xFFF2C4CE), // Icy Pink
     ],
     paletteNames: [
-      'True Red', 'Royal Blue', 'Black', 'Crisp White',
-      'Emerald', 'Burgundy', 'Charcoal', 'Icy Pink',
+      'True Red',
+      'Royal Blue',
+      'Black',
+      'Crisp White',
+      'Emerald',
+      'Burgundy',
+      'Charcoal',
+      'Icy Pink',
     ],
     avoidColors: [Color(0xFFFFD700), Color(0xFFFF6347), Color(0xFFF5DEB3)],
     avoidNames: ['Gold', 'Tomato', 'Wheat'],
-    traits: 'Any depth skin with cool pink/blue undertone · Blue-black, dark brown, silver or platinum hair · Dark brown, black, cool grey or icy blue eyes · Strong contrast between features',
+    traits:
+        'Any depth skin with cool pink/blue undertone · Blue-black, dark brown, silver or platinum hair · Dark brown, black, cool grey or icy blue eyes · Strong contrast between features',
     celebs: ['Zendaya', 'Lupita Nyong\'o', 'Katy Perry', 'Audrey Hepburn'],
   ),
 };
@@ -272,9 +310,10 @@ class _SkinTonePickerState extends State<SkinTonePicker>
     }
 
     // Real analysis — advance step labels while Gemini runs
-    final stepTimer = Stream.periodic(const Duration(milliseconds: 700), (i) => i)
-        .take(_analysisSteps.length - 1)
-        .listen((i) {
+    final stepTimer =
+        Stream.periodic(const Duration(milliseconds: 700), (i) => i)
+            .take(_analysisSteps.length - 1)
+            .listen((i) {
       if (mounted) setState(() => _analysisStepIndex = i + 1);
     });
 
@@ -292,7 +331,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
       stepTimer.cancel();
       if (!mounted) return;
       setState(() {
-        _error = 'AI is rate-limited right now — the Gemini API key is over quota. '
+        _error =
+            'AI is rate-limited right now — the Gemini API key is over quota. '
             'Pick your color season below for now, or try again later once the key is rotated.';
         _errorType = _AnalysisError.apiKeyMissing;
         _step = _PickerStep.manual;
@@ -309,7 +349,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
       stepTimer.cancel();
       if (!mounted) return;
       setState(() {
-        _error = 'Analysis failed: ${e.toString().replaceAll('Exception: ', '')}';
+        _error =
+            'Analysis failed: ${e.toString().replaceAll('Exception: ', '')}';
         _errorType = _AnalysisError.genericFailure;
         _step = _PickerStep.manual;
       });
@@ -399,7 +440,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.add_a_photo,
-                            size: 36, color: AppTheme.primary.withValues(alpha: 0.7)),
+                            size: 36,
+                            color: AppTheme.primary.withValues(alpha: 0.7)),
                         const SizedBox(height: 8),
                         Text(
                           'Upload\nSelfie',
@@ -438,16 +480,16 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 ('Face clearly visible', Icons.face_outlined),
                 ('Natural hair color if possible', Icons.content_cut_outlined),
               ].map((tip) => Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Row(
-                  children: [
-                    Icon(tip.$2, size: 15, color: AppTheme.primary),
-                    const SizedBox(width: 8),
-                    Text(tip.$1,
-                        style: const TextStyle(fontSize: 12, height: 1.3)),
-                  ],
-                ),
-              )),
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      children: [
+                        Icon(tip.$2, size: 15, color: AppTheme.primary),
+                        const SizedBox(width: 8),
+                        Text(tip.$1,
+                            style: const TextStyle(fontSize: 12, height: 1.3)),
+                      ],
+                    ),
+                  )),
             ],
           ),
         ),
@@ -601,7 +643,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: season.accent.withValues(alpha: 0.3), width: 1.5),
+              border: Border.all(
+                  color: season.accent.withValues(alpha: 0.3), width: 1.5),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -769,8 +812,7 @@ class _SkinTonePickerState extends State<SkinTonePicker>
               Icon(Icons.block, size: 15, color: Colors.red.shade400),
               const SizedBox(width: 6),
               const Text('Colors to avoid',
-                  style:
-                      TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 10),
@@ -786,11 +828,11 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                       decoration: BoxDecoration(
                         color: season.avoidColors[i],
                         shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Colors.red.shade300, width: 2),
+                        border:
+                            Border.all(color: Colors.red.shade300, width: 2),
                       ),
-                      child:
-                          Icon(Icons.close, size: 16, color: Colors.red.shade400),
+                      child: Icon(Icons.close,
+                          size: 16, color: Colors.red.shade400),
                     ),
                     const SizedBox(height: 4),
                     Text(season.avoidNames[i],
@@ -809,7 +851,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 child: OutlinedButton.icon(
                   onPressed: _reset,
                   icon: const Icon(Icons.refresh, size: 16),
-                  label: const Text('Retake Photo', style: TextStyle(fontSize: 13)),
+                  label: const Text('Retake Photo',
+                      style: TextStyle(fontSize: 13)),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.textSecondary,
                     side: BorderSide(color: Colors.grey.shade300),
@@ -824,7 +867,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 child: OutlinedButton.icon(
                   onPressed: () => setState(() => _step = _PickerStep.manual),
                   icon: const Icon(Icons.tune, size: 16),
-                  label: const Text('Change Season', style: TextStyle(fontSize: 13)),
+                  label: const Text('Change Season',
+                      style: TextStyle(fontSize: 13)),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.textSecondary,
                     side: BorderSide(color: Colors.grey.shade300),
@@ -894,7 +938,6 @@ class _SkinTonePickerState extends State<SkinTonePicker>
               ],
             ),
           ),
-
         Text(
           'Which season best describes your coloring?',
           style: TextStyle(
@@ -903,7 +946,6 @@ class _SkinTonePickerState extends State<SkinTonePicker>
               fontStyle: FontStyle.italic),
         ),
         const SizedBox(height: 14),
-
         Expanded(
           child: SingleChildScrollView(
             child: Column(
@@ -923,9 +965,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                             : Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: isSelected
-                              ? season.accent
-                              : Colors.grey.shade200,
+                          color:
+                              isSelected ? season.accent : Colors.grey.shade200,
                           width: isSelected ? 2 : 1,
                         ),
                       ),
@@ -980,38 +1021,48 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w700,
-                                    color: isSelected ? season.accent : AppTheme.textPrimary,
+                                    color: isSelected
+                                        ? season.accent
+                                        : AppTheme.textPrimary,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   season.subtitle,
-                                  style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: AppTheme.textSecondary),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   season.traits,
-                                  style: const TextStyle(fontSize: 11, height: 1.4),
+                                  style: const TextStyle(
+                                      fontSize: 11, height: 1.4),
                                 ),
                                 const SizedBox(height: 6),
                                 Wrap(
                                   spacing: 4,
                                   runSpacing: 4,
-                                  children: season.celebs.map((name) => Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: season.accent.withValues(alpha: 0.12),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      name,
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
-                                        color: season.accent,
-                                      ),
-                                    ),
-                                  )).toList(),
+                                  children: season.celebs
+                                      .map((name) => Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 3),
+                                            decoration: BoxDecoration(
+                                              color: season.accent
+                                                  .withValues(alpha: 0.12),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Text(
+                                              name,
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                                color: season.accent,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
                                 ),
                               ],
                             ),
@@ -1031,7 +1082,6 @@ class _SkinTonePickerState extends State<SkinTonePicker>
             ),
           ),
         ),
-
         if (_error != null || widget.selectedUndertone == null)
           Padding(
             padding: const EdgeInsets.only(top: 8),

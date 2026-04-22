@@ -13,18 +13,18 @@ class AestheticPicker extends StatelessWidget {
   });
 
   static const _aesthetics = [
-    ('minimalist', 'Minimalist', Icons.crop_square,      AppTheme.primary),
-    ('streetwear', 'Streetwear', Icons.skateboarding,    AppTheme.accent),
-    ('preppy',     'Preppy',     Icons.school,           AppTheme.primaryDeep),
-    ('y2k',        'Y2K',        Icons.star,             AppTheme.primary),
-    ('cottagecore','Cottagecore',Icons.local_florist,    AppTheme.accent),
-    ('casual',     'Casual',     Icons.weekend,          AppTheme.primaryDeep),
-    ('formal',     'Formal',     Icons.business_center,  AppTheme.primary),
-    ('bohemian',   'Bohemian',   Icons.auto_awesome,     AppTheme.accent),
-    ('athleisure', 'Athleisure', Icons.fitness_center,   AppTheme.primaryDeep),
-    ('vintage',    'Vintage',    Icons.camera_alt,       AppTheme.accent),
-    ('edgy',       'Edgy',       Icons.bolt,             AppTheme.primary),
-    ('romantic',   'Romantic',   Icons.favorite,         AppTheme.primaryDeep),
+    ('minimalist', 'Minimalist', Icons.crop_square, AppTheme.primary),
+    ('streetwear', 'Streetwear', Icons.skateboarding, AppTheme.accent),
+    ('preppy', 'Preppy', Icons.school, AppTheme.primaryDeep),
+    ('y2k', 'Y2K', Icons.star, AppTheme.primary),
+    ('cottagecore', 'Cottagecore', Icons.local_florist, AppTheme.accent),
+    ('casual', 'Casual', Icons.weekend, AppTheme.primaryDeep),
+    ('formal', 'Formal', Icons.business_center, AppTheme.primary),
+    ('bohemian', 'Bohemian', Icons.auto_awesome, AppTheme.accent),
+    ('athleisure', 'Athleisure', Icons.fitness_center, AppTheme.primaryDeep),
+    ('vintage', 'Vintage', Icons.camera_alt, AppTheme.accent),
+    ('edgy', 'Edgy', Icons.bolt, AppTheme.primary),
+    ('romantic', 'Romantic', Icons.favorite, AppTheme.primaryDeep),
   ];
 
   @override
@@ -70,7 +70,9 @@ class AestheticPicker extends StatelessWidget {
                           : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected ? AppTheme.primary : Colors.grey.shade200,
+                        color: isSelected
+                            ? AppTheme.primary
+                            : Colors.grey.shade200,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -91,8 +93,11 @@ class AestheticPicker extends StatelessWidget {
                           label,
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected ? AppTheme.primary : AppTheme.textPrimary,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected
+                                ? AppTheme.primary
+                                : AppTheme.textPrimary,
                           ),
                         ),
                         if (isSelected)

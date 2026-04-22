@@ -122,10 +122,11 @@ class GeminiService {
     final response = await _postToGemini({
       'model': 'gemini-2.5-flash',
       'contents': [
-          {
-            'parts': [
-              {
-                'text': '''You are a professional color analyst trained in Johannes Itten's color temperature theory and Carole Jackson's "Color Me Beautiful" 4-season system.
+        {
+          'parts': [
+            {
+              'text':
+                  '''You are a professional color analyst trained in Johannes Itten's color temperature theory and Carole Jackson's "Color Me Beautiful" 4-season system.
 
 Analyze this person's natural coloring carefully. Look at:
 1. SKIN UNDERTONE: Is it warm (yellow/golden/peachy) or cool (pink/rosy/bluish)?
@@ -155,20 +156,20 @@ Respond with ONLY valid JSON (no markdown, no extra text):
   "eye_observation": "<one sentence about eye color>",
   "contrast_level": "<Low|Medium|High>"
 }''',
+            },
+            {
+              'inline_data': {
+                'mime_type': 'image/jpeg',
+                'data': base64Image,
               },
-              {
-                'inline_data': {
-                  'mime_type': 'image/jpeg',
-                  'data': base64Image,
-                },
-              },
-            ],
-          },
-        ],
-        'generationConfig': {
-          'temperature': 0.3,
-          'maxOutputTokens': 512,
+            },
+          ],
         },
+      ],
+      'generationConfig': {
+        'temperature': 0.3,
+        'maxOutputTokens': 512,
+      },
     });
 
     if (response.statusCode == 429) {
@@ -178,7 +179,8 @@ Respond with ONLY valid JSON (no markdown, no extra text):
       );
     }
     if (response.statusCode != 200) {
-      throw Exception('Gemini API error ${response.statusCode}: ${response.body}');
+      throw Exception(
+          'Gemini API error ${response.statusCode}: ${response.body}');
     }
 
     final body = jsonDecode(response.body);
@@ -206,7 +208,9 @@ Respond with ONLY valid JSON (no markdown, no extra text):
       final decoded = img.decodeImage(bytes);
       if (decoded == null) return bytes;
       final resized = decoded.width > 800 || decoded.height > 800
-          ? img.copyResize(decoded, width: decoded.width > decoded.height ? 800 : -1, height: decoded.height >= decoded.width ? 800 : -1)
+          ? img.copyResize(decoded,
+              width: decoded.width > decoded.height ? 800 : -1,
+              height: decoded.height >= decoded.width ? 800 : -1)
           : decoded;
       return Uint8List.fromList(img.encodeJpg(resized, quality: 85));
     } catch (_) {
@@ -220,10 +224,11 @@ Respond with ONLY valid JSON (no markdown, no extra text):
     final response = await _postToGemini({
       'model': AppConstants.geminiModel,
       'contents': [
-          {
-            'parts': [
-              {
-                'text': '''You are a fashion expert. Rate this outfit on a scale of 1-100 and provide brief feedback.
+        {
+          'parts': [
+            {
+              'text':
+                  '''You are a fashion expert. Rate this outfit on a scale of 1-100 and provide brief feedback.
 
 Consider:
 - Color harmony and coordination
@@ -233,24 +238,25 @@ Consider:
 
 Respond with ONLY valid JSON:
 {"score": <number 1-100>, "feedback": "<2-3 sentences of constructive feedback>"}''',
+            },
+            {
+              'inline_data': {
+                'mime_type': 'image/png',
+                'data': base64Image,
               },
-              {
-                'inline_data': {
-                  'mime_type': 'image/png',
-                  'data': base64Image,
-                },
-              },
-            ],
-          },
-        ],
-        'generationConfig': {
-          'temperature': 0.7,
-          'maxOutputTokens': 256,
+            },
+          ],
         },
+      ],
+      'generationConfig': {
+        'temperature': 0.7,
+        'maxOutputTokens': 256,
+      },
     });
 
     if (response.statusCode != 200) {
-      throw Exception('Gemini API error: ${response.statusCode} ${response.body}');
+      throw Exception(
+          'Gemini API error: ${response.statusCode} ${response.body}');
     }
 
     final body = jsonDecode(response.body);
@@ -291,7 +297,8 @@ Respond with ONLY valid JSON:
         ? 'Current weather: $weather. Adapt layers/fabric choices accordingly.'
         : '';
 
-    final prompt = '''You are an expert WOMEN'S fashion stylist with encyclopedic knowledge of current trends, runway collections, streetwear culture, and modern color theory. You style exclusively for women — never use menswear terminology (e.g. never say "button-up shirt for him", "men's loafers"). Reference brands women actually shop: Zara, Aritzia, Free People, Revolve, SHEIN, Skims, Mango, Uniqlo, Victoria's Secret, Aritzia, Anthropologie, Fashion Nova, Mejuri, Steve Madden.
+    final prompt =
+        '''You are an expert WOMEN'S fashion stylist with encyclopedic knowledge of current trends, runway collections, streetwear culture, and modern color theory. You style exclusively for women — never use menswear terminology (e.g. never say "button-up shirt for him", "men's loafers"). Reference brands women actually shop: Zara, Aritzia, Free People, Revolve, SHEIN, Skims, Mango, Uniqlo, Victoria's Secret, Aritzia, Anthropologie, Fashion Nova, Mejuri, Steve Madden.
 
 ═══ CLOTHING TERMINOLOGY — USE THESE PRECISELY ═══
 TOPS: crop top (ends above navel), bralette, blouse (loose/flowy), silk button-down, tank top, camisole, bodysuit, tube top, off-shoulder top, corset top, bustier, cardigan wrap, ribbed tee, puff-sleeve blouse
@@ -337,16 +344,23 @@ Respond with ONLY valid JSON (no markdown fences):
       final response = await _postToGemini({
         'model': 'gemini-2.5-flash',
         'contents': [
-          {'parts': [{'text': prompt}]}
+          {
+            'parts': [
+              {'text': prompt}
+            ]
+          }
         ],
         'generationConfig': {'temperature': 0.9, 'maxOutputTokens': 512},
       });
 
-      if (response.statusCode == 429) throw const GeminiRateLimitException('Rate limit hit');
-      if (response.statusCode != 200) return _fallbackOutfit(occasion, colorSeason);
+      if (response.statusCode == 429)
+        throw const GeminiRateLimitException('Rate limit hit');
+      if (response.statusCode != 200)
+        return _fallbackOutfit(occasion, colorSeason);
 
       final body = jsonDecode(response.body);
-      final text = body['candidates'][0]['content']['parts'][0]['text'] as String;
+      final text =
+          body['candidates'][0]['content']['parts'][0]['text'] as String;
       final jsonStr = _extractJson(text);
       final result = jsonDecode(jsonStr) as Map<String, dynamic>;
 
@@ -375,13 +389,16 @@ Respond with ONLY valid JSON (no markdown fences):
           'Clean silhouettes and cohesive tones keep the overall look polished and effortless.',
       styleScore: 8,
       selectedItemIds: [],
-      trendNote: 'Minimalist-chic is trending across FashionNova and social media this season.',
-      suggestions: 'Add a gold-toned accessory to elevate the look and tie the palette together.',
+      trendNote:
+          'Minimalist-chic is trending across FashionNova and social media this season.',
+      suggestions:
+          'Add a gold-toned accessory to elevate the look and tie the palette together.',
     );
   }
 
   String _extractJson(String text) {
-    final codeBlockMatch = RegExp(r'```(?:json)?\s*([\s\S]*?)```').firstMatch(text);
+    final codeBlockMatch =
+        RegExp(r'```(?:json)?\s*([\s\S]*?)```').firstMatch(text);
     if (codeBlockMatch != null) return codeBlockMatch.group(1)!.trim();
 
     final start = text.indexOf('{');

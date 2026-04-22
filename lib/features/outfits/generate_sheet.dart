@@ -25,23 +25,25 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
   bool _isGenerating = false;
 
   static const _occasions = [
-    ('casual',    'Casual',     Icons.weekend),
-    ('work',      'Work',       Icons.business_center),
-    ('date_night','Date Night', Icons.favorite),
-    ('formal',    'Formal',     Icons.diamond),
-    ('workout',   'Workout',    Icons.fitness_center),
-    ('outdoor',   'Outdoor',    Icons.park),
+    ('casual', 'Casual', Icons.weekend),
+    ('work', 'Work', Icons.business_center),
+    ('date_night', 'Date Night', Icons.favorite),
+    ('formal', 'Formal', Icons.diamond),
+    ('workout', 'Workout', Icons.fitness_center),
+    ('outdoor', 'Outdoor', Icons.park),
   ];
 
   @override
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
     final todayWeather = weatherAsync.value?[DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day)];
+        DateTime.now().year, DateTime.now().month, DateTime.now().day)];
 
     return Padding(
       padding: EdgeInsets.only(
-        left: 24, right: 24, top: 24,
+        left: 24,
+        right: 24,
+        top: 24,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       child: SingleChildScrollView(
@@ -51,7 +53,8 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
           children: [
             Center(
               child: Container(
-                width: 40, height: 4,
+                width: 40,
+                height: 4,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(2),
@@ -70,19 +73,24 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
             if (todayWeather != null) ...[
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: todayWeather.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: todayWeather.color.withValues(alpha: 0.3)),
+                  border: Border.all(
+                      color: todayWeather.color.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    Icon(todayWeather.icon, size: 16, color: todayWeather.color),
+                    Icon(todayWeather.icon,
+                        size: 16, color: todayWeather.color),
                     const SizedBox(width: 6),
                     Text(
                       '${todayWeather.description} · ${todayWeather.tempRange} — outfit adapted for weather',
-                      style: TextStyle(fontSize: 12, color: todayWeather.color,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: todayWeather.color,
                           fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -125,7 +133,8 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Wrap(
-              spacing: 8, runSpacing: 8,
+              spacing: 8,
+              runSpacing: 8,
               children: _occasions.map((o) {
                 final isSelected = _occasion == o.$1;
                 return ChoiceChip(
@@ -151,10 +160,12 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Wrap(
-              spacing: 8, runSpacing: 8,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 ChoiceChip(
-                  label: const Text('Auto-detect', style: TextStyle(fontSize: 12)),
+                  label:
+                      const Text('Auto-detect', style: TextStyle(fontSize: 12)),
                   selected: _colorSeason == null,
                   onSelected: (_) => setState(() => _colorSeason = null),
                   selectedColor: AppTheme.primary.withValues(alpha: 0.2),
@@ -180,7 +191,8 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                            width: 18, height: 18,
+                            width: 18,
+                            height: 18,
                             child: CircularProgressIndicator(
                                 strokeWidth: 2, color: Colors.white)),
                         SizedBox(width: 12),
@@ -198,8 +210,8 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
                     .remainingOutfitsText;
                 return Text(remaining,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 12, color: AppTheme.textSecondary));
+                    style:
+                        TextStyle(fontSize: 12, color: AppTheme.textSecondary));
               },
             ),
           ],
@@ -221,13 +233,12 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
     setState(() => _isGenerating = true);
 
     try {
-      final outfit = await ref
-          .read(outfitControllerProvider.notifier)
-          .generateOutfit(
-            _occasion,
-            colorSeason: _colorSeason,
-            fromScratch: _fromScratch,
-          );
+      final outfit =
+          await ref.read(outfitControllerProvider.notifier).generateOutfit(
+                _occasion,
+                colorSeason: _colorSeason,
+                fromScratch: _fromScratch,
+              );
 
       tracker.recordOutfitGeneration();
 

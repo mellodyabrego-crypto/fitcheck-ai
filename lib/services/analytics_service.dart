@@ -28,7 +28,8 @@ class Analytics {
   }
 
   /// Identify the current user. [userId] should be the Supabase auth uid.
-  static Future<void> identify(String userId, {Map<String, Object>? props}) async {
+  static Future<void> identify(String userId,
+      {Map<String, Object>? props}) async {
     if (!isEnabled || !_initialized) return;
     try {
       await Posthog().identify(userId: userId, userProperties: props);

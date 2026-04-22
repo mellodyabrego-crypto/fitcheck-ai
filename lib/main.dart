@@ -42,12 +42,14 @@ Future<void> main() async {
             await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
           } catch (e, st) {
             debugPrint('SUPABASE INIT FAILED (continuing): $e\n$st');
-            await Observability.capture(e, st, tags: {'phase': 'supabase_init'});
+            await Observability.capture(e, st,
+                tags: {'phase': 'supabase_init'});
             _nukeSupabaseLocalStorage();
             try {
               await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
             } catch (e2, st2) {
-              await Observability.capture(e2, st2, tags: {'phase': 'supabase_init_retry'});
+              await Observability.capture(e2, st2,
+                  tags: {'phase': 'supabase_init_retry'});
             }
           }
         }
@@ -145,14 +147,16 @@ class _ErrorApp extends StatelessWidget {
                 const Icon(Icons.error_outline, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
                 const Text('App failed to start',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 SelectableText(message,
                     style: const TextStyle(fontSize: 13, color: Colors.red)),
                 if (stack != null) ...[
                   const SizedBox(height: 20),
                   const Text('Stack trace:',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   SelectableText(stack!,
                       style: const TextStyle(

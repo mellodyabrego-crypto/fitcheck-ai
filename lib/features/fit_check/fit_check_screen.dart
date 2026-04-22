@@ -75,23 +75,26 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Fit Check')),
-      body: WithDecorations(sparse: true, child: _isLoading
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(color: AppTheme.accent),
-                  SizedBox(height: 20),
-                  Text(
-                    'Analyzing your outfit...',
-                    style: TextStyle(fontSize: 16, color: AppTheme.textSecondary),
+      body: WithDecorations(
+          sparse: true,
+          child: _isLoading
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(color: AppTheme.accent),
+                      SizedBox(height: 20),
+                      Text(
+                        'Analyzing your outfit...',
+                        style: TextStyle(
+                            fontSize: 16, color: AppTheme.textSecondary),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          : _error != null
-              ? Center(child: Text('Error: $_error'))
-              : _buildResult()),
+                )
+              : _error != null
+                  ? Center(child: Text('Error: $_error'))
+                  : _buildResult()),
     );
   }
 
@@ -118,12 +121,16 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, size: 16, color: Colors.orange.shade800),
+                Icon(Icons.info_outline,
+                    size: 16, color: Colors.orange.shade800),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Demo score — real AI analysis coming soon.',
-                    style: TextStyle(fontSize: 12, color: Colors.orange.shade900, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.orange.shade900,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -169,10 +176,22 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 16),
-                _SubScoreBar(label: 'Color Harmony', score: result.colorHarmony, icon: Icons.palette),
-                _SubScoreBar(label: 'Style Cohesion', score: result.styleCohesion, icon: Icons.auto_awesome),
-                _SubScoreBar(label: 'Occasion Fit', score: result.occasionFit, icon: Icons.event),
-                _SubScoreBar(label: 'Versatility', score: result.versatility, icon: Icons.swap_horiz),
+                _SubScoreBar(
+                    label: 'Color Harmony',
+                    score: result.colorHarmony,
+                    icon: Icons.palette),
+                _SubScoreBar(
+                    label: 'Style Cohesion',
+                    score: result.styleCohesion,
+                    icon: Icons.auto_awesome),
+                _SubScoreBar(
+                    label: 'Occasion Fit',
+                    score: result.occasionFit,
+                    icon: Icons.event),
+                _SubScoreBar(
+                    label: 'Versatility',
+                    score: result.versatility,
+                    icon: Icons.swap_horiz),
               ],
             ),
           ),
@@ -201,13 +220,16 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                   children: [
                     Icon(Icons.lightbulb, color: AppTheme.primary, size: 20),
                     SizedBox(width: 8),
-                    Text('Style Notes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    Text('Style Notes',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Text(
                   result.feedback,
-                  style: const TextStyle(fontSize: 15, height: 1.6, color: AppTheme.textSecondary),
+                  style: const TextStyle(
+                      fontSize: 15, height: 1.6, color: AppTheme.textSecondary),
                 ),
               ],
             ),
@@ -222,16 +244,20 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
               decoration: BoxDecoration(
                 color: AppTheme.primary.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
+                border:
+                    Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.tips_and_updates, color: AppTheme.primary, size: 20),
+                      Icon(Icons.tips_and_updates,
+                          color: AppTheme.primary, size: 20),
                       SizedBox(width: 8),
-                      Text('Style Tips', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                      Text('Style Tips',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w700)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -240,9 +266,16 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('• ', style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.w700)),
+                            const Text('• ',
+                                style: TextStyle(
+                                    color: AppTheme.primary,
+                                    fontWeight: FontWeight.w700)),
                             Expanded(
-                              child: Text(tip, style: const TextStyle(fontSize: 14, height: 1.5, color: AppTheme.textSecondary)),
+                              child: Text(tip,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      height: 1.5,
+                                      color: AppTheme.textSecondary)),
                             ),
                           ],
                         ),
@@ -265,7 +298,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
               label: const Text('Share Score'),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
               ),
             ),
           ),
@@ -290,11 +324,16 @@ class _SubScoreBar extends StatelessWidget {
   final int score;
   final IconData icon;
 
-  const _SubScoreBar({required this.label, required this.score, required this.icon});
+  const _SubScoreBar(
+      {required this.label, required this.score, required this.icon});
 
   @override
   Widget build(BuildContext context) {
-    final color = score >= 80 ? Colors.green : score >= 60 ? Colors.orange : Colors.red;
+    final color = score >= 80
+        ? Colors.green
+        : score >= 60
+            ? Colors.orange
+            : Colors.red;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -322,7 +361,8 @@ class _SubScoreBar extends StatelessWidget {
             width: 30,
             child: Text(
               '$score',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: color),
+              style: TextStyle(
+                  fontWeight: FontWeight.w700, fontSize: 13, color: color),
               textAlign: TextAlign.right,
             ),
           ),

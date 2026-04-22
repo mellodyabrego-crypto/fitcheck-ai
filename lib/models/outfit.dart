@@ -17,7 +17,8 @@ class Outfit {
     this.items = const [],
   });
 
-  factory Outfit.fromJson(Map<String, dynamic> json, {List<OutfitItem>? items}) {
+  factory Outfit.fromJson(Map<String, dynamic> json,
+      {List<OutfitItem>? items}) {
     return Outfit(
       id: json['id'] as String,
       userId: json['user_id'] as String,

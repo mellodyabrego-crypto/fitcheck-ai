@@ -17,16 +17,16 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
-  final _nameCtrl     = TextEditingController();
-  final _emailCtrl    = TextEditingController();
-  final _phoneCtrl    = TextEditingController();
-  final _newPassCtrl  = TextEditingController();
-  final _confirmCtrl  = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
+  final _newPassCtrl = TextEditingController();
+  final _confirmCtrl = TextEditingController();
 
-  bool _savingProfile  = false;
+  bool _savingProfile = false;
   bool _savingPassword = false;
-  bool _showNewPass    = false;
-  bool _showConfirm    = false;
+  bool _showNewPass = false;
+  bool _showConfirm = false;
   String? _profileError;
   String? _passwordError;
 
@@ -48,7 +48,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   void _loadCurrentProfile() {
     if (kDemoMode) {
-      _nameCtrl.text  = 'Style Queen';
+      _nameCtrl.text = 'Style Queen';
       _emailCtrl.text = 'demo@thecandyshop.com';
       _phoneCtrl.text = '';
       return;
@@ -56,20 +56,21 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return;
     _emailCtrl.text = user.email ?? '';
-    _nameCtrl.text  = user.userMetadata?['full_name'] as String? ?? '';
+    _nameCtrl.text = user.userMetadata?['full_name'] as String? ?? '';
     _phoneCtrl.text = user.phone ?? '';
   }
 
   Future<void> _saveProfile() async {
     setState(() {
       _savingProfile = true;
-      _profileError  = null;
+      _profileError = null;
     });
     try {
       if (!kDemoMode) {
         await Supabase.instance.client.auth.updateUser(
           UserAttributes(
-            email: _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
+            email:
+                _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
             data: {'full_name': _nameCtrl.text.trim()},
           ),
         );
@@ -93,7 +94,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final confirm = _confirmCtrl.text;
 
     if (newPass.length < 6) {
-      setState(() => _passwordError = 'Password must be at least 6 characters.');
+      setState(
+          () => _passwordError = 'Password must be at least 6 characters.');
       return;
     }
     if (newPass != confirm) {
@@ -102,7 +104,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
     setState(() {
       _savingPassword = true;
-      _passwordError  = null;
+      _passwordError = null;
     });
     try {
       if (!kDemoMode) {
@@ -193,9 +195,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     obscure: !_showNewPass,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _showNewPass
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _showNewPass ? Icons.visibility_off : Icons.visibility,
                         size: 20,
                       ),
                       onPressed: () =>
@@ -211,9 +211,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     obscure: !_showConfirm,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _showConfirm
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _showConfirm ? Icons.visibility_off : Icons.visibility,
                         size: 20,
                       ),
                       onPressed: () =>
@@ -289,8 +287,7 @@ class _SectionCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(18, 16, 18, 12),
             decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Colors.grey.shade100)),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
             ),
             child: Row(
               children: [
