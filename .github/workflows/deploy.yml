@@ -22,16 +22,21 @@ jobs:
 
       - run: flutter pub get
 
+      - name: Create placeholder .env
+        # pubspec.yaml lists `.env` as an asset for local dev. It's gitignored,
+        # so analyze complains about a missing asset unless we touch it here.
+        run: touch .env
+
       - name: Format check
         # Fails the build if any file isn't formatted.
         run: dart format --set-exit-if-changed .
 
       - name: Static analysis
-        # Fails the build on analyzer errors. Warnings still surface in logs.
-        run: flutter analyze --no-fatal-infos
+        # Fails only on real errors. Warnings + infos surface in logs but don't
+        # block deploys (they'd make every small cleanup a blocker).
+        run: flutter analyze --no-fatal-warnings --no-fatal-infos
 
       - name: Run tests
-        # Skip if no tests exist yet — `flutter test` exits 0 in that case.
         run: flutter test --no-pub
 
   # ── Build + deploy. Only runs after verify passes. ─────────────────────
