@@ -79,8 +79,7 @@ final weatherProvider = FutureProvider<Map<DateTime, WeatherDay>>((ref) async {
   }
 });
 
-Future<Map<DateTime, WeatherDay>> _fetchWeather(
-    double lat, double lon) async {
+Future<Map<DateTime, WeatherDay>> _fetchWeather(double lat, double lon) async {
   final uri = Uri.parse(
     'https://api.open-meteo.com/v1/forecast'
     '?latitude=$lat&longitude=$lon'
@@ -93,10 +92,14 @@ Future<Map<DateTime, WeatherDay>> _fetchWeather(
 
   final data = jsonDecode(response.body) as Map<String, dynamic>;
   final daily = data['daily'] as Map<String, dynamic>;
-  final dates  = (daily['time']           as List).cast<String>();
-  final codes  = (daily['weather_code']   as List).cast<int>();
-  final maxT   = (daily['temperature_2m_max'] as List).map((v) => (v as num).toDouble()).toList();
-  final minT   = (daily['temperature_2m_min'] as List).map((v) => (v as num).toDouble()).toList();
+  final dates = (daily['time'] as List).cast<String>();
+  final codes = (daily['weather_code'] as List).cast<int>();
+  final maxT = (daily['temperature_2m_max'] as List)
+      .map((v) => (v as num).toDouble())
+      .toList();
+  final minT = (daily['temperature_2m_min'] as List)
+      .map((v) => (v as num).toDouble())
+      .toList();
 
   final result = <DateTime, WeatherDay>{};
   for (int i = 0; i < dates.length; i++) {

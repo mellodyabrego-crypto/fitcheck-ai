@@ -73,7 +73,8 @@ class UsageTracker extends StateNotifier<SubscriptionState> {
 
   String get remainingOutfitsText {
     if (state.isPro) return 'Unlimited';
-    final remaining = AppConstants.freeDailyOutfits - state.dailyOutfitGenerations;
+    final remaining =
+        AppConstants.freeDailyOutfits - state.dailyOutfitGenerations;
     return '$remaining left today';
   }
 

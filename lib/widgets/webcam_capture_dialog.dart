@@ -86,7 +86,8 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
   Future<Uint8List?> _snapshot() async {
     final v = _video;
     if (v == null || v.videoWidth == 0) return null;
-    final canvas = html.CanvasElement(width: v.videoWidth, height: v.videoHeight);
+    final canvas =
+        html.CanvasElement(width: v.videoWidth, height: v.videoHeight);
     final ctx = canvas.context2D;
     ctx.drawImage(v, 0, 0);
     final blob = await canvas.toBlob('image/png');
@@ -114,7 +115,8 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: const Text('Take a Photo', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Take a Photo', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(null),

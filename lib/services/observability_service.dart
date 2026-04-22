@@ -36,7 +36,15 @@ class Observability {
   }
 
   /// Manually report an error from a try/catch.
-  static Future<void> capture(Object error, [StackTrace? stack, {Map<String, String>? tags}]) async {
+  /// Call sites pass either `capture(e, st)` (two positional) or
+  /// `capture(e, st, tags: {...})` (two positional + named tags).
+  /// Dart doesn't allow mixing `[...]` and `{...}` in one signature, so
+  /// stack is required here — pass `null` if you don't have one.
+  static Future<void> capture(
+    Object error,
+    StackTrace? stack, {
+    Map<String, String>? tags,
+  }) async {
     if (!isEnabled) return;
     try {
       await Sentry.captureException(

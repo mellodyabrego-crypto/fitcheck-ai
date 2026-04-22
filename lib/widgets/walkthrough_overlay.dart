@@ -26,7 +26,8 @@ void _saveWalkthroughSeen() {
 }
 
 // Tracks whether the user has seen the walkthrough (persisted across sessions)
-final walkthroughSeenProvider = StateProvider<bool>((ref) => _loadWalkthroughSeen());
+final walkthroughSeenProvider =
+    StateProvider<bool>((ref) => _loadWalkthroughSeen());
 
 class WalkthroughOverlay extends ConsumerStatefulWidget {
   final Widget child;
@@ -90,43 +91,50 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
     _Step(
       icon: Icons.checkroom,
       title: 'My Closet',
-      body: 'Upload and organize every piece in your wardrobe by category. Tops, dresses, shoes, bags — all in one place.',
+      body:
+          'Upload and organize every piece in your wardrobe by category. Tops, dresses, shoes, bags — all in one place.',
       color: AppTheme.primary,
     ),
     _Step(
       icon: Icons.auto_awesome,
       title: 'Outfits',
-      body: 'Tap Create to let our AI stylist build a full outfit from your closet. It picks tops, bottoms, shoes, accessories — all matched for you.',
+      body:
+          'Tap Create to let our AI stylist build a full outfit from your closet. It picks tops, bottoms, shoes, accessories — all matched for you.',
       color: AppTheme.accent,
     ),
     _Step(
       icon: Icons.shopping_bag,
       title: 'Shop',
-      body: 'Browse curated picks matched to your color palette. Tap the camera button to photo-check any item before you buy.',
+      body:
+          'Browse curated picks matched to your color palette. Tap the camera button to photo-check any item before you buy.',
       color: AppTheme.primaryDeep,
     ),
     _Step(
       icon: Icons.people,
       title: 'The Network',
-      body: 'Share your looks, vote on style polls, and get inspired by the community. Tap a hashtag to filter by trend.',
+      body:
+          'Share your looks, vote on style polls, and get inspired by the community. Tap a hashtag to filter by trend.',
       color: AppTheme.accent,
     ),
     _Step(
       icon: Icons.calendar_month,
       title: 'Calendar',
-      body: 'Log what you wore each day with notes and photos. Weather icons show the forecast so you can plan outfits ahead.',
+      body:
+          'Log what you wore each day with notes and photos. Weather icons show the forecast so you can plan outfits ahead.',
       color: AppTheme.primary,
     ),
     _Step(
       icon: Icons.play_circle,
       title: 'Fashion & Beauty',
-      body: 'Swipe through style tutorials, articles from Vogue & Byrdie, trend reports, and skincare guides — all in one feed.',
+      body:
+          'Swipe through style tutorials, articles from Vogue & Byrdie, trend reports, and skincare guides — all in one feed.',
       color: AppTheme.primaryDeep,
     ),
     _Step(
       icon: Icons.person,
       title: 'Your Profile',
-      body: 'Set your sizes, color palette, favorite brands, and social links. Edit your display name and profile photo anytime.',
+      body:
+          'Set your sizes, color palette, favorite brands, and social links. Edit your display name and profile photo anytime.',
       color: AppTheme.accent,
     ),
   ];
@@ -139,7 +147,8 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
 
   void _goToStep(int next) {
     setState(() => _step = next);
-    Analytics.track(AnalyticsEvents.walkthroughStepReached, props: {'step': next});
+    Analytics.track(AnalyticsEvents.walkthroughStepReached,
+        props: {'step': next});
   }
 
   void _complete() {
@@ -187,22 +196,25 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
             // Progress dots
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_steps.length, (i) => AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: i == _step ? 20 : 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: i == _step ? step.color : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              )),
+              children: List.generate(
+                  _steps.length,
+                  (i) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        width: i == _step ? 20 : 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: i == _step ? step.color : Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      )),
             ),
             const SizedBox(height: 24),
 
             // Icon
             Container(
-              width: 72, height: 72,
+              width: 72,
+              height: 72,
               decoration: BoxDecoration(
                 color: step.color.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
@@ -226,9 +238,7 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
             Text(step.body,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    fontSize: 14,
-                    height: 1.6,
-                    color: AppTheme.textSecondary)),
+                    fontSize: 14, height: 1.6, color: AppTheme.textSecondary)),
             const SizedBox(height: 28),
 
             // Buttons
@@ -252,8 +262,8 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
                         _goToStep(_step + 1);
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: step.color),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: step.color),
                     child: Text(isLast ? "Let's Go!" : 'Next'),
                   ),
                 ),
@@ -266,7 +276,8 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
             TextButton(
               onPressed: _skip,
               child: const Text('Skip tour',
-                  style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                  style:
+                      TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
             ),
           ],
         ),
@@ -280,5 +291,9 @@ class _Step {
   final String title;
   final String body;
   final Color color;
-  const _Step({required this.icon, required this.title, required this.body, required this.color});
+  const _Step(
+      {required this.icon,
+      required this.title,
+      required this.body,
+      required this.color});
 }

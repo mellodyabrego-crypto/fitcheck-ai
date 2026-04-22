@@ -20,48 +20,47 @@ class ClothingGridTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(14)),
-              child: Hero(
-                tag: _heroTag,
-                child: WardrobeItemImage(item: item),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(14)),
+                child: Hero(
+                  tag: _heroTag,
+                  child: WardrobeItemImage(item: item),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-            child: Text(
-              item.name ?? item.category.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.textSecondary,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              child: Text(
+                item.name ?? item.category.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.textSecondary,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
-
 }
 
 Future<void> showExpandedWardrobeImage(
@@ -149,8 +148,7 @@ class _ExpandedImageView extends StatelessWidget {
                         Navigator.of(context).pop();
                         onViewDetails!();
                       },
-                      icon: const Icon(Icons.info_outline,
-                          color: Colors.white),
+                      icon: const Icon(Icons.info_outline, color: Colors.white),
                       label: const Text(
                         'View Details',
                         style: TextStyle(color: Colors.white),
@@ -189,14 +187,17 @@ class WardrobeItemImage extends StatelessWidget {
         placeholder: (_, __) => Container(
           color: Colors.grey.shade100,
           child: const Center(
-            child: SizedBox(width: 20, height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2)),
+            child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2)),
           ),
         ),
         errorWidget: (_, __, ___) => Container(
           color: _colorFromName(item.color),
-          child: Center(child: Icon(item.category.icon, size: 28,
-            color: Colors.white.withValues(alpha: 0.9))),
+          child: Center(
+              child: Icon(item.category.icon,
+                  size: 28, color: Colors.white.withValues(alpha: 0.9))),
         ),
       );
     }
@@ -209,13 +210,14 @@ class WardrobeItemImage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(item.category.icon, size: 28,
-                  color: Colors.white.withValues(alpha: 0.9)),
+              Icon(item.category.icon,
+                  size: 28, color: Colors.white.withValues(alpha: 0.9)),
               const SizedBox(height: 4),
               Text(item.color ?? '',
-                style: TextStyle(fontSize: 10,
-                  color: Colors.white.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w600)),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.white.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w600)),
             ],
           ),
         ),
@@ -234,8 +236,10 @@ class WardrobeItemImage extends StatelessWidget {
       placeholder: (_, __) => Container(
         color: Colors.grey.shade100,
         child: const Center(
-          child: SizedBox(width: 20, height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2)),
+          child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2)),
         ),
       ),
       errorWidget: (_, __, ___) => Container(

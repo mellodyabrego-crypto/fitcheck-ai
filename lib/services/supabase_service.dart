@@ -107,9 +107,7 @@ class SupabaseService {
   }
 
   String getPublicUrl(String path) {
-    return _client.storage
-        .from(AppConstants.wardrobeBucket)
-        .getPublicUrl(path);
+    return _client.storage.from(AppConstants.wardrobeBucket).getPublicUrl(path);
   }
 
   Future<void> deleteImage(String pathOrUrl) async {
@@ -135,11 +133,8 @@ class SupabaseService {
   }
 
   Future<WardrobeItem> addWardrobeItem(Map<String, dynamic> item) async {
-    final data = await _client
-        .from('wardrobe_items')
-        .insert(item)
-        .select()
-        .single();
+    final data =
+        await _client.from('wardrobe_items').insert(item).select().single();
     return WardrobeItem.fromJson(data);
   }
 
@@ -148,12 +143,10 @@ class SupabaseService {
   }
 
   // ── Outfits ───────────────────────────────────────────
-  Future<Outfit> createOutfit(Map<String, dynamic> outfit, List<Map<String, dynamic>> items) async {
-    final outfitData = await _client
-        .from('outfits')
-        .insert(outfit)
-        .select()
-        .single();
+  Future<Outfit> createOutfit(
+      Map<String, dynamic> outfit, List<Map<String, dynamic>> items) async {
+    final outfitData =
+        await _client.from('outfits').insert(outfit).select().single();
 
     for (final item in items) {
       item['outfit_id'] = outfitData['id'];
@@ -173,20 +166,15 @@ class SupabaseService {
   }
 
   Future<List<OutfitItem>> getOutfitItems(String outfitId) async {
-    final data = await _client
-        .from('outfit_items')
-        .select()
-        .eq('outfit_id', outfitId);
+    final data =
+        await _client.from('outfit_items').select().eq('outfit_id', outfitId);
     return data.map((json) => OutfitItem.fromJson(json)).toList();
   }
 
   // ── Fit Checks ────────────────────────────────────────
   Future<FitCheck> saveFitCheck(Map<String, dynamic> fitCheck) async {
-    final data = await _client
-        .from('fit_checks')
-        .insert(fitCheck)
-        .select()
-        .single();
+    final data =
+        await _client.from('fit_checks').insert(fitCheck).select().single();
     return FitCheck.fromJson(data);
   }
 
