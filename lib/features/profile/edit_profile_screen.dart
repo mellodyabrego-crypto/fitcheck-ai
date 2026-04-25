@@ -119,9 +119,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         final client = Supabase.instance.client;
         await client.auth.updateUser(
           UserAttributes(
-            email: _emailCtrl.text.trim().isEmpty
-                ? null
-                : _emailCtrl.text.trim(),
+            email:
+                _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
             data: {'full_name': _nameCtrl.text.trim()},
           ),
         );

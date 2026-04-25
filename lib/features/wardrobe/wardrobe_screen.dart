@@ -369,10 +369,10 @@ class _ItemsGrid extends ConsumerWidget {
                       onViewDetails: isSample
                           ? null
                           : () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => ItemDetailScreen(item: item),
+                                MaterialPageRoute(
+                                  builder: (_) => ItemDetailScreen(item: item),
+                                ),
                               ),
-                            ),
                     ),
                   );
                 },

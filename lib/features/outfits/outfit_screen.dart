@@ -91,9 +91,8 @@ final outfitDetailProvider = FutureProvider.family<_OutfitDetail, String>((
     final wardrobeItems = await supabase.getWardrobeItems();
 
     final itemsWithDetails = outfitItems.map((oi) {
-      final wardrobeItem = wardrobeItems
-          .where((wi) => wi.id == oi.wardrobeItemId)
-          .firstOrNull;
+      final wardrobeItem =
+          wardrobeItems.where((wi) => wi.id == oi.wardrobeItemId).firstOrNull;
       return _OutfitItemDetail(slot: oi.slot, wardrobeItem: wardrobeItem);
     }).toList();
 
@@ -159,12 +158,11 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                   .where((i) => i.wardrobeItem != null)
                   .map((i) => i.wardrobeItem!)
                   .toList();
-              final shared = await ref
-                  .read(shareServiceProvider)
-                  .shareOutfitCard(
-                    occasion: detail.outfit.occasion ?? 'outfit',
-                    items: items,
-                  );
+              final shared =
+                  await ref.read(shareServiceProvider).shareOutfitCard(
+                        occasion: detail.outfit.occasion ?? 'outfit',
+                        items: items,
+                      );
               if (!shared && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -269,7 +267,7 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                   onPressed: _isRegenerating
                       ? null
                       : () =>
-                            _generateAgain(detail.outfit.occasion ?? 'casual'),
+                          _generateAgain(detail.outfit.occasion ?? 'casual'),
                   icon: _isRegenerating
                       ? const SizedBox(
                           width: 16,
@@ -385,9 +383,8 @@ class _FeedbackRowState extends ConsumerState<_FeedbackRow> {
             ),
             label: Text(_signal == 'love' ? 'Loved' : 'Love it'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: _signal == 'love'
-                  ? AppTheme.primary
-                  : AppTheme.textPrimary,
+              foregroundColor:
+                  _signal == 'love' ? AppTheme.primary : AppTheme.textPrimary,
               side: BorderSide(
                 color: _signal == 'love'
                     ? AppTheme.primary

@@ -5,8 +5,8 @@ import '../models/subscription_state.dart';
 
 final usageTrackerProvider =
     StateNotifierProvider<UsageTracker, SubscriptionState>((ref) {
-      return UsageTracker();
-    });
+  return UsageTracker();
+});
 
 /// Tracks daily usage limits for free tier.
 /// In production, this would sync with Supabase.

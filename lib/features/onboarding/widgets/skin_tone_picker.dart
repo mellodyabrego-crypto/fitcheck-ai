@@ -310,13 +310,12 @@ class _SkinTonePickerState extends State<SkinTonePicker>
     }
 
     // Real analysis — advance step labels while Gemini runs
-    final stepTimer =
-        Stream.periodic(
-          const Duration(milliseconds: 700),
-          (i) => i,
-        ).take(_analysisSteps.length - 1).listen((i) {
-          if (mounted) setState(() => _analysisStepIndex = i + 1);
-        });
+    final stepTimer = Stream.periodic(
+      const Duration(milliseconds: 700),
+      (i) => i,
+    ).take(_analysisSteps.length - 1).listen((i) {
+      if (mounted) setState(() => _analysisStepIndex = i + 1);
+    });
 
     try {
       final result = await gemini.analyzeColorSeason(bytes);
@@ -616,9 +615,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                     _analysisSteps[i],
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: isCurrent
-                          ? FontWeight.w700
-                          : FontWeight.normal,
+                      fontWeight:
+                          isCurrent ? FontWeight.w700 : FontWeight.normal,
                       color: isCurrent
                           ? AppTheme.textPrimary
                           : AppTheme.textSecondary,
@@ -1007,9 +1005,8 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                             : Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: isSelected
-                              ? season.accent
-                              : Colors.grey.shade200,
+                          color:
+                              isSelected ? season.accent : Colors.grey.shade200,
                           width: isSelected ? 2 : 1,
                         ),
                       ),

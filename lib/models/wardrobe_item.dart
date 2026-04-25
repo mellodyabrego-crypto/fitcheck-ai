@@ -58,20 +58,20 @@ class WardrobeItem {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'user_id': userId,
-    'category': category.name,
-    'subcategory': subcategory,
-    'color': color,
-    'image_path': imagePath,
-    'thumbnail_path': thumbnailPath,
-    'name': name,
-    'brand': brand,
-    'purchase_price': purchasePrice,
-    'wear_count': wearCount,
-    'tags': tags,
-    'season': season,
-  };
+        'id': id,
+        'user_id': userId,
+        'category': category.name,
+        'subcategory': subcategory,
+        'color': color,
+        'image_path': imagePath,
+        'thumbnail_path': thumbnailPath,
+        'name': name,
+        'brand': brand,
+        'purchase_price': purchasePrice,
+        'wear_count': wearCount,
+        'tags': tags,
+        'season': season,
+      };
 
   WardrobeItem copyWith({
     String? name,

@@ -95,7 +95,6 @@ class _PermissionsPickerState extends State<PermissionsPicker> {
             style: TextStyle(color: AppTheme.textSecondary, fontSize: 15),
           ),
           const SizedBox(height: 28),
-
           _PermTile(
             icon: Icons.notifications_active_outlined,
             title: 'Daily outfit reminder',

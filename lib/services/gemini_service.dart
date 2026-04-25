@@ -413,8 +413,7 @@ Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" labe
 
     final itemList = items
         .map(
-          (i) =>
-              '- ${i["name"] ?? i["category"]} '
+          (i) => '- ${i["name"] ?? i["category"]} '
               '(${i["color"] ?? "unspecified"}, ${i["category"]})',
         )
         .join('\n');
@@ -493,8 +492,7 @@ Respond with ONLY valid JSON. No markdown fences. No leading "JSON" label.
       occasionFit: clamp(result['occasion_fit']),
       versatility: clamp(result['versatility']),
       headline: result['headline'] as String? ?? 'Solid fit',
-      feedback:
-          result['feedback'] as String? ??
+      feedback: result['feedback'] as String? ??
           'A workable look — small tweaks will lift it further.',
       tips: ((result['tips'] as List?) ?? const [])
           .map((e) => e.toString())
@@ -607,8 +605,7 @@ Respond with ONLY valid JSON (no markdown, no leading "JSON" label):
         title: result['title'] as String? ?? '$occasion Look',
         reasoning: result['reasoning'] as String? ?? '',
         styleScore: (result['styleScore'] as num?)?.toInt() ?? 8,
-        selectedItemIds:
-            (result['selectedItemIds'] as List?)
+        selectedItemIds: (result['selectedItemIds'] as List?)
                 ?.map((e) => e.toString())
                 .toList() ??
             [],

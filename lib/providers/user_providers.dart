@@ -146,20 +146,17 @@ final styleProfileContextProvider = FutureProvider<StyleProfileContext>((
     }
 
     return StyleProfileContext(
-      colorSeason:
-          mapSeason(row?['skin_tone_undertone'] as String?) ??
+      colorSeason: mapSeason(row?['skin_tone_undertone'] as String?) ??
           ref.read(colorSeasonProvider),
-      colorPreferences:
-          ((row?['color_preferences'] as List?)
+      colorPreferences: ((row?['color_preferences'] as List?)
               ?.map((e) => e.toString())
               .toList() ??
           ref.read(favoriteColorsProvider)),
       bodyType: row?['body_type'] as String?,
       aesthetics:
           (row?['aesthetics'] as List?)?.map((e) => e.toString()).toList() ??
-          const [],
-      brands:
-          (row?['brands'] as List?)?.map((e) => e.toString()).toList() ??
+              const [],
+      brands: (row?['brands'] as List?)?.map((e) => e.toString()).toList() ??
           const [],
       topSize: row?['top_size'] as String? ?? ref.read(topSizeProvider),
       bottomSize:

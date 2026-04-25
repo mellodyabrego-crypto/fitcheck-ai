@@ -772,9 +772,9 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
         leading: selectedCat != null
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () =>
-                    ref.read(_selectedShopCategoryProvider.notifier).state =
-                        null,
+                onPressed: () => ref
+                    .read(_selectedShopCategoryProvider.notifier)
+                    .state = null,
               )
             : null,
       ),
@@ -799,11 +799,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                                 onPressed: () {
                                   _searchCtrl.clear();
                                   ref
-                                          .read(
-                                            _shopSearchQueryProvider.notifier,
-                                          )
-                                          .state =
-                                      '';
+                                      .read(
+                                        _shopSearchQueryProvider.notifier,
+                                      )
+                                      .state = '';
                                   setState(() {});
                                 },
                               )
@@ -897,14 +896,12 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
               child: selectedCat != null
                   ? _ProductGrid(category: selectedCat, searchQuery: query)
                   : query.isNotEmpty
-                  ? _ProductGrid(category: null, searchQuery: query)
-                  : _ShopHomePage(
-                      onCategoryTap: (cat) =>
-                          ref
-                                  .read(_selectedShopCategoryProvider.notifier)
-                                  .state =
-                              cat,
-                    ),
+                      ? _ProductGrid(category: null, searchQuery: query)
+                      : _ShopHomePage(
+                          onCategoryTap: (cat) => ref
+                              .read(_selectedShopCategoryProvider.notifier)
+                              .state = cat,
+                        ),
             ),
           ],
         ),
@@ -952,8 +949,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
             {
               'parts': [
                 {
-                  'text':
-                      'Analyze this clothing item photo. Tell me: '
+                  'text': 'Analyze this clothing item photo. Tell me: '
                       '1) What type of clothing it is (top, bottom, dress, etc.), '
                       '2) The dominant colors and whether they are warm (autumn/spring) or cool (summer/winter) toned, '
                       '3) Which of the 4 seasonal color palettes (Spring, Summer, Autumn, Winter) it best fits, '
@@ -992,8 +988,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
 
         if (resp != null && resp.statusCode == 200) {
           final json = jsonDecode(resp.body) as Map<String, dynamic>;
-          analysis =
-              (json['candidates']?[0]?['content']?['parts']?[0]?['text']
+          analysis = (json['candidates']?[0]?['content']?['parts']?[0]?['text']
                       as String?)
                   ?.trim() ??
               '⚠️ The AI responded but I couldn\'t read the result. Try another photo.';
@@ -1050,12 +1045,12 @@ class _ShopHomePage extends ConsumerWidget {
     final seasonMatches = season == null
         ? <_Product>[]
         : all
-              .where(
-                (p) =>
-                    p.palette?.toLowerCase().contains(season.toLowerCase()) ??
-                    false,
-              )
-              .toList();
+            .where(
+              (p) =>
+                  p.palette?.toLowerCase().contains(season.toLowerCase()) ??
+                  false,
+            )
+            .toList();
     bool mentionsFavColor(_Product p) {
       if (favColors.isEmpty) return false;
       final haystack = '${p.name} ${p.palette ?? ""}'.toLowerCase();
@@ -1187,12 +1182,12 @@ class _ProductGrid extends StatelessWidget {
       products = q.isEmpty
           ? catProducts
           : catProducts
-                .where(
-                  (p) =>
-                      p.name.toLowerCase().contains(q) ||
-                      p.brand.toLowerCase().contains(q),
-                )
-                .toList();
+              .where(
+                (p) =>
+                    p.name.toLowerCase().contains(q) ||
+                    p.brand.toLowerCase().contains(q),
+              )
+              .toList();
     } else if (q.isNotEmpty) {
       products = _catalog.values
           .expand((p) => p)

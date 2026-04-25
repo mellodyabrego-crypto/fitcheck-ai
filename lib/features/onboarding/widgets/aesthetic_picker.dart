@@ -93,9 +93,8 @@ class AestheticPicker extends StatelessWidget {
                           label,
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: isSelected
-                                ? FontWeight.w700
-                                : FontWeight.w500,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500,
                             color: isSelected
                                 ? AppTheme.primary
                                 : AppTheme.textPrimary,

@@ -126,12 +126,10 @@ class SizesPicker extends StatelessWidget {
                         size,
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight: isSelected
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                          color: isSelected
-                              ? Colors.white
-                              : AppTheme.textPrimary,
+                          fontWeight:
+                              isSelected ? FontWeight.w700 : FontWeight.w500,
+                          color:
+                              isSelected ? Colors.white : AppTheme.textPrimary,
                         ),
                       ),
                     ),
@@ -191,9 +189,8 @@ class _SizeRow extends StatelessWidget {
                     height: 44,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppTheme.primary
-                          : Colors.grey.shade100,
+                      color:
+                          isSelected ? AppTheme.primary : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: isSelected
@@ -205,9 +202,8 @@ class _SizeRow extends StatelessWidget {
                       size,
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
+                        fontWeight:
+                            isSelected ? FontWeight.w700 : FontWeight.w500,
                         color: isSelected ? Colors.white : AppTheme.textPrimary,
                       ),
                     ),

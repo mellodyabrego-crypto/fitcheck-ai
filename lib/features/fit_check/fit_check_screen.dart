@@ -127,9 +127,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
 
     Uint8List? bytes;
     try {
-      final boundary =
-          _shareCardKey.currentContext?.findRenderObject()
-              as RenderRepaintBoundary?;
+      final boundary = _shareCardKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
       if (boundary != null) {
         final image = await boundary.toImage(pixelRatio: 3.0);
         final data = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -141,8 +140,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
 
     final scoreForShare =
         (_rawOverall != null && _rawOverall! < _kDisplayMinScore)
-        ? _kDisplayMinScore
-        : result.overall;
+            ? _kDisplayMinScore
+            : result.overall;
     final fallbackText =
         '✨ My ${(_occasion ?? "outfit").toUpperCase()} fit check on Her Style Co. — '
         '$scoreForShare/100. ${result.headline}';
@@ -195,17 +194,17 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                 ),
               )
             : _error != null
-            ? _ErrorView(
-                message: _error!,
-                onRetry: () {
-                  setState(() {
-                    _isLoading = true;
-                    _error = null;
-                  });
-                  _runFitCheck();
-                },
-              )
-            : _buildResult(),
+                ? _ErrorView(
+                    message: _error!,
+                    onRetry: () {
+                      setState(() {
+                        _isLoading = true;
+                        _error = null;
+                      });
+                      _runFitCheck();
+                    },
+                  )
+                : _buildResult(),
       ),
     );
   }
@@ -219,8 +218,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
     final scoreColor = displayedScore >= 90
         ? Colors.green.shade600
         : displayedScore >= 80
-        ? Colors.green.shade400
-        : AppTheme.primary;
+            ? Colors.green.shade400
+            : AppTheme.primary;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -556,8 +555,8 @@ class _SubScoreBar extends StatelessWidget {
     final color = score >= 80
         ? Colors.green
         : score >= 60
-        ? AppTheme.primary
-        : Colors.orange;
+            ? AppTheme.primary
+            : Colors.orange;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),

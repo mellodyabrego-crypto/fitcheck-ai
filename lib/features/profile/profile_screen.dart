@@ -167,9 +167,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     CircleAvatar(
                       radius: 52,
                       backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
-                      backgroundImage: photo != null
-                          ? MemoryImage(photo)
-                          : null,
+                      backgroundImage:
+                          photo != null ? MemoryImage(photo) : null,
                       child: photo == null
                           ? const Icon(
                               Icons.person,
@@ -756,38 +755,50 @@ class _ColorPaletteSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final seasons = [
-      _SeasonPalette('Spring', [
-        const Color(0xFFF9A8D4),
-        const Color(0xFFFDE68A),
-        const Color(0xFF86EFAC),
-        const Color(0xFFFCA5A5),
-        const Color(0xFFFED7AA),
-        const Color(0xFFBFDBFE),
-      ], const Color(0xFFF9A8D4)),
-      _SeasonPalette('Summer', [
-        const Color(0xFFC4B5FD),
-        const Color(0xFF93C5FD),
-        const Color(0xFFA5F3FC),
-        const Color(0xFFF9A8D4),
-        const Color(0xFFE2E8F0),
-        const Color(0xFF6EE7B7),
-      ], const Color(0xFFC4B5FD)),
-      _SeasonPalette('Autumn', [
-        const Color(0xFFB45309),
-        const Color(0xFFD97706),
-        const Color(0xFF92400E),
-        const Color(0xFF78350F),
-        const Color(0xFFDC8A32),
-        const Color(0xFF6B7280),
-      ], const Color(0xFFD97706)),
-      _SeasonPalette('Winter', [
-        const Color(0xFF1E40AF),
-        const Color(0xFF7C3AED),
-        const Color(0xFF111827),
-        const Color(0xFFDC2626),
-        const Color(0xFFF9FAFB),
-        const Color(0xFF065F46),
-      ], const Color(0xFF7C3AED)),
+      _SeasonPalette(
+          'Spring',
+          [
+            const Color(0xFFF9A8D4),
+            const Color(0xFFFDE68A),
+            const Color(0xFF86EFAC),
+            const Color(0xFFFCA5A5),
+            const Color(0xFFFED7AA),
+            const Color(0xFFBFDBFE),
+          ],
+          const Color(0xFFF9A8D4)),
+      _SeasonPalette(
+          'Summer',
+          [
+            const Color(0xFFC4B5FD),
+            const Color(0xFF93C5FD),
+            const Color(0xFFA5F3FC),
+            const Color(0xFFF9A8D4),
+            const Color(0xFFE2E8F0),
+            const Color(0xFF6EE7B7),
+          ],
+          const Color(0xFFC4B5FD)),
+      _SeasonPalette(
+          'Autumn',
+          [
+            const Color(0xFFB45309),
+            const Color(0xFFD97706),
+            const Color(0xFF92400E),
+            const Color(0xFF78350F),
+            const Color(0xFFDC8A32),
+            const Color(0xFF6B7280),
+          ],
+          const Color(0xFFD97706)),
+      _SeasonPalette(
+          'Winter',
+          [
+            const Color(0xFF1E40AF),
+            const Color(0xFF7C3AED),
+            const Color(0xFF111827),
+            const Color(0xFFDC2626),
+            const Color(0xFFF9FAFB),
+            const Color(0xFF065F46),
+          ],
+          const Color(0xFF7C3AED)),
     ];
 
     return Column(

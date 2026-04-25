@@ -36,12 +36,11 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
   @override
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
-    final todayWeather =
-        weatherAsync.value?[DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-        )];
+    final todayWeather = weatherAsync.value?[DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    )];
 
     return Padding(
       padding: EdgeInsets.only(
@@ -262,13 +261,12 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
     setState(() => _isGenerating = true);
 
     try {
-      final outfit = await ref
-          .read(outfitControllerProvider.notifier)
-          .generateOutfit(
-            _occasion,
-            colorSeason: _colorSeason,
-            fromScratch: _fromScratch,
-          );
+      final outfit =
+          await ref.read(outfitControllerProvider.notifier).generateOutfit(
+                _occasion,
+                colorSeason: _colorSeason,
+                fromScratch: _fromScratch,
+              );
 
       tracker.recordOutfitGeneration();
 

@@ -85,9 +85,8 @@ class BodyTypePicker extends StatelessWidget {
                           label,
                           style: TextStyle(
                             fontSize: 15,
-                            fontWeight: isSelected
-                                ? FontWeight.w700
-                                : FontWeight.w500,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w500,
                             color: isSelected
                                 ? AppTheme.primary
                                 : AppTheme.textPrimary,

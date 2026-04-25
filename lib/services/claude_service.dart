@@ -23,8 +23,7 @@ class ClaudeService {
             'category': item.category.name,
             'subcategory': item.subcategory ?? 'unknown',
             'color': item.color ?? 'unknown',
-            'name':
-                item.name ??
+            'name': item.name ??
                 '${item.color ?? ''} ${item.subcategory ?? item.category.label}'
                     .trim(),
           },

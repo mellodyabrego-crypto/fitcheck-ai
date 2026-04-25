@@ -63,76 +63,77 @@ final _activeHashtagProvider = StateProvider<String?>((ref) => null);
 // usernameProvider is shared — imported from providers/user_providers.dart
 
 List<_Post> _buildSamplePosts() => [
-  _Post(
-    id: '1',
-    username: 'styledbyjaz',
-    avatar: 'J',
-    caption:
-        'Obsessed with this coral set for summer! 🌸 Anyone else living in two-piece sets this season?',
-    imageUrl:
-        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80',
-    likes: 247,
-    tags: ['#SummerVibes', '#OOTD', '#TwoPieceSet'],
-    comments: [
-      _Comment(
-        username: 'fashionbymia',
-        text: 'Obsessed!! Where is this from?',
-        timeAgo: '1h',
-      ),
-      _Comment(
-        username: 'kurvedbykira',
-        text: 'You\'re so right, living in sets rn 🔥',
-        timeAgo: '30m',
-      ),
-    ],
-  ),
-  _Post(
-    id: '2',
-    username: 'fashionbymia',
-    avatar: 'M',
-    caption: 'Would this bag work for both casual and office? 👜 Vote below!',
-    imageUrl:
-        'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80',
-    likes: 89,
-    tags: ['#BagAddict', '#StyleAdvice'],
-    comments: [],
-    pollOptions: [
-      _PollOption(label: 'Yes, perfect for both!', votes: 143),
-      _PollOption(label: 'Too casual for office', votes: 38),
-      _PollOption(label: 'Too formal for casual', votes: 12),
-    ],
-  ),
-  _Post(
-    id: '3',
-    username: 'kurvedbykira',
-    avatar: 'K',
-    caption:
-        'Found these heels for \$35 at Zara! They look SO much more expensive 😍',
-    imageUrl:
-        'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80',
-    likes: 412,
-    tags: ['#ShoeLover', '#ZaraFinds', '#BudgetFashion'],
-    comments: [
-      _Comment(
+      _Post(
+        id: '1',
         username: 'styledbyjaz',
-        text: 'NEED THESE. Linking please!',
-        timeAgo: '3h',
+        avatar: 'J',
+        caption:
+            'Obsessed with this coral set for summer! 🌸 Anyone else living in two-piece sets this season?',
+        imageUrl:
+            'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80',
+        likes: 247,
+        tags: ['#SummerVibes', '#OOTD', '#TwoPieceSet'],
+        comments: [
+          _Comment(
+            username: 'fashionbymia',
+            text: 'Obsessed!! Where is this from?',
+            timeAgo: '1h',
+          ),
+          _Comment(
+            username: 'kurvedbykira',
+            text: 'You\'re so right, living in sets rn 🔥',
+            timeAgo: '30m',
+          ),
+        ],
       ),
-    ],
-  ),
-  _Post(
-    id: '4',
-    username: 'thestylediva',
-    avatar: 'T',
-    caption:
-        'The blazer era is NOT over. Styling tip: go one size up for that effortless oversized look ✨',
-    imageUrl:
-        'https://images.unsplash.com/photo-1598522325074-042db73aa4e6?w=500&q=80',
-    likes: 331,
-    tags: ['#BlazerSzn', '#StylingTips'],
-    comments: [],
-  ),
-];
+      _Post(
+        id: '2',
+        username: 'fashionbymia',
+        avatar: 'M',
+        caption:
+            'Would this bag work for both casual and office? 👜 Vote below!',
+        imageUrl:
+            'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80',
+        likes: 89,
+        tags: ['#BagAddict', '#StyleAdvice'],
+        comments: [],
+        pollOptions: [
+          _PollOption(label: 'Yes, perfect for both!', votes: 143),
+          _PollOption(label: 'Too casual for office', votes: 38),
+          _PollOption(label: 'Too formal for casual', votes: 12),
+        ],
+      ),
+      _Post(
+        id: '3',
+        username: 'kurvedbykira',
+        avatar: 'K',
+        caption:
+            'Found these heels for \$35 at Zara! They look SO much more expensive 😍',
+        imageUrl:
+            'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80',
+        likes: 412,
+        tags: ['#ShoeLover', '#ZaraFinds', '#BudgetFashion'],
+        comments: [
+          _Comment(
+            username: 'styledbyjaz',
+            text: 'NEED THESE. Linking please!',
+            timeAgo: '3h',
+          ),
+        ],
+      ),
+      _Post(
+        id: '4',
+        username: 'thestylediva',
+        avatar: 'T',
+        caption:
+            'The blazer era is NOT over. Styling tip: go one size up for that effortless oversized look ✨',
+        imageUrl:
+            'https://images.unsplash.com/photo-1598522325074-042db73aa4e6?w=500&q=80',
+        likes: 331,
+        tags: ['#BlazerSzn', '#StylingTips'],
+        comments: [],
+      ),
+    ];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
@@ -228,9 +229,9 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                           style: const TextStyle(fontSize: 16),
                         ),
                         TextButton(
-                          onPressed: () =>
-                              ref.read(_activeHashtagProvider.notifier).state =
-                                  null,
+                          onPressed: () => ref
+                              .read(_activeHashtagProvider.notifier)
+                              .state = null,
                           child: const Text('Clear filter'),
                         ),
                       ],
@@ -284,18 +285,18 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                         onLike: () => _toggleLike(realIndex),
                         onComment: () => _showComments(post, realIndex),
                         onShare: () => _sharePost(post),
-                        onHashtagTap: (tag) =>
-                            ref.read(_activeHashtagProvider.notifier).state =
-                                tag,
+                        onHashtagTap: (tag) => ref
+                            .read(_activeHashtagProvider.notifier)
+                            .state = tag,
                         onVote: (optionIndex) =>
                             _castVote(realIndex, optionIndex),
                         onReport: () =>
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Post reported. Thank you!'),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            ),
+                          const SnackBar(
+                            content: Text('Post reported. Thank you!'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -383,17 +384,17 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                   if (_addingPoll) ...[
                     const SizedBox(height: 8),
                     ..._pollOptionCtrl.asMap().entries.map(
-                      (e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: TextField(
-                          controller: e.value,
-                          decoration: InputDecoration(
-                            labelText: 'Option ${e.key + 1}',
-                            isDense: true,
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: TextField(
+                              controller: e.value,
+                              decoration: InputDecoration(
+                                labelText: 'Option ${e.key + 1}',
+                                isDense: true,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
                     TextButton.icon(
                       onPressed: () => setState(
                         () => _pollOptionCtrl.add(TextEditingController()),
@@ -581,12 +582,12 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                       final uname = username.isNotEmpty ? username : 'you';
                       final posts = [...ref.read(_postsProvider)];
                       posts[index].comments.add(
-                        _Comment(
-                          username: uname,
-                          text: commentCtrl.text,
-                          timeAgo: 'Just now',
-                        ),
-                      );
+                            _Comment(
+                              username: uname,
+                              text: commentCtrl.text,
+                              timeAgo: 'Just now',
+                            ),
+                          );
                       ref.read(_postsProvider.notifier).state = List.from(
                         posts,
                       );
@@ -893,9 +894,8 @@ class _PostCard extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     post.liked ? Icons.favorite : Icons.favorite_border,
-                    color: post.liked
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
+                    color:
+                        post.liked ? AppTheme.primary : AppTheme.textSecondary,
                     size: 22,
                   ),
                   onPressed: onLike,

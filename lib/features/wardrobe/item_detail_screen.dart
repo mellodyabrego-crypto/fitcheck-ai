@@ -146,9 +146,8 @@ class ItemDetailScreen extends ConsumerWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: item.tags!
-                      .map((t) => Chip(label: Text(t)))
-                      .toList(),
+                  children:
+                      item.tags!.map((t) => Chip(label: Text(t))).toList(),
                 ),
               ],
             ],

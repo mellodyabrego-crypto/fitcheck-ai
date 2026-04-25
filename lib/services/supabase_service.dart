@@ -61,9 +61,7 @@ class SupabaseService {
         'That file isn\'t a recognized image (only JPEG / PNG / WebP allowed).',
       );
     }
-    await _client.storage
-        .from(AppConstants.wardrobeBucket)
-        .uploadBinary(
+    await _client.storage.from(AppConstants.wardrobeBucket).uploadBinary(
           path,
           bytes,
           fileOptions: FileOptions(upsert: true, contentType: mime),
@@ -132,11 +130,8 @@ class SupabaseService {
   }
 
   Future<WardrobeItem> addWardrobeItem(Map<String, dynamic> item) async {
-    final data = await _client
-        .from('wardrobe_items')
-        .insert(item)
-        .select()
-        .single();
+    final data =
+        await _client.from('wardrobe_items').insert(item).select().single();
     return WardrobeItem.fromJson(data);
   }
 
@@ -149,11 +144,8 @@ class SupabaseService {
     Map<String, dynamic> outfit,
     List<Map<String, dynamic>> items,
   ) async {
-    final outfitData = await _client
-        .from('outfits')
-        .insert(outfit)
-        .select()
-        .single();
+    final outfitData =
+        await _client.from('outfits').insert(outfit).select().single();
 
     for (final item in items) {
       item['outfit_id'] = outfitData['id'];
@@ -173,20 +165,15 @@ class SupabaseService {
   }
 
   Future<List<OutfitItem>> getOutfitItems(String outfitId) async {
-    final data = await _client
-        .from('outfit_items')
-        .select()
-        .eq('outfit_id', outfitId);
+    final data =
+        await _client.from('outfit_items').select().eq('outfit_id', outfitId);
     return data.map((json) => OutfitItem.fromJson(json)).toList();
   }
 
   // ── Fit Checks ────────────────────────────────────────
   Future<FitCheck> saveFitCheck(Map<String, dynamic> fitCheck) async {
-    final data = await _client
-        .from('fit_checks')
-        .insert(fitCheck)
-        .select()
-        .single();
+    final data =
+        await _client.from('fit_checks').insert(fitCheck).select().single();
     return FitCheck.fromJson(data);
   }
 

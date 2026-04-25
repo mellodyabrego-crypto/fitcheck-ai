@@ -16,20 +16,20 @@ import '../auth/auth_controller.dart';
 
 final _settingsProfileProvider =
     FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
-      if (kDemoMode) return null;
-      try {
-        final client = Supabase.instance.client;
-        final userId = client.auth.currentUser?.id;
-        if (userId == null) return null;
-        return await client
-            .from('user_profiles')
-            .select('notifications_enabled, notification_time')
-            .eq('user_id', userId)
-            .maybeSingle();
-      } catch (_) {
-        return null;
-      }
-    });
+  if (kDemoMode) return null;
+  try {
+    final client = Supabase.instance.client;
+    final userId = client.auth.currentUser?.id;
+    if (userId == null) return null;
+    return await client
+        .from('user_profiles')
+        .select('notifications_enabled, notification_time')
+        .eq('user_id', userId)
+        .maybeSingle();
+  } catch (_) {
+    return null;
+  }
+});
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -336,18 +336,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               trailing: Switch(
                 value: notifEnabled,
                 activeColor: AppTheme.primary,
-                onChanged: profileAsync.isLoading
-                    ? null
-                    : _setNotificationsEnabled,
+                onChanged:
+                    profileAsync.isLoading ? null : _setNotificationsEnabled,
               ),
             ),
             _SettingsTile(
               icon: Icons.access_time,
               title: 'Reminder Time',
               subtitle: _formatTime(context, reminderTime),
-              onTap: notifEnabled
-                  ? () => _pickReminderTime(reminderTime)
-                  : null,
+              onTap:
+                  notifEnabled ? () => _pickReminderTime(reminderTime) : null,
               // Greyed out subtitle when notifications are off — visual cue.
               trailing: notifEnabled
                   ? const Icon(Icons.chevron_right, size: 20)
@@ -504,8 +502,7 @@ class _SettingsTile extends StatelessWidget {
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
             )
           : null,
-      trailing:
-          trailing ??
+      trailing: trailing ??
           (onTap != null ? const Icon(Icons.chevron_right, size: 20) : null),
       onTap: onTap,
     );

@@ -134,8 +134,8 @@ class OutfitController extends AsyncNotifier<void> {
     // returned too few IDs (or none that matched), fall back to the default picker.
     List<WardrobeItem> selectedItems = result.selectedItemIds.isNotEmpty
         ? sourceItems
-              .where((i) => result.selectedItemIds.contains(i.id))
-              .toList()
+            .where((i) => result.selectedItemIds.contains(i.id))
+            .toList()
         : [];
 
     if (selectedItems.length < 4) {
@@ -162,9 +162,7 @@ class OutfitController extends AsyncNotifier<void> {
     );
 
     // Persist in local store
-    ref
-        .read(localOutfitStoreProvider.notifier)
-        .update(
+    ref.read(localOutfitStoreProvider.notifier).update(
           (list) => [
             ...list,
             LocalOutfitStore(outfit: outfit, items: selectedItems),
@@ -173,9 +171,9 @@ class OutfitController extends AsyncNotifier<void> {
 
     // Auto-save to My Photos (AI-generated card with first item's image)
     final firstWithUrl = selectedItems.cast<WardrobeItem?>().firstWhere(
-      (i) => i?.imagePath.startsWith('http') ?? false,
-      orElse: () => null,
-    );
+          (i) => i?.imagePath.startsWith('http') ?? false,
+          orElse: () => null,
+        );
     final photo = RatedPhoto(
       networkUrl: firstWithUrl?.imagePath,
       isAiGenerated: true,
@@ -260,12 +258,10 @@ class OutfitController extends AsyncNotifier<void> {
     final shoes = items.where((i) => i.category.name == 'shoes').toList();
     final dresses = items.where((i) => i.category.name == 'dresses').toList();
     final bags = items.where((i) => i.category.name == 'bags').toList();
-    final accessories = items
-        .where((i) => i.category.name == 'accessories')
-        .toList();
-    final outerwear = items
-        .where((i) => i.category.name == 'outerwear')
-        .toList();
+    final accessories =
+        items.where((i) => i.category.name == 'accessories').toList();
+    final outerwear =
+        items.where((i) => i.category.name == 'outerwear').toList();
 
     final result = <WardrobeItem>[];
 

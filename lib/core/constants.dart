@@ -54,8 +54,8 @@ abstract class AppConstants {
       _pickEnv(_dartDefPosthogKey, 'POSTHOG_API_KEY');
   static String get posthogHost =>
       _pickEnv(_dartDefPosthogHost, 'POSTHOG_HOST').isNotEmpty
-      ? _pickEnv(_dartDefPosthogHost, 'POSTHOG_HOST')
-      : 'https://us.i.posthog.com';
+          ? _pickEnv(_dartDefPosthogHost, 'POSTHOG_HOST')
+          : 'https://us.i.posthog.com';
   static String get appEnv => _dartDefAppEnv;
 
   // Firebase web — push notifications
@@ -64,9 +64,9 @@ abstract class AppConstants {
   static String get firebaseProjectId =>
       _pickEnv(_dartDefFirebaseProjectId, 'FIREBASE_PROJECT_ID');
   static String get firebaseMessagingSenderId => _pickEnv(
-    _dartDefFirebaseMessagingSenderId,
-    'FIREBASE_MESSAGING_SENDER_ID',
-  );
+        _dartDefFirebaseMessagingSenderId,
+        'FIREBASE_MESSAGING_SENDER_ID',
+      );
   static String get firebaseAppId =>
       _pickEnv(_dartDefFirebaseAppId, 'FIREBASE_APP_ID');
   static String get firebaseAuthDomain =>

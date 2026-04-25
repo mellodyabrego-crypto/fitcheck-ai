@@ -645,9 +645,8 @@ class _FashionScreenState extends State<FashionScreen> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontWeight: selected
-                              ? FontWeight.w700
-                              : FontWeight.w500,
+                          fontWeight:
+                              selected ? FontWeight.w700 : FontWeight.w500,
                         ),
                       ),
                     ),
@@ -718,7 +717,7 @@ class _VideoPageState extends State<_VideoPage> {
                   child: CircularProgressIndicator(
                     value: progress.expectedTotalBytes != null
                         ? progress.cumulativeBytesLoaded /
-                              progress.expectedTotalBytes!
+                            progress.expectedTotalBytes!
                         : null,
                     color: AppTheme.primary,
                   ),

@@ -42,8 +42,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) {
         setState(() {
-          _error =
-              '$label sign-in failed: ${e.message}\n\n'
+          _error = '$label sign-in failed: ${e.message}\n\n'
               'The $label OAuth provider may not be configured in Supabase yet. '
               'Enable it in the Supabase dashboard → Authentication → Providers.';
         });

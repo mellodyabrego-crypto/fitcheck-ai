@@ -28,17 +28,17 @@ class ClosetPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (kClosetPlaceholderStyle) {
       ClosetPlaceholderStyle.editorial => _EditorialPlaceholder(
-        category: category,
-        onAdd: onAdd,
-      ),
+          category: category,
+          onAdd: onAdd,
+        ),
       ClosetPlaceholderStyle.sketched => _SketchedPlaceholder(
-        category: category,
-        onAdd: onAdd,
-      ),
+          category: category,
+          onAdd: onAdd,
+        ),
       ClosetPlaceholderStyle.mannequin => _MannequinPlaceholder(
-        category: category,
-        onAdd: onAdd,
-      ),
+          category: category,
+          onAdd: onAdd,
+        ),
     };
   }
 }

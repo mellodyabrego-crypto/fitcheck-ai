@@ -75,8 +75,7 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error =
-              'Could not access camera: $e\n\n'
+          _error = 'Could not access camera: $e\n\n'
               'Check your browser permissions, or close other apps using the camera.';
           _starting = false;
         });
@@ -145,31 +144,31 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
                     ),
                   )
                 : _error != null
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.videocam_off,
-                            color: Colors.white70,
-                            size: 48,
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.videocam_off,
+                                color: Colors.white70,
+                                size: 48,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                _error!,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            _error!,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : HtmlElementView(viewType: _viewType),
+                        ),
+                      )
+                    : HtmlElementView(viewType: _viewType),
           ),
           // Capture controls
           Container(

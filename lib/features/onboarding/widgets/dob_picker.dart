@@ -43,9 +43,9 @@ class DobPicker extends StatelessWidget {
         return Theme(
           data: Theme.of(ctx).copyWith(
             colorScheme: Theme.of(ctx).colorScheme.copyWith(
-              primary: AppTheme.primary,
-              onPrimary: Colors.white,
-            ),
+                  primary: AppTheme.primary,
+                  onPrimary: Colors.white,
+                ),
           ),
           child: child ?? const SizedBox.shrink(),
         );

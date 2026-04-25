@@ -62,8 +62,7 @@ class _BrandsPickerState extends State<BrandsPicker> {
     if (trimmed.isEmpty || widget.selected.length >= 5) return;
     if (widget.selected
         .map((b) => b.toLowerCase())
-        .contains(trimmed.toLowerCase()))
-      return;
+        .contains(trimmed.toLowerCase())) return;
     widget.onChanged([...widget.selected, trimmed]);
     _controller.clear();
     setState(() => _query = '');

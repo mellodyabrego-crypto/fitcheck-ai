@@ -23,8 +23,7 @@ class ShareService {
   }) async {
     final itemNames = items
         .map(
-          (i) =>
-              '• ${i.name ?? i.category.label}'
+          (i) => '• ${i.name ?? i.category.label}'
               '${i.color != null ? ' (${i.color})' : ''}',
         )
         .join('\n');

@@ -270,9 +270,8 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
 
               // Save button
               ElevatedButton(
-                onPressed: _imageBytes != null && !_isUploading
-                    ? _saveItem
-                    : null,
+                onPressed:
+                    _imageBytes != null && !_isUploading ? _saveItem : null,
                 child: _isUploading
                     ? const SizedBox(
                         height: 20,

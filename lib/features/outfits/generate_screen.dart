@@ -38,12 +38,11 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
   @override
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
-    final todayWeather =
-        weatherAsync.value?[DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-        )];
+    final todayWeather = weatherAsync.value?[DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    )];
 
     return Scaffold(
       appBar: AppBar(
@@ -335,12 +334,12 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
   }
 
   Color _seasonColor(String season) => switch (season) {
-    'Spring' => const Color(0xFFE8955A),
-    'Summer' => const Color(0xFF9BB7D4),
-    'Autumn' => const Color(0xFFB5651D),
-    'Winter' => const Color(0xFF5B7FA6),
-    _ => AppTheme.primary,
-  };
+        'Spring' => const Color(0xFFE8955A),
+        'Summer' => const Color(0xFF9BB7D4),
+        'Autumn' => const Color(0xFFB5651D),
+        'Winter' => const Color(0xFF5B7FA6),
+        _ => AppTheme.primary,
+      };
 
   Future<void> _generate() async {
     final tracker = ref.read(usageTrackerProvider.notifier);
@@ -350,13 +349,12 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
     }
     setState(() => _isGenerating = true);
     try {
-      final outfit = await ref
-          .read(outfitControllerProvider.notifier)
-          .generateOutfit(
-            _occasion,
-            colorSeason: _colorSeason,
-            fromScratch: _fromScratch,
-          );
+      final outfit =
+          await ref.read(outfitControllerProvider.notifier).generateOutfit(
+                _occasion,
+                colorSeason: _colorSeason,
+                fromScratch: _fromScratch,
+              );
       tracker.recordOutfitGeneration();
       if (mounted) {
         context.pushReplacement('/outfit/${outfit.id}');

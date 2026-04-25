@@ -172,7 +172,6 @@ class _LocationPickerState extends State<LocationPicker> {
             style: TextStyle(color: AppTheme.textSecondary, fontSize: 15),
           ),
           const SizedBox(height: 24),
-
           Text(
             'Country',
             style: TextStyle(
@@ -209,7 +208,6 @@ class _LocationPickerState extends State<LocationPicker> {
             ),
           ),
           const SizedBox(height: 20),
-
           Text(
             isUs ? 'State' : 'State / Region',
             style: TextStyle(

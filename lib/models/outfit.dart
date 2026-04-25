@@ -32,11 +32,11 @@ class Outfit {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'user_id': userId,
-    'occasion': occasion,
-    'reasoning': reasoning,
-  };
+        'id': id,
+        'user_id': userId,
+        'occasion': occasion,
+        'reasoning': reasoning,
+      };
 }
 
 class OutfitItem {
@@ -64,8 +64,8 @@ class OutfitItem {
   }
 
   Map<String, dynamic> toJson() => {
-    'outfit_id': outfitId,
-    'wardrobe_item_id': wardrobeItemId,
-    'slot': slot,
-  };
+        'outfit_id': outfitId,
+        'wardrobe_item_id': wardrobeItemId,
+        'slot': slot,
+      };
 }

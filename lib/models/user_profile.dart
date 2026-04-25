@@ -73,14 +73,12 @@ class UserProfile {
     return UserProfile(
       id: json['id'] as String,
       userId: json['user_id'] as String,
-      aesthetics:
-          (json['aesthetics'] as List<dynamic>?)
+      aesthetics: (json['aesthetics'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],
       bodyType: json['body_type'] as String?,
-      colorPreferences:
-          (json['color_preferences'] as List<dynamic>?)
+      colorPreferences: (json['color_preferences'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],
@@ -93,10 +91,9 @@ class UserProfile {
       updatedAt: DateTime.parse(json['updated_at'] as String),
       goals:
           (json['goals'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-          [],
+              [],
       ageRange: json['age_range'] as String?,
-      brands:
-          (json['brands'] as List<dynamic>?)
+      brands: (json['brands'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],
@@ -114,29 +111,29 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJson() => {
-    'user_id': userId,
-    'aesthetics': aesthetics,
-    'body_type': bodyType,
-    'color_preferences': colorPreferences,
-    'gender': gender,
-    'onboarding_complete': onboardingComplete,
-    'notifications_enabled': notificationsEnabled,
-    'notification_time': notificationTime,
-    'location': location,
-    'goals': goals,
-    'age_range': ageRange,
-    'brands': brands,
-    'top_size': topSize,
-    'bottom_size': bottomSize,
-    'shoe_size': shoeSize,
-    'skin_tone_undertone': skinToneUndertone,
-    'dob': dob?.toIso8601String(),
-    'country': country,
-    'state': state,
-    'referral_source': referralSource,
-    'weather_opt_in': weatherOptIn,
-    'deleted_at': deletedAt?.toIso8601String(),
-  };
+        'user_id': userId,
+        'aesthetics': aesthetics,
+        'body_type': bodyType,
+        'color_preferences': colorPreferences,
+        'gender': gender,
+        'onboarding_complete': onboardingComplete,
+        'notifications_enabled': notificationsEnabled,
+        'notification_time': notificationTime,
+        'location': location,
+        'goals': goals,
+        'age_range': ageRange,
+        'brands': brands,
+        'top_size': topSize,
+        'bottom_size': bottomSize,
+        'shoe_size': shoeSize,
+        'skin_tone_undertone': skinToneUndertone,
+        'dob': dob?.toIso8601String(),
+        'country': country,
+        'state': state,
+        'referral_source': referralSource,
+        'weather_opt_in': weatherOptIn,
+        'deleted_at': deletedAt?.toIso8601String(),
+      };
 
   UserProfile copyWith({
     List<String>? aesthetics,

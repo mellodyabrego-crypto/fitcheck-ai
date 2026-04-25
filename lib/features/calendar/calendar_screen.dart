@@ -285,8 +285,8 @@ class _DayCell extends StatelessWidget {
         color: isSelected
             ? AppTheme.primary
             : isToday
-            ? AppTheme.primary.withValues(alpha: 0.2)
-            : null,
+                ? AppTheme.primary.withValues(alpha: 0.2)
+                : null,
         shape: BoxShape.circle,
       ),
       child: Column(

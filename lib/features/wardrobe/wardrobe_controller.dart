@@ -9,8 +9,8 @@ import '../../services/supabase_service.dart';
 
 final wardrobeControllerProvider =
     AsyncNotifierProvider<WardrobeController, List<WardrobeItem>>(
-      WardrobeController.new,
-    );
+  WardrobeController.new,
+);
 
 class WardrobeController extends AsyncNotifier<List<WardrobeItem>> {
   @override

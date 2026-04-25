@@ -70,5 +70,5 @@ class CollectionsNotifier extends StateNotifier<List<OutfitCollection>> {
 
 final collectionsProvider =
     StateNotifierProvider<CollectionsNotifier, List<OutfitCollection>>(
-      (ref) => CollectionsNotifier(),
-    );
+  (ref) => CollectionsNotifier(),
+);

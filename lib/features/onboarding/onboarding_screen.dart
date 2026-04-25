@@ -228,8 +228,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ref.read(shoeSizeProvider.notifier).state = _shoeSize;
     }
     if (_selectedColors.isNotEmpty) {
-      ref.read(favoriteColorsProvider.notifier).state = _selectedColors
-          .toList();
+      ref.read(favoriteColorsProvider.notifier).state =
+          _selectedColors.toList();
     }
     final season = _mapUndertoneToSeason(_skinToneUndertone);
     if (season != null) {

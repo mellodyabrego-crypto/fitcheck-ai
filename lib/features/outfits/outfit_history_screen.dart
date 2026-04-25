@@ -213,11 +213,11 @@ class OutfitHistoryScreen extends ConsumerWidget {
                             padding: const EdgeInsets.all(16),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                  childAspectRatio: 0.72,
-                                ),
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 0.72,
+                            ),
                             itemCount: ratedPhotos.length,
                             itemBuilder: (ctx, i) =>
                                 _RatedPhotoCard(photo: ratedPhotos[i]),
@@ -1192,9 +1192,8 @@ Future<void> pickCollectionAndAdd(
                 ),
               );
               if (name != null && name.isNotEmpty) {
-                final created = ref
-                    .read(collectionsProvider.notifier)
-                    .create(name);
+                final created =
+                    ref.read(collectionsProvider.notifier).create(name);
                 if (ctx.mounted) Navigator.pop(ctx, created);
               }
             },
