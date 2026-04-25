@@ -96,8 +96,9 @@ final colorSeasonProvider = StateProvider<String?>((ref) {
 /// (Originally autoDispose, but autoDispose + invalidate-from-controller is a
 /// race: if no widget is currently watching, the provider is already gone and
 /// invalidate is a no-op for cache-warming.)
-final styleProfileContextProvider =
-    FutureProvider<StyleProfileContext>((ref) async {
+final styleProfileContextProvider = FutureProvider<StyleProfileContext>((
+  ref,
+) async {
   try {
     final client = Supabase.instance.client;
     final userId = client.auth.currentUser?.id;
@@ -106,7 +107,8 @@ final styleProfileContextProvider =
     final row = await client
         .from('user_profiles')
         .select(
-            'aesthetics, brands, body_type, color_preferences, skin_tone_undertone, top_size, bottom_size, shoe_size')
+          'aesthetics, brands, body_type, color_preferences, skin_tone_undertone, top_size, bottom_size, shoe_size',
+        )
         .eq('user_id', userId)
         .maybeSingle();
 
@@ -145,17 +147,20 @@ final styleProfileContextProvider =
 
     return StyleProfileContext(
       colorSeason:
-          mapSeason(row?['skin_tone_undertone'] as String?) ?? ref.read(colorSeasonProvider),
-      colorPreferences: ((row?['color_preferences'] as List?)
+          mapSeason(row?['skin_tone_undertone'] as String?) ??
+          ref.read(colorSeasonProvider),
+      colorPreferences:
+          ((row?['color_preferences'] as List?)
               ?.map((e) => e.toString())
               .toList() ??
           ref.read(favoriteColorsProvider)),
       bodyType: row?['body_type'] as String?,
       aesthetics:
           (row?['aesthetics'] as List?)?.map((e) => e.toString()).toList() ??
-              const [],
+          const [],
       brands:
-          (row?['brands'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+          (row?['brands'] as List?)?.map((e) => e.toString()).toList() ??
+          const [],
       topSize: row?['top_size'] as String? ?? ref.read(topSizeProvider),
       bottomSize:
           row?['bottom_size'] as String? ?? ref.read(bottomSizeProvider),

@@ -59,7 +59,8 @@ class _PermissionsPickerState extends State<PermissionsPicker> {
       widget.onWeatherChanged(true);
       if (mounted) {
         setState(() {
-          _locationStatus = 'Location enabled — we’ll dress you for the weather.';
+          _locationStatus =
+              'Location enabled — we’ll dress you for the weather.';
           _checkingLocation = false;
         });
       }
@@ -84,10 +85,9 @@ class _PermissionsPickerState extends State<PermissionsPicker> {
           const SizedBox(height: 16),
           Text(
             'A few helpful permissions',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -193,13 +193,21 @@ class _PermTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w700)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(subtitle,
-                    style: TextStyle(
-                        fontSize: 12.5, color: AppTheme.textSecondary)),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
               ],
             ),
           ),
@@ -207,8 +215,7 @@ class _PermTile extends StatelessWidget {
               ? const SizedBox(
                   width: 24,
                   height: 24,
-                  child:
-                      CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : Switch(
                   value: value,

@@ -42,7 +42,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) {
         setState(() {
-          _error = '$label sign-in failed: ${e.message}\n\n'
+          _error =
+              '$label sign-in failed: ${e.message}\n\n'
               'The $label OAuth provider may not be configured in Supabase yet. '
               'Enable it in the Supabase dashboard → Authentication → Providers.';
         });
@@ -139,13 +140,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       height: 118,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: const SweepGradient(colors: [
-                          Color(0xFFD8A7B1),
-                          Color(0xFFE8DED2),
-                          Color(0xFFC6A96B),
-                          Color(0xFFE8DED2),
-                          Color(0xFFD8A7B1),
-                        ]),
+                        gradient: const SweepGradient(
+                          colors: [
+                            Color(0xFFD8A7B1),
+                            Color(0xFFE8DED2),
+                            Color(0xFFC6A96B),
+                            Color(0xFFE8DED2),
+                            Color(0xFFD8A7B1),
+                          ],
+                        ),
                       ),
                     ),
                     // White ring separator
@@ -176,20 +179,27 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           Positioned(
                             top: 10,
                             right: 14,
-                            child: Icon(Icons.star,
-                                color: Colors.white.withValues(alpha: 0.6),
-                                size: 10),
+                            child: Icon(
+                              Icons.star,
+                              color: Colors.white.withValues(alpha: 0.6),
+                              size: 10,
+                            ),
                           ),
                           Positioned(
                             bottom: 12,
                             left: 12,
-                            child: Icon(Icons.star,
-                                color: Colors.white.withValues(alpha: 0.5),
-                                size: 8),
+                            child: Icon(
+                              Icons.star,
+                              color: Colors.white.withValues(alpha: 0.5),
+                              size: 8,
+                            ),
                           ),
                           // Fashion icon
-                          const Icon(Icons.auto_awesome,
-                              size: 42, color: Colors.white),
+                          const Icon(
+                            Icons.auto_awesome,
+                            size: 42,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -257,8 +267,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     padding: const EdgeInsets.only(top: 12),
                     child: Text(
                       _error!,
-                      style:
-                          TextStyle(color: Colors.red.shade700, fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontSize: 14,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -308,8 +320,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     Expanded(child: Divider(color: Colors.grey.shade300)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('or',
-                          style: TextStyle(color: AppTheme.textSecondary)),
+                      child: Text(
+                        'or',
+                        style: TextStyle(color: AppTheme.textSecondary),
+                      ),
                     ),
                     Expanded(child: Divider(color: Colors.grey.shade300)),
                   ],

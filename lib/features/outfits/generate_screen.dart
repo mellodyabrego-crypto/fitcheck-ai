@@ -38,8 +38,12 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
   @override
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
-    final todayWeather = weatherAsync.value?[DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day)];
+    final todayWeather =
+        weatherAsync.value?[DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+        )];
 
     return Scaffold(
       appBar: AppBar(
@@ -71,14 +75,21 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('AI Stylist',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 18)),
-                          Text('Styled for your palette, weather & trends',
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: 12)),
+                          Text(
+                            'AI Stylist',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Styled for your palette, weather & trends',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -90,25 +101,32 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
               if (todayWeather != null) ...[
                 const SizedBox(height: 12),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: todayWeather.color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                        color: todayWeather.color.withValues(alpha: 0.3)),
+                      color: todayWeather.color.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      Icon(todayWeather.icon,
-                          size: 16, color: todayWeather.color),
+                      Icon(
+                        todayWeather.icon,
+                        size: 16,
+                        color: todayWeather.color,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         '${todayWeather.description} · ${todayWeather.tempRange} — outfit adapted for weather',
                         style: TextStyle(
-                            fontSize: 12,
-                            color: todayWeather.color,
-                            fontWeight: FontWeight.w500),
+                          fontSize: 12,
+                          color: todayWeather.color,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -118,8 +136,10 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
               const SizedBox(height: 24),
 
               // Generation mode
-              const Text('Generate from',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              const Text(
+                'Generate from',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -148,8 +168,10 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
               const SizedBox(height: 24),
 
               // Occasion
-              const Text('Occasion',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              const Text(
+                'Occasion',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,
@@ -161,7 +183,9 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 9),
+                        horizontal: 14,
+                        vertical: 9,
+                      ),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppTheme.primary
@@ -176,11 +200,13 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(o.$3,
-                              size: 14,
-                              color: isSelected
-                                  ? Colors.white
-                                  : AppTheme.textSecondary),
+                          Icon(
+                            o.$3,
+                            size: 14,
+                            color: isSelected
+                                ? Colors.white
+                                : AppTheme.textSecondary,
+                          ),
                           const SizedBox(width: 5),
                           Text(
                             o.$2,
@@ -202,8 +228,10 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
               const SizedBox(height: 24),
 
               // Color Season
-              const Text('My Color Palette',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              const Text(
+                'My Color Palette',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,
@@ -215,12 +243,14 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                     color: AppTheme.primary,
                     onTap: () => setState(() => _colorSeason = null),
                   ),
-                  ..._colorSeasons.map((s) => _SeasonChip(
-                        label: s,
-                        selected: _colorSeason == s,
-                        color: _seasonColor(s),
-                        onTap: () => setState(() => _colorSeason = s),
-                      )),
+                  ..._colorSeasons.map(
+                    (s) => _SeasonChip(
+                      label: s,
+                      selected: _colorSeason == s,
+                      color: _seasonColor(s),
+                      onTap: () => setState(() => _colorSeason = s),
+                    ),
+                  ),
                 ],
               ),
 
@@ -234,34 +264,48 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primary,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: _isGenerating
                       ? const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2, color: Colors.white)),
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            ),
                             SizedBox(width: 12),
-                            Text('Creating your look...',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
+                            Text(
+                              'Creating your look...',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         )
                       : const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.auto_awesome,
-                                color: Colors.white, size: 20),
+                            Icon(
+                              Icons.auto_awesome,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                             SizedBox(width: 8),
-                            Text('Create My Outfit',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white)),
+                            Text(
+                              'Create My Outfit',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         ),
                 ),
@@ -273,10 +317,14 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                   final remaining = ref
                       .watch(usageTrackerProvider.notifier)
                       .remainingOutfitsText;
-                  return Text(remaining,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12, color: AppTheme.textSecondary));
+                  return Text(
+                    remaining,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textSecondary,
+                    ),
+                  );
                 },
               ),
             ],
@@ -287,12 +335,12 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
   }
 
   Color _seasonColor(String season) => switch (season) {
-        'Spring' => const Color(0xFFE8955A),
-        'Summer' => const Color(0xFF9BB7D4),
-        'Autumn' => const Color(0xFFB5651D),
-        'Winter' => const Color(0xFF5B7FA6),
-        _ => AppTheme.primary,
-      };
+    'Spring' => const Color(0xFFE8955A),
+    'Summer' => const Color(0xFF9BB7D4),
+    'Autumn' => const Color(0xFFB5651D),
+    'Winter' => const Color(0xFF5B7FA6),
+    _ => AppTheme.primary,
+  };
 
   Future<void> _generate() async {
     final tracker = ref.read(usageTrackerProvider.notifier);
@@ -304,8 +352,11 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
     try {
       final outfit = await ref
           .read(outfitControllerProvider.notifier)
-          .generateOutfit(_occasion,
-              colorSeason: _colorSeason, fromScratch: _fromScratch);
+          .generateOutfit(
+            _occasion,
+            colorSeason: _colorSeason,
+            fromScratch: _fromScratch,
+          );
       tracker.recordOutfitGeneration();
       if (mounted) {
         context.pushReplacement('/outfit/${outfit.id}');
@@ -352,22 +403,30 @@ class _ModeCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(icon,
-                color: selected ? AppTheme.primary : AppTheme.textSecondary,
-                size: 26),
+            Icon(
+              icon,
+              color: selected ? AppTheme.primary : AppTheme.textSecondary,
+              size: 26,
+            ),
             const SizedBox(height: 6),
-            Text(label,
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: selected ? AppTheme.primary : AppTheme.textPrimary)),
-            Text(subtitle,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 10,
-                    color: selected
-                        ? AppTheme.primary.withValues(alpha: 0.7)
-                        : AppTheme.textSecondary)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: selected ? AppTheme.primary : AppTheme.textPrimary,
+              ),
+            ),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10,
+                color: selected
+                    ? AppTheme.primary.withValues(alpha: 0.7)
+                    : AppTheme.textSecondary,
+              ),
+            ),
           ],
         ),
       ),
@@ -399,7 +458,9 @@ class _SeasonChip extends StatelessWidget {
           color: selected ? color : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: selected ? color : Colors.grey.shade300, width: 1.5),
+            color: selected ? color : Colors.grey.shade300,
+            width: 1.5,
+          ),
         ),
         child: Text(
           label,

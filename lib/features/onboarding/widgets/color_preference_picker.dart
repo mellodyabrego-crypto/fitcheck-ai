@@ -20,8 +20,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFF2D3436),
         Color(0xFF636E72),
         Color(0xFFDFE6E9),
-        Color(0xFFFAFAFA)
-      ]
+        Color(0xFFFAFAFA),
+      ],
     ),
     (
       'earth_tones',
@@ -30,8 +30,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFF8B6914),
         Color(0xFFA0522D),
         Color(0xFF6B8E23),
-        Color(0xFFC4A882)
-      ]
+        Color(0xFFC4A882),
+      ],
     ),
     (
       'pastels',
@@ -40,8 +40,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFFFFB5C5),
         Color(0xFFBFEFFF),
         Color(0xFFBDFCC9),
-        Color(0xFFFFF0B5)
-      ]
+        Color(0xFFFFF0B5),
+      ],
     ),
     (
       'bold',
@@ -50,8 +50,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFFE74C3C),
         Color(0xFF3498DB),
         Color(0xFFF39C12),
-        Color(0xFF9B59B6)
-      ]
+        Color(0xFF9B59B6),
+      ],
     ),
     (
       'monochrome',
@@ -60,8 +60,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFF000000),
         Color(0xFF555555),
         Color(0xFFAAAAAA),
-        Color(0xFFFFFFFF)
-      ]
+        Color(0xFFFFFFFF),
+      ],
     ),
     (
       'jewel_tones',
@@ -70,8 +70,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFF1B4F72),
         Color(0xFF7D3C98),
         Color(0xFF196F3D),
-        Color(0xFF922B21)
-      ]
+        Color(0xFF922B21),
+      ],
     ),
     (
       'warm',
@@ -80,8 +80,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFFFF6B6B),
         Color(0xFFFFA07A),
         Color(0xFFFFD93D),
-        Color(0xFFFF8C42)
-      ]
+        Color(0xFFFF8C42),
+      ],
     ),
     (
       'cool',
@@ -90,8 +90,8 @@ class ColorPreferencePicker extends StatelessWidget {
         Color(0xFF74B9FF),
         Color(0xFFA29BFE),
         Color(0xFF81ECEC),
-        Color(0xFF55EFC4)
-      ]
+        Color(0xFF55EFC4),
+      ],
     ),
   ];
 
@@ -105,9 +105,9 @@ class ColorPreferencePicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Colors you love',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -152,20 +152,23 @@ class ColorPreferencePicker extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: colors
-                              .map((c) => Container(
-                                    width: 28,
-                                    height: 28,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 3),
-                                    decoration: BoxDecoration(
-                                      color: c,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.grey.shade300,
-                                        width: 0.5,
-                                      ),
+                              .map(
+                                (c) => Container(
+                                  width: 28,
+                                  height: 28,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: c,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                      width: 0.5,
                                     ),
-                                  ))
+                                  ),
+                                ),
+                              )
                               .toList(),
                         ),
                         const SizedBox(height: 10),
@@ -186,8 +189,11 @@ class ColorPreferencePicker extends StatelessWidget {
                             ),
                             if (isSelected) ...[
                               const SizedBox(width: 4),
-                              Icon(Icons.check_circle,
-                                  color: AppTheme.primary, size: 14),
+                              Icon(
+                                Icons.check_circle,
+                                color: AppTheme.primary,
+                                size: 14,
+                              ),
                             ],
                           ],
                         ),

@@ -17,8 +17,10 @@ class Outfit {
     this.items = const [],
   });
 
-  factory Outfit.fromJson(Map<String, dynamic> json,
-      {List<OutfitItem>? items}) {
+  factory Outfit.fromJson(
+    Map<String, dynamic> json, {
+    List<OutfitItem>? items,
+  }) {
     return Outfit(
       id: json['id'] as String,
       userId: json['user_id'] as String,
@@ -30,11 +32,11 @@ class Outfit {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'user_id': userId,
-        'occasion': occasion,
-        'reasoning': reasoning,
-      };
+    'id': id,
+    'user_id': userId,
+    'occasion': occasion,
+    'reasoning': reasoning,
+  };
 }
 
 class OutfitItem {
@@ -62,8 +64,8 @@ class OutfitItem {
   }
 
   Map<String, dynamic> toJson() => {
-        'outfit_id': outfitId,
-        'wardrobe_item_id': wardrobeItemId,
-        'slot': slot,
-      };
+    'outfit_id': outfitId,
+    'wardrobe_item_id': wardrobeItemId,
+    'slot': slot,
+  };
 }

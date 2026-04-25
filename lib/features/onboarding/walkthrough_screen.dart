@@ -130,9 +130,13 @@ class _WalkthroughScreenState extends State<WalkthroughScreen> {
                   child: ElevatedButton(
                     onPressed: _next,
                     child: Text(
-                      _index == _steps.length - 1 ? 'Enter Her Style Co.' : 'Next',
+                      _index == _steps.length - 1
+                          ? 'Enter Her Style Co.'
+                          : 'Next',
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -182,10 +186,7 @@ class _StepView extends StatelessWidget {
           Text(
             step.title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-            ),
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 12),
           Text(

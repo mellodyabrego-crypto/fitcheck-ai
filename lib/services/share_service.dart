@@ -22,8 +22,11 @@ class ShareService {
     bool isPro = false,
   }) async {
     final itemNames = items
-        .map((i) => '• ${i.name ?? i.category.label}'
-            '${i.color != null ? ' (${i.color})' : ''}')
+        .map(
+          (i) =>
+              '• ${i.name ?? i.category.label}'
+              '${i.color != null ? ' (${i.color})' : ''}',
+        )
         .join('\n');
 
     final scoreLine = fitCheckScore != null
@@ -69,11 +72,7 @@ class ShareService {
     // Try native image share via share_plus XFile (works on web in modern browsers
     // that support navigator.share with files; falls through otherwise).
     try {
-      final file = XFile.fromData(
-        bytes,
-        name: filename,
-        mimeType: 'image/png',
-      );
+      final file = XFile.fromData(bytes, name: filename, mimeType: 'image/png');
       final result = await Share.shareXFiles(
         [file],
         text: fallbackText,

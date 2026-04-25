@@ -10,8 +10,18 @@ class DobPicker extends StatelessWidget {
 
   static String _format(DateTime d) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[d.month - 1]} ${d.day}, ${d.year}';
   }
@@ -33,9 +43,9 @@ class DobPicker extends StatelessWidget {
         return Theme(
           data: Theme.of(ctx).copyWith(
             colorScheme: Theme.of(ctx).colorScheme.copyWith(
-                  primary: AppTheme.primary,
-                  onPrimary: Colors.white,
-                ),
+              primary: AppTheme.primary,
+              onPrimary: Colors.white,
+            ),
           ),
           child: child ?? const SizedBox.shrink(),
         );
@@ -54,10 +64,9 @@ class DobPicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'When’s your birthday?',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -84,10 +93,12 @@ class DobPicker extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.cake_outlined,
-                      color: selected != null
-                          ? AppTheme.primary
-                          : AppTheme.textSecondary),
+                  Icon(
+                    Icons.cake_outlined,
+                    color: selected != null
+                        ? AppTheme.primary
+                        : AppTheme.textSecondary,
+                  ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(

@@ -102,7 +102,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         _selectedColors
           ..clear()
           ..addAll(
-              (row['color_preferences'] as List?)?.cast<String>() ?? const []);
+            (row['color_preferences'] as List?)?.cast<String>() ?? const [],
+          );
         _referralSource = row['referral_source'] as String?;
         _notificationsEnabled = row['notifications_enabled'] as bool? ?? false;
         _weatherOptIn = row['weather_opt_in'] as bool? ?? false;
@@ -227,8 +228,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ref.read(shoeSizeProvider.notifier).state = _shoeSize;
     }
     if (_selectedColors.isNotEmpty) {
-      ref.read(favoriteColorsProvider.notifier).state =
-          _selectedColors.toList();
+      ref.read(favoriteColorsProvider.notifier).state = _selectedColors
+          .toList();
     }
     final season = _mapUndertoneToSeason(_skinToneUndertone);
     if (season != null) {
@@ -326,8 +327,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           return Expanded(
                             child: Container(
                               height: 4,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 1.5),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 1.5,
+                              ),
                               decoration: BoxDecoration(
                                 gradient: i <= _currentPage
                                     ? AppTheme.primaryGradient
@@ -345,8 +347,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     TextButton(
                       onPressed: () =>
                           context.go(_isRetake ? '/home' : '/reviews'),
-                      child: Text('Skip',
-                          style: TextStyle(color: AppTheme.textSecondary)),
+                      child: Text(
+                        'Skip',
+                        style: TextStyle(color: AppTheme.textSecondary),
+                      ),
                     ),
                   ],
                 ),
@@ -370,13 +374,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         padding: const EdgeInsets.only(left: 8),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Text('Optional',
-                              style: TextStyle(fontSize: 11)),
+                          child: const Text(
+                            'Optional',
+                            style: TextStyle(fontSize: 11),
+                          ),
                         ),
                       ),
                   ],
@@ -488,7 +496,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ? 'Get Started'
                           : 'Continue',
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),

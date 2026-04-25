@@ -576,8 +576,10 @@ class _FashionScreenState extends State<FashionScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black.withValues(alpha: 0.35),
         elevation: 0,
-        title: const Text('Fashion & Beauty',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        title: const Text(
+          'Fashion & Beauty',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
         actions: [
           IconButton(
             tooltip: 'Search this category on Google',
@@ -626,7 +628,9 @@ class _FashionScreenState extends State<FashionScreen> {
                     child: Container(
                       margin: const EdgeInsets.only(right: 8),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 7),
+                        horizontal: 14,
+                        vertical: 7,
+                      ),
                       decoration: BoxDecoration(
                         color: selected
                             ? AppTheme.primary
@@ -636,13 +640,16 @@ class _FashionScreenState extends State<FashionScreen> {
                           color: selected ? AppTheme.primary : Colors.white30,
                         ),
                       ),
-                      child: Text(cat,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: selected
-                                  ? FontWeight.w700
-                                  : FontWeight.w500)),
+                      child: Text(
+                        cat,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: selected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -696,8 +703,12 @@ class _VideoPageState extends State<_VideoPage> {
             errorBuilder: (_, __, ___) => Container(
               color: Colors.grey.shade900,
               child: const Center(
-                  child: Icon(Icons.smart_display,
-                      color: Colors.white54, size: 80)),
+                child: Icon(
+                  Icons.smart_display,
+                  color: Colors.white54,
+                  size: 80,
+                ),
+              ),
             ),
             loadingBuilder: (ctx, child, progress) {
               if (progress == null) return child;
@@ -707,7 +718,7 @@ class _VideoPageState extends State<_VideoPage> {
                   child: CircularProgressIndicator(
                     value: progress.expectedTotalBytes != null
                         ? progress.cumulativeBytesLoaded /
-                            progress.expectedTotalBytes!
+                              progress.expectedTotalBytes!
                         : null,
                     color: AppTheme.primary,
                   ),
@@ -767,8 +778,11 @@ class _VideoPageState extends State<_VideoPage> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white38, width: 1.5),
               ),
-              child: const Icon(Icons.play_arrow_rounded,
-                  color: Colors.white, size: 40),
+              child: const Icon(
+                Icons.play_arrow_rounded,
+                color: Colors.white,
+                size: 40,
+              ),
             ),
           ),
 
@@ -815,56 +829,83 @@ class _VideoPageState extends State<_VideoPage> {
               children: [
                 // Category chip
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.primary,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(widget.item.category,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700)),
+                  child: Text(
+                    widget.item.category,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 8),
-                Text(widget.item.title,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        height: 1.2),
-                    maxLines: 2),
+                Text(
+                  widget.item.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    height: 1.2,
+                  ),
+                  maxLines: 2,
+                ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(Icons.smart_display,
-                        color: Colors.red, size: 16),
+                    const Icon(
+                      Icons.smart_display,
+                      color: Colors.red,
+                      size: 16,
+                    ),
                     const SizedBox(width: 5),
-                    Text(widget.item.channel,
-                        style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500)),
+                    Text(
+                      widget.item.channel,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     const SizedBox(width: 10),
-                    Text(widget.item.views,
-                        style: const TextStyle(
-                            color: Colors.white54, fontSize: 12)),
+                    Text(
+                      widget.item.views,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.access_time,
-                        color: Colors.white54, size: 13),
+                    const Icon(
+                      Icons.access_time,
+                      color: Colors.white54,
+                      size: 13,
+                    ),
                     const SizedBox(width: 4),
-                    Text(widget.item.duration,
-                        style: const TextStyle(
-                            color: Colors.white54, fontSize: 12)),
+                    Text(
+                      widget.item.duration,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
                     const SizedBox(width: 16),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white54),
                         borderRadius: BorderRadius.circular(12),
@@ -872,20 +913,23 @@ class _VideoPageState extends State<_VideoPage> {
                       child: Row(
                         children: [
                           Icon(
-                              widget.item.duration == 'Article'
-                                  ? Icons.article_outlined
-                                  : Icons.play_circle_outline,
-                              color: Colors.white,
-                              size: 14),
+                            widget.item.duration == 'Article'
+                                ? Icons.article_outlined
+                                : Icons.play_circle_outline,
+                            color: Colors.white,
+                            size: 14,
+                          ),
                           const SizedBox(width: 4),
                           Text(
-                              widget.item.duration == 'Article'
-                                  ? 'Read Article'
-                                  : 'Watch on YouTube',
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600)),
+                            widget.item.duration == 'Article'
+                                ? 'Read Article'
+                                : 'Watch on YouTube',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -902,10 +946,15 @@ class _VideoPageState extends State<_VideoPage> {
             right: 0,
             child: Column(
               children: [
-                const Icon(Icons.keyboard_arrow_up,
-                    color: Colors.white38, size: 20),
-                const Text('Swipe up for more',
-                    style: TextStyle(color: Colors.white38, fontSize: 10)),
+                const Icon(
+                  Icons.keyboard_arrow_up,
+                  color: Colors.white38,
+                  size: 20,
+                ),
+                const Text(
+                  'Swipe up for more',
+                  style: TextStyle(color: Colors.white38, fontSize: 10),
+                ),
               ],
             ),
           ),
@@ -934,19 +983,22 @@ class _ActionBtn extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          Icon(icon,
-              color: color,
-              size: 30,
-              shadows: [Shadow(color: Colors.black45, blurRadius: 6)]),
+          Icon(
+            icon,
+            color: color,
+            size: 30,
+            shadows: [Shadow(color: Colors.black45, blurRadius: 6)],
+          ),
           const SizedBox(height: 3),
-          Text(label,
-              style: TextStyle(
-                  color: color,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  shadows: [
-                    const Shadow(color: Colors.black45, blurRadius: 4)
-                  ])),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              shadows: [const Shadow(color: Colors.black45, blurRadius: 4)],
+            ),
+          ),
         ],
       ),
     );

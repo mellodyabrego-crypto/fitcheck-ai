@@ -100,19 +100,28 @@ class OutfitHistoryScreen extends ConsumerWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.auto_awesome,
-                                    size: 64,
-                                    color: AppTheme.textSecondary
-                                        .withValues(alpha: 0.5)),
+                                Icon(
+                                  Icons.auto_awesome,
+                                  size: 64,
+                                  color: AppTheme.textSecondary.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                                 const SizedBox(height: 16),
-                                const Text('No creations yet',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500)),
+                                const Text(
+                                  'No creations yet',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                                 const SizedBox(height: 8),
-                                Text('Tap Create to generate your first look!',
-                                    style: TextStyle(
-                                        color: AppTheme.textSecondary)),
+                                Text(
+                                  'Tap Create to generate your first look!',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                  ),
+                                ),
                               ],
                             ),
                           );
@@ -130,17 +139,21 @@ class OutfitHistoryScreen extends ConsumerWidget {
                                   width: 48,
                                   height: 48,
                                   decoration: BoxDecoration(
-                                    color:
-                                        AppTheme.primary.withValues(alpha: 0.1),
+                                    color: AppTheme.primary.withValues(
+                                      alpha: 0.1,
+                                    ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Icon(Icons.auto_awesome,
-                                      color: AppTheme.primary),
+                                  child: const Icon(
+                                    Icons.auto_awesome,
+                                    color: AppTheme.primary,
+                                  ),
                                 ),
                                 title: Text(
                                   outfit.occasion?.toUpperCase() ?? 'OUTFIT',
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                                 subtitle: Text(
                                   outfit.reasoning ?? 'Tap to view',
@@ -163,20 +176,29 @@ class OutfitHistoryScreen extends ConsumerWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.photo_camera,
-                                    size: 64,
-                                    color: AppTheme.textSecondary
-                                        .withValues(alpha: 0.4)),
+                                Icon(
+                                  Icons.photo_camera,
+                                  size: 64,
+                                  color: AppTheme.textSecondary.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                ),
                                 const SizedBox(height: 16),
-                                const Text('No photos yet',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500)),
+                                const Text(
+                                  'No photos yet',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                                 const SizedBox(height: 8),
-                                Text('Upload a photo or generate an AI outfit!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: AppTheme.textSecondary)),
+                                Text(
+                                  'Upload a photo or generate an AI outfit!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                  ),
+                                ),
                                 const SizedBox(height: 20),
                                 ElevatedButton.icon(
                                   onPressed: () =>
@@ -191,11 +213,11 @@ class OutfitHistoryScreen extends ConsumerWidget {
                             padding: const EdgeInsets.all(16),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 0.72,
-                            ),
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  childAspectRatio: 0.72,
+                                ),
                             itemCount: ratedPhotos.length,
                             itemBuilder: (ctx, i) =>
                                 _RatedPhotoCard(photo: ratedPhotos[i]),
@@ -224,8 +246,10 @@ class OutfitHistoryScreen extends ConsumerWidget {
         ),
         backgroundColor: AppTheme.accent,
         foregroundColor: Colors.white,
-        extendedPadding:
-            const EdgeInsets.symmetric(horizontal: 22, vertical: 4),
+        extendedPadding: const EdgeInsets.symmetric(
+          horizontal: 22,
+          vertical: 4,
+        ),
         extendedIconLabelSpacing: 10,
       ),
     );
@@ -235,16 +259,20 @@ class OutfitHistoryScreen extends ConsumerWidget {
     final source = await showModalBottomSheet<String>(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Wrap(children: [
-          ListTile(
+        child: Wrap(
+          children: [
+            ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Camera'),
-              onTap: () => Navigator.pop(ctx, 'camera')),
-          ListTile(
+              onTap: () => Navigator.pop(ctx, 'camera'),
+            ),
+            ListTile(
               leading: const Icon(Icons.photo_library),
               title: const Text('Gallery'),
-              onTap: () => Navigator.pop(ctx, 'gallery')),
-        ]),
+              onTap: () => Navigator.pop(ctx, 'gallery'),
+            ),
+          ],
+        ),
       ),
     );
     if (source == null) return;
@@ -257,8 +285,9 @@ class OutfitHistoryScreen extends ConsumerWidget {
     // Auto-save to calendar for today.
     final today = DateTime.now();
     final todayKey = DateTime(today.year, today.month, today.day);
-    final calPhotos =
-        Map<DateTime, List<Uint8List>>.from(ref.read(calendarPhotosProvider));
+    final calPhotos = Map<DateTime, List<Uint8List>>.from(
+      ref.read(calendarPhotosProvider),
+    );
     calPhotos[todayKey] = [...(calPhotos[todayKey] ?? []), bytes];
     ref.read(calendarPhotosProvider.notifier).state = calPhotos;
 
@@ -279,7 +308,10 @@ class OutfitHistoryScreen extends ConsumerWidget {
   /// Call Gemini (via the proxy) to score the uploaded outfit photo.
   /// Minimum score shown is 7 (per product spec).
   Future<void> _scoreUploadedPhoto(
-      WidgetRef ref, Uint8List bytes, RatedPhoto pending) async {
+    WidgetRef ref,
+    Uint8List bytes,
+    RatedPhoto pending,
+  ) async {
     try {
       final gemini = ref.read(geminiServiceProvider);
       if (!gemini.isGeminiConfigured) throw Exception('Gemini not configured');
@@ -292,21 +324,32 @@ class OutfitHistoryScreen extends ConsumerWidget {
           ? result.feedback
           : 'Solid look — polished and wearable.';
 
-      _replacePhoto(ref, pending,
-          score: rawTen, feedback: feedback, improvements: suggestion);
+      _replacePhoto(
+        ref,
+        pending,
+        score: rawTen,
+        feedback: feedback,
+        improvements: suggestion,
+      );
     } catch (_) {
       // Scoring failed — leave as unscored with an honest message.
-      _replacePhoto(ref, pending,
-          score: 0,
-          feedback: 'Saved to your looks. AI scoring unavailable right now.',
-          improvements: '');
+      _replacePhoto(
+        ref,
+        pending,
+        score: 0,
+        feedback: 'Saved to your looks. AI scoring unavailable right now.',
+        improvements: '',
+      );
     }
   }
 
-  void _replacePhoto(WidgetRef ref, RatedPhoto old,
-      {required int score,
-      required String feedback,
-      required String improvements}) {
+  void _replacePhoto(
+    WidgetRef ref,
+    RatedPhoto old, {
+    required int score,
+    required String feedback,
+    required String improvements,
+  }) {
     final list = [...ref.read(ratedPhotosProvider)];
     final idx = list.indexOf(old);
     if (idx == -1) return;
@@ -337,7 +380,8 @@ class OutfitHistoryScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (_) => const GenerateSheet(),
     );
   }
@@ -365,9 +409,10 @@ class _RatedPhotoCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 10,
-                offset: const Offset(0, 4)),
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: ClipRRect(
@@ -385,16 +430,24 @@ class _RatedPhotoCard extends ConsumerWidget {
                   errorBuilder: (_, __, ___) => Container(
                     color: AppTheme.primary.withValues(alpha: 0.1),
                     child: const Center(
-                        child: Icon(Icons.auto_awesome,
-                            color: AppTheme.primary, size: 40)),
+                      child: Icon(
+                        Icons.auto_awesome,
+                        color: AppTheme.primary,
+                        size: 40,
+                      ),
+                    ),
                   ),
                 )
               else
                 Container(
                   color: AppTheme.primary.withValues(alpha: 0.1),
                   child: const Center(
-                      child: Icon(Icons.auto_awesome,
-                          color: AppTheme.primary, size: 40)),
+                    child: Icon(
+                      Icons.auto_awesome,
+                      color: AppTheme.primary,
+                      size: 40,
+                    ),
+                  ),
                 ),
 
               // AI badge
@@ -403,8 +456,10 @@ class _RatedPhotoCard extends ConsumerWidget {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(10),
@@ -414,11 +469,14 @@ class _RatedPhotoCard extends ConsumerWidget {
                       children: [
                         Icon(Icons.auto_awesome, color: Colors.white, size: 10),
                         SizedBox(width: 3),
-                        Text('AI',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w800)),
+                        Text(
+                          'AI',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -430,23 +488,27 @@ class _RatedPhotoCard extends ConsumerWidget {
                   top: 10,
                   right: 10,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: _scoreColor,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 4)
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 4,
+                        ),
                       ],
                     ),
                     child: Text(
                       '${photo.score}/10',
                       style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                 ),
@@ -457,8 +519,10 @@ class _RatedPhotoCard extends ConsumerWidget {
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
@@ -473,19 +537,25 @@ class _RatedPhotoCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (photo.outfitLabel != null)
-                        Text(photo.outfitLabel!,
-                            style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600)),
-                      Text(photo.feedback,
+                        Text(
+                          photo.outfitLabel!,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              height: 1.3),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
+                            color: Colors.white70,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      Text(
+                        photo.feedback,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          height: 1.3,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       if (photo.score > 0 &&
                           photo.score < 10 &&
                           photo.improvements.isNotEmpty) ...[
@@ -495,13 +565,16 @@ class _RatedPhotoCard extends ConsumerWidget {
                           children: [
                             const Text('💡 ', style: TextStyle(fontSize: 10)),
                             Expanded(
-                              child: Text(photo.improvements,
-                                  style: const TextStyle(
-                                      color: Colors.amber,
-                                      fontSize: 10,
-                                      height: 1.3),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis),
+                              child: Text(
+                                photo.improvements,
+                                style: const TextStyle(
+                                  color: Colors.amber,
+                                  fontSize: 10,
+                                  height: 1.3,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -510,16 +583,21 @@ class _RatedPhotoCard extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.accent,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text('Shop Similar',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w700)),
+                          child: const Text(
+                            'Shop Similar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ],
                     ],
@@ -595,7 +673,9 @@ class _RatedPhotoDetailView extends ConsumerWidget {
                   if (photo.outfitLabel != null)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
@@ -624,10 +704,7 @@ class _RatedPhotoDetailView extends ConsumerWidget {
                     Text(
                       '💡 ${photo.improvements}',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.amber,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.amber, fontSize: 12),
                     ),
                   ],
                   const SizedBox(height: 16),
@@ -692,18 +769,18 @@ class _RatedPhotoDetailView extends ConsumerWidget {
     list.remove(photo);
     ref.read(ratedPhotosProvider.notifier).state = list;
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Photo deleted')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Photo deleted')));
   }
 
   Future<void> _share(BuildContext context, WidgetRef ref) async {
     final text = '${photo.outfitLabel ?? "Outfit"} — ${photo.feedback}';
     await ref.read(shareServiceProvider).shareText(text);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Look shared!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Look shared!')));
   }
 
   Future<void> _saveToCollection(BuildContext context, WidgetRef ref) async {
@@ -723,8 +800,10 @@ class _RatedPhotoDetailView extends ConsumerWidget {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-                'Uploaded photos can be saved from the outfit view. Open an AI look to save it to a collection.')),
+          content: Text(
+            'Uploaded photos can be saved from the outfit view. Open an AI look to save it to a collection.',
+          ),
+        ),
       );
       return;
     }
@@ -747,15 +826,22 @@ class _CollectionsTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.collections_bookmark_outlined,
-                size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.4)),
+            Icon(
+              Icons.collections_bookmark_outlined,
+              size: 64,
+              color: AppTheme.textSecondary.withValues(alpha: 0.4),
+            ),
             const SizedBox(height: 16),
-            const Text('No collections yet',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+            const Text(
+              'No collections yet',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
             const SizedBox(height: 8),
-            Text('Group your favorite looks into themed collections!',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppTheme.textSecondary)),
+            Text(
+              'Group your favorite looks into themed collections!',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppTheme.textSecondary),
+            ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () => _createCollection(context, ref),
@@ -819,7 +905,9 @@ class _CollectionsTab extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, controller.text.trim()),
             child: const Text('Create'),
@@ -853,8 +941,10 @@ class _CollectionCard extends ConsumerWidget {
           ),
           child: const Icon(Icons.collections_bookmark, color: AppTheme.accent),
         ),
-        title: Text(collection.name,
-            style: const TextStyle(fontWeight: FontWeight.w700)),
+        title: Text(
+          collection.name,
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
         subtitle: Text('$count outfit${count == 1 ? '' : 's'}'),
         trailing: PopupMenuButton<String>(
           onSelected: (v) {
@@ -907,16 +997,24 @@ class _CollectionDetailScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.auto_awesome,
-                        size: 56,
-                        color: AppTheme.textSecondary.withValues(alpha: 0.4)),
+                    Icon(
+                      Icons.auto_awesome,
+                      size: 56,
+                      color: AppTheme.textSecondary.withValues(alpha: 0.4),
+                    ),
                     const SizedBox(height: 12),
-                    const Text('No outfits in this collection yet',
-                        style: TextStyle(fontSize: 16)),
+                    const Text(
+                      'No outfits in this collection yet',
+                      style: TextStyle(fontSize: 16),
+                    ),
                     const SizedBox(height: 6),
-                    Text('Open an outfit and tap "Save to Collection"',
-                        style: TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 13)),
+                    Text(
+                      'Open an outfit and tap "Save to Collection"',
+                      style: TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -935,7 +1033,8 @@ class _CollectionDetailScreen extends ConsumerWidget {
 
             if (resolved.isEmpty) {
               return const Center(
-                  child: Text('Saved outfits no longer available'));
+                child: Text('Saved outfits no longer available'),
+              );
             }
 
             return ListView.builder(
@@ -954,8 +1053,10 @@ class _CollectionDetailScreen extends ConsumerWidget {
                         color: AppTheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.auto_awesome,
-                          color: AppTheme.primary),
+                      child: const Icon(
+                        Icons.auto_awesome,
+                        color: AppTheme.primary,
+                      ),
                     ),
                     title: Text(
                       outfit.occasion?.toUpperCase() ?? 'OUTFIT',
@@ -967,8 +1068,10 @@ class _CollectionDetailScreen extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     trailing: IconButton(
-                      icon: const Icon(Icons.remove_circle_outline,
-                          color: Colors.redAccent),
+                      icon: const Icon(
+                        Icons.remove_circle_outline,
+                        color: Colors.redAccent,
+                      ),
                       onPressed: () => ref
                           .read(collectionsProvider.notifier)
                           .removeOutfit(collectionId, outfit.id),
@@ -1048,13 +1151,17 @@ Future<void> pickCollectionAndAdd(
             padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('Save to Collection',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              child: Text(
+                'Save to Collection',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
             ),
           ),
           ListTile(
-            leading:
-                const Icon(Icons.add_circle_outline, color: AppTheme.primary),
+            leading: const Icon(
+              Icons.add_circle_outline,
+              color: AppTheme.primary,
+            ),
             title: const Text('New collection…'),
             onTap: () async {
               final controller = TextEditingController();
@@ -1073,8 +1180,9 @@ Future<void> pickCollectionAndAdd(
                   ),
                   actions: [
                     TextButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: const Text('Cancel')),
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text('Cancel'),
+                    ),
                     ElevatedButton(
                       onPressed: () =>
                           Navigator.pop(ctx, controller.text.trim()),
@@ -1084,24 +1192,30 @@ Future<void> pickCollectionAndAdd(
                 ),
               );
               if (name != null && name.isNotEmpty) {
-                final created =
-                    ref.read(collectionsProvider.notifier).create(name);
+                final created = ref
+                    .read(collectionsProvider.notifier)
+                    .create(name);
                 if (ctx.mounted) Navigator.pop(ctx, created);
               }
             },
           ),
           if (collections.isNotEmpty) const Divider(height: 1),
-          ...collections.map((c) => ListTile(
-                leading: const Icon(Icons.collections_bookmark,
-                    color: AppTheme.accent),
-                title: Text(c.name),
-                subtitle: Text(
-                    '${c.outfitIds.length} outfit${c.outfitIds.length == 1 ? '' : 's'}'),
-                trailing: c.outfitIds.contains(outfitId)
-                    ? const Icon(Icons.check, color: AppTheme.primary)
-                    : null,
-                onTap: () => Navigator.pop(ctx, c),
-              )),
+          ...collections.map(
+            (c) => ListTile(
+              leading: const Icon(
+                Icons.collections_bookmark,
+                color: AppTheme.accent,
+              ),
+              title: Text(c.name),
+              subtitle: Text(
+                '${c.outfitIds.length} outfit${c.outfitIds.length == 1 ? '' : 's'}',
+              ),
+              trailing: c.outfitIds.contains(outfitId)
+                  ? const Icon(Icons.check, color: AppTheme.primary)
+                  : null,
+              onTap: () => Navigator.pop(ctx, c),
+            ),
+          ),
           const SizedBox(height: 8),
         ],
       ),
@@ -1111,8 +1225,8 @@ Future<void> pickCollectionAndAdd(
   if (picked != null) {
     ref.read(collectionsProvider.notifier).addOutfit(picked.id, outfitId);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Saved to "${picked.name}"')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Saved to "${picked.name}"')));
   }
 }

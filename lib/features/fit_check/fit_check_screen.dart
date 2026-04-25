@@ -54,26 +54,28 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
 
     try {
       // Pull outfit detail
-      final detail =
-          await ref.read(outfitDetailProvider(widget.outfitId).future);
+      final detail = await ref.read(
+        outfitDetailProvider(widget.outfitId).future,
+      );
       _occasion = detail.outfit.occasion;
       final items = detail.items
           .where((i) => i.wardrobeItem != null)
-          .map((i) => {
-                'name': i.wardrobeItem!.name ??
-                    i.wardrobeItem!.category.label,
-                'color': i.wardrobeItem!.color ?? 'unspecified',
-                'category': i.wardrobeItem!.category.name,
-              })
+          .map(
+            (i) => {
+              'name': i.wardrobeItem!.name ?? i.wardrobeItem!.category.label,
+              'color': i.wardrobeItem!.color ?? 'unspecified',
+              'category': i.wardrobeItem!.category.name,
+            },
+          )
           .toList();
 
       if (items.isEmpty) {
         throw const GeminiResponseException(
-            'This outfit has no items to score yet.');
+          'This outfit has no items to score yet.',
+        );
       }
 
-      final profile =
-          await ref.read(styleProfileContextProvider.future);
+      final profile = await ref.read(styleProfileContextProvider.future);
 
       final gemini = ref.read(geminiServiceProvider);
       final result = await gemini.scoreFitCheckFromItems(
@@ -125,8 +127,9 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
 
     Uint8List? bytes;
     try {
-      final boundary = _shareCardKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
+      final boundary =
+          _shareCardKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary != null) {
         final image = await boundary.toImage(pixelRatio: 3.0);
         final data = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -138,8 +141,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
 
     final scoreForShare =
         (_rawOverall != null && _rawOverall! < _kDisplayMinScore)
-            ? _kDisplayMinScore
-            : result.overall;
+        ? _kDisplayMinScore
+        : result.overall;
     final fallbackText =
         '✨ My ${(_occasion ?? "outfit").toUpperCase()} fit check on Her Style Co. — '
         '$scoreForShare/100. ${result.headline}';
@@ -153,13 +156,17 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
         subject: 'My Her Style Co. fit check',
       );
     } else {
-      ok = await share.shareText(fallbackText,
-          subject: 'My Her Style Co. fit check');
+      ok = await share.shareText(
+        fallbackText,
+        subject: 'My Her Style Co. fit check',
+      );
     }
     if (!mounted) return;
     if (!ok) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Couldn\'t open share — copied to clipboard.')),
+        const SnackBar(
+          content: Text('Couldn\'t open share — copied to clipboard.'),
+        ),
       );
     }
   }
@@ -180,20 +187,25 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                     Text(
                       'Reading your fit…',
                       style: TextStyle(
-                          fontSize: 16, color: AppTheme.textSecondary),
+                        fontSize: 16,
+                        color: AppTheme.textSecondary,
+                      ),
                     ),
                   ],
                 ),
               )
             : _error != null
-                ? _ErrorView(message: _error!, onRetry: () {
-                    setState(() {
-                      _isLoading = true;
-                      _error = null;
-                    });
-                    _runFitCheck();
-                  })
-                : _buildResult(),
+            ? _ErrorView(
+                message: _error!,
+                onRetry: () {
+                  setState(() {
+                    _isLoading = true;
+                    _error = null;
+                  });
+                  _runFitCheck();
+                },
+              )
+            : _buildResult(),
       ),
     );
   }
@@ -207,8 +219,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
     final scoreColor = displayedScore >= 90
         ? Colors.green.shade600
         : displayedScore >= 80
-            ? Colors.green.shade400
-            : AppTheme.primary;
+        ? Colors.green.shade400
+        : AppTheme.primary;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -230,8 +242,7 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
             const SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.orange.shade50,
                 borderRadius: BorderRadius.circular(12),
@@ -239,16 +250,20 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline,
-                      size: 16, color: Colors.orange.shade800),
+                  Icon(
+                    Icons.info_outline,
+                    size: 16,
+                    color: Colors.orange.shade800,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Limited match — see the tips below to lift this fit.',
                       style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.orange.shade900,
-                          fontWeight: FontWeight.w600),
+                        fontSize: 12,
+                        color: Colors.orange.shade900,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -282,21 +297,25 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                 ),
                 const SizedBox(height: 16),
                 _SubScoreBar(
-                    label: 'Color Harmony',
-                    score: result.colorHarmony,
-                    icon: Icons.palette),
+                  label: 'Color Harmony',
+                  score: result.colorHarmony,
+                  icon: Icons.palette,
+                ),
                 _SubScoreBar(
-                    label: 'Style Cohesion',
-                    score: result.styleCohesion,
-                    icon: Icons.auto_awesome),
+                  label: 'Style Cohesion',
+                  score: result.styleCohesion,
+                  icon: Icons.auto_awesome,
+                ),
                 _SubScoreBar(
-                    label: 'Occasion Fit',
-                    score: result.occasionFit,
-                    icon: Icons.event),
+                  label: 'Occasion Fit',
+                  score: result.occasionFit,
+                  icon: Icons.event,
+                ),
                 _SubScoreBar(
-                    label: 'Versatility',
-                    score: result.versatility,
-                    icon: Icons.swap_horiz),
+                  label: 'Versatility',
+                  score: result.versatility,
+                  icon: Icons.swap_horiz,
+                ),
               ],
             ),
           ),
@@ -325,16 +344,23 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                   children: [
                     Icon(Icons.lightbulb, color: AppTheme.primary, size: 20),
                     SizedBox(width: 8),
-                    Text('Stylist Notes',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w700)),
+                    Text(
+                      'Stylist Notes',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Text(
                   result.feedback,
                   style: const TextStyle(
-                      fontSize: 15, height: 1.6, color: AppTheme.textSecondary),
+                    fontSize: 15,
+                    height: 1.6,
+                    color: AppTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -348,42 +374,58 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
               decoration: BoxDecoration(
                 color: AppTheme.primary.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(20),
-                border:
-                    Border.all(color: AppTheme.primary.withValues(alpha: 0.1)),
+                border: Border.all(
+                  color: AppTheme.primary.withValues(alpha: 0.1),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.tips_and_updates,
-                          color: AppTheme.primary, size: 20),
+                      Icon(
+                        Icons.tips_and_updates,
+                        color: AppTheme.primary,
+                        size: 20,
+                      ),
                       SizedBox(width: 8),
-                      Text('Style Tips',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w700)),
+                      Text(
+                        'Style Tips',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  ...result.tips.map((tip) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('• ',
-                                style: TextStyle(
-                                    color: AppTheme.primary,
-                                    fontWeight: FontWeight.w700)),
-                            Expanded(
-                              child: Text(tip,
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      height: 1.5,
-                                      color: AppTheme.textSecondary)),
+                  ...result.tips.map(
+                    (tip) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '• ',
+                            style: TextStyle(
+                              color: AppTheme.primary,
+                              fontWeight: FontWeight.w700,
                             ),
-                          ],
-                        ),
-                      )),
+                          ),
+                          Expanded(
+                            child: Text(
+                              tip,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                height: 1.5,
+                                color: AppTheme.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -403,7 +445,8 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ),
@@ -502,16 +545,19 @@ class _SubScoreBar extends StatelessWidget {
   final int score;
   final IconData icon;
 
-  const _SubScoreBar(
-      {required this.label, required this.score, required this.icon});
+  const _SubScoreBar({
+    required this.label,
+    required this.score,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
     final color = score >= 80
         ? Colors.green
         : score >= 60
-            ? AppTheme.primary
-            : Colors.orange;
+        ? AppTheme.primary
+        : Colors.orange;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -540,7 +586,10 @@ class _SubScoreBar extends StatelessWidget {
             child: Text(
               '$score',
               style: TextStyle(
-                  fontWeight: FontWeight.w700, fontSize: 13, color: color),
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+                color: color,
+              ),
               textAlign: TextAlign.right,
             ),
           ),
@@ -565,9 +614,10 @@ class _ErrorView extends StatelessWidget {
           children: [
             Icon(Icons.cloud_off, size: 56, color: Colors.orange.shade400),
             const SizedBox(height: 16),
-            Text('AI fit check failed',
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.w800)),
+            Text(
+              'AI fit check failed',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
             const SizedBox(height: 8),
             Text(
               message,

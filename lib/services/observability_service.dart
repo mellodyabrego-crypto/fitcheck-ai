@@ -18,17 +18,14 @@ class Observability {
       return;
     }
     try {
-      await SentryFlutter.init(
-        (options) {
-          options.dsn = AppConstants.sentryDsn;
-          options.environment = AppConstants.appEnv;
-          options.tracesSampleRate = kDebugMode ? 0.0 : 0.1;
-          options.attachScreenshot = false; // wardrobe photos are sensitive
-          options.attachViewHierarchy = false;
-          options.sendDefaultPii = false;
-        },
-        appRunner: appRunner,
-      );
+      await SentryFlutter.init((options) {
+        options.dsn = AppConstants.sentryDsn;
+        options.environment = AppConstants.appEnv;
+        options.tracesSampleRate = kDebugMode ? 0.0 : 0.1;
+        options.attachScreenshot = false; // wardrobe photos are sensitive
+        options.attachViewHierarchy = false;
+        options.sendDefaultPii = false;
+      }, appRunner: appRunner);
     } catch (e) {
       debugPrint('Sentry init failed (continuing): $e');
       await appRunner();

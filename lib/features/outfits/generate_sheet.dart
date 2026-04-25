@@ -36,8 +36,12 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
   @override
   Widget build(BuildContext context) {
     final weatherAsync = ref.watch(weatherProvider);
-    final todayWeather = weatherAsync.value?[DateTime(
-        DateTime.now().year, DateTime.now().month, DateTime.now().day)];
+    final todayWeather =
+        weatherAsync.value?[DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+        )];
 
     return Padding(
       padding: EdgeInsets.only(
@@ -63,35 +67,46 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
             ),
             const SizedBox(height: 20),
 
-            const Text('Generate Outfit',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+            const Text(
+              'Generate Outfit',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 4),
-            Text('Let AI style you based on your palette & trends',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+            Text(
+              'Let AI style you based on your palette & trends',
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+            ),
 
             // Weather strip
             if (todayWeather != null) ...[
               const SizedBox(height: 12),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: todayWeather.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                      color: todayWeather.color.withValues(alpha: 0.3)),
+                    color: todayWeather.color.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    Icon(todayWeather.icon,
-                        size: 16, color: todayWeather.color),
+                    Icon(
+                      todayWeather.icon,
+                      size: 16,
+                      color: todayWeather.color,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       '${todayWeather.description} · ${todayWeather.tempRange} — outfit adapted for weather',
                       style: TextStyle(
-                          fontSize: 12,
-                          color: todayWeather.color,
-                          fontWeight: FontWeight.w500),
+                        fontSize: 12,
+                        color: todayWeather.color,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -101,8 +116,10 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
             const SizedBox(height: 18),
 
             // ── Generation mode ──
-            const Text('Generate from',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            const Text(
+              'Generate from',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -129,8 +146,10 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
             const SizedBox(height: 18),
 
             // ── Occasion ──
-            const Text('Occasion',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            const Text(
+              'Occasion',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -156,26 +175,32 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
             const SizedBox(height: 18),
 
             // ── Color Season ──
-            const Text('My Color Palette',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            const Text(
+              'My Color Palette',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
                 ChoiceChip(
-                  label:
-                      const Text('Auto-detect', style: TextStyle(fontSize: 12)),
+                  label: const Text(
+                    'Auto-detect',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   selected: _colorSeason == null,
                   onSelected: (_) => setState(() => _colorSeason = null),
                   selectedColor: AppTheme.primary.withValues(alpha: 0.2),
                 ),
-                ..._colorSeasons.map((s) => ChoiceChip(
-                      label: Text(s, style: const TextStyle(fontSize: 12)),
-                      selected: _colorSeason == s,
-                      onSelected: (_) => setState(() => _colorSeason = s),
-                      selectedColor: AppTheme.accent.withValues(alpha: 0.3),
-                    )),
+                ..._colorSeasons.map(
+                  (s) => ChoiceChip(
+                    label: Text(s, style: const TextStyle(fontSize: 12)),
+                    selected: _colorSeason == s,
+                    onSelected: (_) => setState(() => _colorSeason = s),
+                    selectedColor: AppTheme.accent.withValues(alpha: 0.3),
+                  ),
+                ),
               ],
             ),
 
@@ -191,10 +216,13 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white)),
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        ),
                         SizedBox(width: 12),
                         Text('Styling your look...'),
                       ],
@@ -208,10 +236,11 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
                 final remaining = ref
                     .watch(usageTrackerProvider.notifier)
                     .remainingOutfitsText;
-                return Text(remaining,
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontSize: 12, color: AppTheme.textSecondary));
+                return Text(
+                  remaining,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                );
               },
             ),
           ],
@@ -233,12 +262,13 @@ class _GenerateSheetState extends ConsumerState<GenerateSheet> {
     setState(() => _isGenerating = true);
 
     try {
-      final outfit =
-          await ref.read(outfitControllerProvider.notifier).generateOutfit(
-                _occasion,
-                colorSeason: _colorSeason,
-                fromScratch: _fromScratch,
-              );
+      final outfit = await ref
+          .read(outfitControllerProvider.notifier)
+          .generateOutfit(
+            _occasion,
+            colorSeason: _colorSeason,
+            fromScratch: _fromScratch,
+          );
 
       tracker.recordOutfitGeneration();
 
@@ -288,17 +318,22 @@ class _ModeButton extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon,
-                color: selected ? AppTheme.primary : AppTheme.textSecondary,
-                size: 22),
+            Icon(
+              icon,
+              color: selected ? AppTheme.primary : AppTheme.textSecondary,
+              size: 22,
+            ),
             const SizedBox(height: 6),
-            Text(label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: selected ? AppTheme.primary : AppTheme.textSecondary,
-                    height: 1.3)),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: selected ? AppTheme.primary : AppTheme.textSecondary,
+                height: 1.3,
+              ),
+            ),
           ],
         ),
       ),

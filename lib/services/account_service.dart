@@ -36,7 +36,8 @@ class AccountService {
     }
     if (_deleteUrl.isEmpty) {
       throw const AccountException(
-          'Backend not configured — contact support to delete your account.');
+        'Backend not configured — contact support to delete your account.',
+      );
     }
 
     final res = await http.post(

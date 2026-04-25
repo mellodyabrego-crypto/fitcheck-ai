@@ -63,74 +63,76 @@ final _activeHashtagProvider = StateProvider<String?>((ref) => null);
 // usernameProvider is shared — imported from providers/user_providers.dart
 
 List<_Post> _buildSamplePosts() => [
-      _Post(
-        id: '1',
-        username: 'styledbyjaz',
-        avatar: 'J',
-        caption:
-            'Obsessed with this coral set for summer! 🌸 Anyone else living in two-piece sets this season?',
-        imageUrl:
-            'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80',
-        likes: 247,
-        tags: ['#SummerVibes', '#OOTD', '#TwoPieceSet'],
-        comments: [
-          _Comment(
-              username: 'fashionbymia',
-              text: 'Obsessed!! Where is this from?',
-              timeAgo: '1h'),
-          _Comment(
-              username: 'kurvedbykira',
-              text: 'You\'re so right, living in sets rn 🔥',
-              timeAgo: '30m'),
-        ],
-      ),
-      _Post(
-        id: '2',
+  _Post(
+    id: '1',
+    username: 'styledbyjaz',
+    avatar: 'J',
+    caption:
+        'Obsessed with this coral set for summer! 🌸 Anyone else living in two-piece sets this season?',
+    imageUrl:
+        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&q=80',
+    likes: 247,
+    tags: ['#SummerVibes', '#OOTD', '#TwoPieceSet'],
+    comments: [
+      _Comment(
         username: 'fashionbymia',
-        avatar: 'M',
-        caption:
-            'Would this bag work for both casual and office? 👜 Vote below!',
-        imageUrl:
-            'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80',
-        likes: 89,
-        tags: ['#BagAddict', '#StyleAdvice'],
-        comments: [],
-        pollOptions: [
-          _PollOption(label: 'Yes, perfect for both!', votes: 143),
-          _PollOption(label: 'Too casual for office', votes: 38),
-          _PollOption(label: 'Too formal for casual', votes: 12),
-        ],
+        text: 'Obsessed!! Where is this from?',
+        timeAgo: '1h',
       ),
-      _Post(
-        id: '3',
+      _Comment(
         username: 'kurvedbykira',
-        avatar: 'K',
-        caption:
-            'Found these heels for \$35 at Zara! They look SO much more expensive 😍',
-        imageUrl:
-            'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80',
-        likes: 412,
-        tags: ['#ShoeLover', '#ZaraFinds', '#BudgetFashion'],
-        comments: [
-          _Comment(
-              username: 'styledbyjaz',
-              text: 'NEED THESE. Linking please!',
-              timeAgo: '3h'),
-        ],
+        text: 'You\'re so right, living in sets rn 🔥',
+        timeAgo: '30m',
       ),
-      _Post(
-        id: '4',
-        username: 'thestylediva',
-        avatar: 'T',
-        caption:
-            'The blazer era is NOT over. Styling tip: go one size up for that effortless oversized look ✨',
-        imageUrl:
-            'https://images.unsplash.com/photo-1598522325074-042db73aa4e6?w=500&q=80',
-        likes: 331,
-        tags: ['#BlazerSzn', '#StylingTips'],
-        comments: [],
+    ],
+  ),
+  _Post(
+    id: '2',
+    username: 'fashionbymia',
+    avatar: 'M',
+    caption: 'Would this bag work for both casual and office? 👜 Vote below!',
+    imageUrl:
+        'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80',
+    likes: 89,
+    tags: ['#BagAddict', '#StyleAdvice'],
+    comments: [],
+    pollOptions: [
+      _PollOption(label: 'Yes, perfect for both!', votes: 143),
+      _PollOption(label: 'Too casual for office', votes: 38),
+      _PollOption(label: 'Too formal for casual', votes: 12),
+    ],
+  ),
+  _Post(
+    id: '3',
+    username: 'kurvedbykira',
+    avatar: 'K',
+    caption:
+        'Found these heels for \$35 at Zara! They look SO much more expensive 😍',
+    imageUrl:
+        'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&q=80',
+    likes: 412,
+    tags: ['#ShoeLover', '#ZaraFinds', '#BudgetFashion'],
+    comments: [
+      _Comment(
+        username: 'styledbyjaz',
+        text: 'NEED THESE. Linking please!',
+        timeAgo: '3h',
       ),
-    ];
+    ],
+  ),
+  _Post(
+    id: '4',
+    username: 'thestylediva',
+    avatar: 'T',
+    caption:
+        'The blazer era is NOT over. Styling tip: go one size up for that effortless oversized look ✨',
+    imageUrl:
+        'https://images.unsplash.com/photo-1598522325074-042db73aa4e6?w=500&q=80',
+    likes: 331,
+    tags: ['#BlazerSzn', '#StylingTips'],
+    comments: [],
+  ),
+];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
@@ -182,16 +184,20 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
           indicatorColor: AppTheme.primary,
           labelColor: AppTheme.primary,
           unselectedLabelColor: AppTheme.textSecondary,
-          tabs: const [Tab(text: 'Feed'), Tab(text: 'Post')],
+          tabs: const [
+            Tab(text: 'Feed'),
+            Tab(text: 'Post'),
+          ],
         ),
         actions: [
           if (activeTag != null)
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Chip(
-                label: Text(activeTag,
-                    style:
-                        const TextStyle(fontSize: 12, color: AppTheme.primary)),
+                label: Text(
+                  activeTag,
+                  style: const TextStyle(fontSize: 12, color: AppTheme.primary),
+                ),
                 deleteIcon: const Icon(Icons.close, size: 14),
                 onDeleted: () =>
                     ref.read(_activeHashtagProvider.notifier).state = null,
@@ -211,15 +217,20 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.tag,
-                            size: 48, color: AppTheme.textSecondary),
+                        const Icon(
+                          Icons.tag,
+                          size: 48,
+                          color: AppTheme.textSecondary,
+                        ),
                         const SizedBox(height: 12),
-                        Text('No posts with $activeTag',
-                            style: const TextStyle(fontSize: 16)),
+                        Text(
+                          'No posts with $activeTag',
+                          style: const TextStyle(fontSize: 16),
+                        ),
                         TextButton(
-                          onPressed: () => ref
-                              .read(_activeHashtagProvider.notifier)
-                              .state = null,
+                          onPressed: () =>
+                              ref.read(_activeHashtagProvider.notifier).state =
+                                  null,
                           child: const Text('Clear filter'),
                         ),
                       ],
@@ -234,25 +245,32 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                         return Container(
                           margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.primary.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                                color: AppTheme.primary.withValues(alpha: 0.2)),
+                              color: AppTheme.primary.withValues(alpha: 0.2),
+                            ),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.info_outline,
-                                  size: 16, color: AppTheme.primary),
+                              const Icon(
+                                Icons.info_outline,
+                                size: 16,
+                                color: AppTheme.primary,
+                              ),
                               const SizedBox(width: 8),
                               const Expanded(
                                 child: Text(
                                   'Sample community — real posting + following coming soon.',
                                   style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppTheme.primary,
-                                      fontWeight: FontWeight.w600),
+                                    fontSize: 12,
+                                    color: AppTheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],
@@ -266,17 +284,18 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                         onLike: () => _toggleLike(realIndex),
                         onComment: () => _showComments(post, realIndex),
                         onShare: () => _sharePost(post),
-                        onHashtagTap: (tag) => ref
-                            .read(_activeHashtagProvider.notifier)
-                            .state = tag,
+                        onHashtagTap: (tag) =>
+                            ref.read(_activeHashtagProvider.notifier).state =
+                                tag,
                         onVote: (optionIndex) =>
                             _castVote(realIndex, optionIndex),
                         onReport: () =>
                             ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Post reported. Thank you!'),
-                              behavior: SnackBarBehavior.floating),
-                        ),
+                              const SnackBar(
+                                content: Text('Post reported. Thank you!'),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            ),
                       );
                     },
                   ),
@@ -287,9 +306,10 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text('Share Your Look',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                  const Text(
+                    'Share Your Look',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
                   const SizedBox(height: 16),
 
                   // Photo
@@ -305,18 +325,27 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                       child: _newPostPhoto != null
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(18),
-                              child: Image.memory(_newPostPhoto!,
-                                  fit: BoxFit.cover))
+                              child: Image.memory(
+                                _newPostPhoto!,
+                                fit: BoxFit.cover,
+                              ),
+                            )
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.add_a_photo,
-                                    size: 44, color: AppTheme.textSecondary),
+                                const Icon(
+                                  Icons.add_a_photo,
+                                  size: 44,
+                                  color: AppTheme.textSecondary,
+                                ),
                                 const SizedBox(height: 10),
-                                Text('Add outfit photo / video',
-                                    style: TextStyle(
-                                        color: AppTheme.textSecondary,
-                                        fontSize: 15)),
+                                Text(
+                                  'Add outfit photo / video',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 15,
+                                  ),
+                                ),
                               ],
                             ),
                     ),
@@ -344,26 +373,31 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                         activeColor: AppTheme.primary,
                         onChanged: (v) => setState(() => _addingPoll = v),
                       ),
-                      const Text('Add a Poll',
-                          style: TextStyle(fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Add a Poll',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     ],
                   ),
 
                   if (_addingPoll) ...[
                     const SizedBox(height: 8),
-                    ..._pollOptionCtrl.asMap().entries.map((e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: TextField(
-                            controller: e.value,
-                            decoration: InputDecoration(
-                              labelText: 'Option ${e.key + 1}',
-                              isDense: true,
-                            ),
+                    ..._pollOptionCtrl.asMap().entries.map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: TextField(
+                          controller: e.value,
+                          decoration: InputDecoration(
+                            labelText: 'Option ${e.key + 1}',
+                            isDense: true,
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                     TextButton.icon(
                       onPressed: () => setState(
-                          () => _pollOptionCtrl.add(TextEditingController())),
+                        () => _pollOptionCtrl.add(TextEditingController()),
+                      ),
                       icon: const Icon(Icons.add, size: 16),
                       label: const Text('Add option'),
                     ),
@@ -412,10 +446,12 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
     final options = p.pollOptions!
         .asMap()
         .entries
-        .map((e) => _PollOption(
-              label: e.value.label,
-              votes: e.key == optionIndex ? e.value.votes + 1 : e.value.votes,
-            ))
+        .map(
+          (e) => _PollOption(
+            label: e.value.label,
+            votes: e.key == optionIndex ? e.value.votes + 1 : e.value.votes,
+          ),
+        )
         .toList();
     posts[postIndex] = _Post(
       id: p.id,
@@ -440,64 +476,86 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setLocalState) => Padding(
           padding: EdgeInsets.only(
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
-              left: 20,
-              right: 20,
-              top: 20),
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+            left: 20,
+            right: 20,
+            top: 20,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Comments (${post.comments.length})',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w700)),
+              Text(
+                'Comments (${post.comments.length})',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(height: 12),
               if (post.comments.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text('No comments yet — be the first!',
-                      style: TextStyle(color: AppTheme.textSecondary)),
+                  child: Text(
+                    'No comments yet — be the first!',
+                    style: TextStyle(color: AppTheme.textSecondary),
+                  ),
                 ),
-              ...post.comments.map((c) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 14,
-                          backgroundColor:
-                              AppTheme.primary.withValues(alpha: 0.15),
-                          child: Text(c.username[0].toUpperCase(),
-                              style: const TextStyle(
-                                  fontSize: 11,
-                                  color: AppTheme.primary,
-                                  fontWeight: FontWeight.w700)),
+              ...post.comments.map(
+                (c) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 14,
+                        backgroundColor: AppTheme.primary.withValues(
+                          alpha: 0.15,
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('@${c.username}',
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700)),
-                              Text(c.text,
-                                  style: const TextStyle(
-                                      fontSize: 13, height: 1.4)),
-                            ],
+                        child: Text(
+                          c.username[0].toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppTheme.primary,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Text(c.timeAgo,
-                            style: const TextStyle(
-                                fontSize: 11, color: AppTheme.textSecondary)),
-                      ],
-                    ),
-                  )),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '@${c.username}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              c.text,
+                              style: const TextStyle(fontSize: 13, height: 1.4),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        c.timeAgo,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -507,8 +565,10 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                       decoration: const InputDecoration(
                         hintText: 'Add a comment...',
                         isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
                       ),
                     ),
                   ),
@@ -520,13 +580,16 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
                       final username = ref.read(usernameProvider);
                       final uname = username.isNotEmpty ? username : 'you';
                       final posts = [...ref.read(_postsProvider)];
-                      posts[index].comments.add(_Comment(
-                            username: uname,
-                            text: commentCtrl.text,
-                            timeAgo: 'Just now',
-                          ));
-                      ref.read(_postsProvider.notifier).state =
-                          List.from(posts);
+                      posts[index].comments.add(
+                        _Comment(
+                          username: uname,
+                          text: commentCtrl.text,
+                          timeAgo: 'Just now',
+                        ),
+                      );
+                      ref.read(_postsProvider.notifier).state = List.from(
+                        posts,
+                      );
                       setLocalState(() {});
                       commentCtrl.clear();
                     },
@@ -550,16 +613,20 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
     final source = await showModalBottomSheet<String>(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Wrap(children: [
-          ListTile(
+        child: Wrap(
+          children: [
+            ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Camera'),
-              onTap: () => Navigator.pop(ctx, 'camera')),
-          ListTile(
+              onTap: () => Navigator.pop(ctx, 'camera'),
+            ),
+            ListTile(
               leading: const Icon(Icons.photo_library),
               title: const Text('Gallery'),
-              onTap: () => Navigator.pop(ctx, 'gallery')),
-        ]),
+              onTap: () => Navigator.pop(ctx, 'gallery'),
+            ),
+          ],
+        ),
       ),
     );
     if (source == null) return;
@@ -587,24 +654,24 @@ class _NetworkScreenState extends ConsumerState<NetworkScreen>
     }
 
     // Extract hashtags from caption
-    final tags = RegExp(r'#\w+')
-        .allMatches(_captionCtrl.text)
-        .map((m) => m.group(0)!)
-        .toList();
+    final tags = RegExp(
+      r'#\w+',
+    ).allMatches(_captionCtrl.text).map((m) => m.group(0)!).toList();
 
     final posts = [...ref.read(_postsProvider)];
     posts.insert(
-        0,
-        _Post(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          username: uname,
-          avatar: uname[0].toUpperCase(),
-          caption: _captionCtrl.text,
-          imageBytes: _newPostPhoto,
-          likes: 0,
-          tags: tags,
-          pollOptions: pollOptions,
-        ));
+      0,
+      _Post(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        username: uname,
+        avatar: uname[0].toUpperCase(),
+        caption: _captionCtrl.text,
+        imageBytes: _newPostPhoto,
+        likes: 0,
+        tags: tags,
+        pollOptions: pollOptions,
+      ),
+    );
     ref.read(_postsProvider.notifier).state = posts;
     _captionCtrl.clear();
     for (final c in _pollOptionCtrl) c.clear();
@@ -647,9 +714,10 @@ class _PostCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 12,
-              offset: const Offset(0, 4)),
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -663,22 +731,32 @@ class _PostCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 18,
                   backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
-                  child: Text(post.avatar,
-                      style: const TextStyle(
-                          color: AppTheme.primary,
-                          fontWeight: FontWeight.w700)),
+                  child: Text(
+                    post.avatar,
+                    style: const TextStyle(
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text('@${post.username}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 14)),
+                  child: Text(
+                    '@${post.username}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_horiz,
-                      color: AppTheme.textSecondary),
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    color: AppTheme.textSecondary,
+                  ),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                   onSelected: (val) async {
                     if (val == 'report' && onReport != null) onReport!();
                     if (val == 'copy') {
@@ -687,40 +765,55 @@ class _PostCard extends StatelessWidget {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Caption copied to clipboard'),
-                            behavior: SnackBarBehavior.floating),
+                          content: Text('Caption copied to clipboard'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
                       );
                     }
                     if (val == 'share') {
                       final text =
                           '@${post.username}: ${post.caption}\n\n${post.tags.join(' ')}';
-                      await Share.share(text,
-                          subject: 'Outfit from Her Style Co.');
+                      await Share.share(
+                        text,
+                        subject: 'Outfit from Her Style Co.',
+                      );
                     }
                   },
                   itemBuilder: (_) => const [
                     PopupMenuItem(
-                        value: 'copy',
-                        child: Row(children: [
+                      value: 'copy',
+                      child: Row(
+                        children: [
                           Icon(Icons.copy, size: 16),
                           SizedBox(width: 8),
                           Text('Copy caption'),
-                        ])),
+                        ],
+                      ),
+                    ),
                     PopupMenuItem(
-                        value: 'share',
-                        child: Row(children: [
+                      value: 'share',
+                      child: Row(
+                        children: [
                           Icon(Icons.share_outlined, size: 16),
                           SizedBox(width: 8),
                           Text('Share post'),
-                        ])),
+                        ],
+                      ),
+                    ),
                     PopupMenuItem(
-                        value: 'report',
-                        child: Row(children: [
-                          Icon(Icons.flag_outlined,
-                              size: 16, color: Colors.red),
+                      value: 'report',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.flag_outlined,
+                            size: 16,
+                            color: Colors.red,
+                          ),
                           SizedBox(width: 8),
                           Text('Report', style: TextStyle(color: Colors.red)),
-                        ])),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -729,24 +822,32 @@ class _PostCard extends StatelessWidget {
 
           // Image
           if (post.imageUrl != null)
-            Image.network(post.imageUrl!,
-                height: 280,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                    height: 120,
-                    color: AppTheme.primary.withValues(alpha: 0.1),
-                    child:
-                        const Center(child: Icon(Icons.image_not_supported))))
+            Image.network(
+              post.imageUrl!,
+              height: 280,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                height: 120,
+                color: AppTheme.primary.withValues(alpha: 0.1),
+                child: const Center(child: Icon(Icons.image_not_supported)),
+              ),
+            )
           else if (post.imageBytes != null)
-            Image.memory(post.imageBytes!,
-                height: 280, width: double.infinity, fit: BoxFit.cover),
+            Image.memory(
+              post.imageBytes!,
+              height: 280,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
 
           // Caption
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 4),
-            child: Text(post.caption,
-                style: const TextStyle(fontSize: 14, height: 1.5)),
+            child: Text(
+              post.caption,
+              style: const TextStyle(fontSize: 14, height: 1.5),
+            ),
           ),
 
           // Hashtags (tappable)
@@ -756,14 +857,19 @@ class _PostCard extends StatelessWidget {
               child: Wrap(
                 spacing: 6,
                 children: post.tags
-                    .map((t) => GestureDetector(
-                          onTap: () => onHashtagTap(t),
-                          child: Text(t,
-                              style: const TextStyle(
-                                  color: AppTheme.primary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600)),
-                        ))
+                    .map(
+                      (t) => GestureDetector(
+                        onTap: () => onHashtagTap(t),
+                        child: Text(
+                          t,
+                          style: const TextStyle(
+                            color: AppTheme.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -773,9 +879,10 @@ class _PostCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 4),
               child: _PollWidget(
-                  options: post.pollOptions!,
-                  userVote: post.userVote,
-                  onVote: onVote),
+                options: post.pollOptions!,
+                userVote: post.userVote,
+                onVote: onVote,
+              ),
             ),
 
           // Actions
@@ -786,28 +893,43 @@ class _PostCard extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     post.liked ? Icons.favorite : Icons.favorite_border,
-                    color:
-                        post.liked ? AppTheme.primary : AppTheme.textSecondary,
+                    color: post.liked
+                        ? AppTheme.primary
+                        : AppTheme.textSecondary,
                     size: 22,
                   ),
                   onPressed: onLike,
                 ),
-                Text('${post.likes}',
-                    style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w500)),
+                Text(
+                  '${post.likes}',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: const Icon(Icons.chat_bubble_outline,
-                      size: 20, color: AppTheme.textSecondary),
+                  icon: const Icon(
+                    Icons.chat_bubble_outline,
+                    size: 20,
+                    color: AppTheme.textSecondary,
+                  ),
                   onPressed: onComment,
                 ),
-                Text('${post.comments.length}',
-                    style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w500)),
+                Text(
+                  '${post.comments.length}',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.share_outlined,
-                      size: 20, color: AppTheme.textSecondary),
+                  icon: const Icon(
+                    Icons.share_outlined,
+                    size: 20,
+                    color: AppTheme.textSecondary,
+                  ),
                   onPressed: onShare,
                 ),
               ],
@@ -826,8 +948,11 @@ class _PollWidget extends StatelessWidget {
   final int? userVote;
   final void Function(int) onVote;
 
-  const _PollWidget(
-      {required this.options, required this.userVote, required this.onVote});
+  const _PollWidget({
+    required this.options,
+    required this.userVote,
+    required this.onVote,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -837,11 +962,14 @@ class _PollWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Poll',
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.textSecondary)),
+        const Text(
+          'Poll',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: AppTheme.textSecondary,
+          ),
+        ),
         const SizedBox(height: 6),
         ...options.asMap().entries.map((e) {
           final pct = total > 0 ? e.value.votes / total : 0.0;
@@ -852,7 +980,8 @@ class _PollWidget extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 6),
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: isChosen ? AppTheme.primary : Colors.grey.shade300),
+                  color: isChosen ? AppTheme.primary : Colors.grey.shade300,
+                ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Stack(
@@ -872,25 +1001,33 @@ class _PollWidget extends StatelessWidget {
                     ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text(e.value.label,
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: isChosen
-                                      ? FontWeight.w700
-                                      : FontWeight.normal)),
+                          child: Text(
+                            e.value.label,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: isChosen
+                                  ? FontWeight.w700
+                                  : FontWeight.normal,
+                            ),
+                          ),
                         ),
                         if (voted)
-                          Text('${(pct * 100).round()}%',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: isChosen
-                                      ? AppTheme.primary
-                                      : AppTheme.textSecondary,
-                                  fontWeight: FontWeight.w600)),
+                          Text(
+                            '${(pct * 100).round()}%',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isChosen
+                                  ? AppTheme.primary
+                                  : AppTheme.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -900,9 +1037,10 @@ class _PollWidget extends StatelessWidget {
           );
         }),
         if (voted)
-          Text('$total votes',
-              style:
-                  const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+          Text(
+            '$total votes',
+            style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+          ),
       ],
     );
   }

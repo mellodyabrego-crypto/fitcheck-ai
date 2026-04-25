@@ -6,8 +6,11 @@ class GoalPicker extends StatelessWidget {
   final Set<String> selected;
   final ValueChanged<String> onChanged;
 
-  const GoalPicker(
-      {super.key, required this.selected, required this.onChanged});
+  const GoalPicker({
+    super.key,
+    required this.selected,
+    required this.onChanged,
+  });
 
   static const _goals = [
     ('outfit_ideas', 'Get outfit ideas', Icons.auto_awesome, Color(0xFFD8A7B1)),
@@ -18,7 +21,7 @@ class GoalPicker extends StatelessWidget {
       'intentional',
       'Shop more intentionally',
       Icons.shopping_bag,
-      Color(0xFFC6A96B)
+      Color(0xFFC6A96B),
     ),
     ('daily', 'Look put-together daily', Icons.wb_sunny, Color(0xFFD8A7B1)),
   ];
@@ -33,10 +36,9 @@ class GoalPicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'What brings you here?',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -57,7 +59,9 @@ class GoalPicker extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? color.withValues(alpha: 0.1)

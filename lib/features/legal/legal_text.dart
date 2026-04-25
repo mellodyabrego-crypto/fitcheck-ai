@@ -16,7 +16,8 @@
 
 const String kTermsLastUpdated = 'April 25, 2026';
 
-const String kTermsOfService = '''
+const String kTermsOfService =
+    '''
 Her Style Co. — Terms of Service
 Last updated: $kTermsLastUpdated
 
@@ -90,7 +91,8 @@ constitutes acceptance.
 hello@herstyleco.app
 ''';
 
-const String kPrivacyPolicy = '''
+const String kPrivacyPolicy =
+    '''
 Her Style Co. — Privacy Policy
 Last updated: $kTermsLastUpdated
 

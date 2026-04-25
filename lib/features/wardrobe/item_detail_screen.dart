@@ -27,11 +27,13 @@ class ItemDetailScreen extends ConsumerWidget {
                 builder: (ctx) => AlertDialog(
                   title: const Text('Delete Item?'),
                   content: const Text(
-                      'This will permanently remove this item from your wardrobe.'),
+                    'This will permanently remove this item from your wardrobe.',
+                  ),
                   actions: [
                     TextButton(
-                        onPressed: () => Navigator.pop(ctx, false),
-                        child: const Text('Cancel')),
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('Cancel'),
+                    ),
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, true),
                       style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -73,9 +75,11 @@ class ItemDetailScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(item.category.icon,
-                            size: 56,
-                            color: Colors.white.withValues(alpha: 0.9)),
+                        Icon(
+                          item.category.icon,
+                          size: 56,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
                         const SizedBox(height: 8),
                         Text(
                           item.color ?? '',
@@ -134,15 +138,17 @@ class ItemDetailScreen extends ConsumerWidget {
 
               if (item.tags != null && item.tags!.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                const Text('Tags',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                const Text(
+                  'Tags',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children:
-                      item.tags!.map((t) => Chip(label: Text(t))).toList(),
+                  children: item.tags!
+                      .map((t) => Chip(label: Text(t)))
+                      .toList(),
                 ),
               ],
             ],
@@ -179,11 +185,14 @@ class _DetailRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 15)),
-          Text(value,
-              style:
-                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+          Text(
+            label,
+            style: TextStyle(color: AppTheme.textSecondary, fontSize: 15),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+          ),
         ],
       ),
     );
@@ -195,8 +204,11 @@ class _StatChip extends StatelessWidget {
   final String value;
   final String label;
 
-  const _StatChip(
-      {required this.icon, required this.value, required this.label});
+  const _StatChip({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -212,11 +224,14 @@ class _StatChip extends StatelessWidget {
           children: [
             Icon(icon, size: 20, color: AppTheme.primary),
             const SizedBox(height: 4),
-            Text(value,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-            Text(label,
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+            Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
+            Text(
+              label,
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+            ),
           ],
         ),
       ),

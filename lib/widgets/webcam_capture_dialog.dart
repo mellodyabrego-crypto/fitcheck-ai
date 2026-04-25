@@ -75,7 +75,8 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Could not access camera: $e\n\n'
+          _error =
+              'Could not access camera: $e\n\n'
               'Check your browser permissions, or close other apps using the camera.';
           _starting = false;
         });
@@ -86,8 +87,10 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
   Future<Uint8List?> _snapshot() async {
     final v = _video;
     if (v == null || v.videoWidth == 0) return null;
-    final canvas =
-        html.CanvasElement(width: v.videoWidth, height: v.videoHeight);
+    final canvas = html.CanvasElement(
+      width: v.videoWidth,
+      height: v.videoHeight,
+    );
     final ctx = canvas.context2D;
     ctx.drawImage(v, 0, 0);
     final blob = await canvas.toBlob('image/png');
@@ -115,8 +118,10 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title:
-            const Text('Take a Photo', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Take a Photo',
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(null),
@@ -132,30 +137,39 @@ class _WebcamCaptureDialogState extends State<WebcamCaptureDialog> {
                       children: [
                         CircularProgressIndicator(color: AppTheme.primary),
                         SizedBox(height: 16),
-                        Text('Starting camera…',
-                            style: TextStyle(color: Colors.white70)),
+                        Text(
+                          'Starting camera…',
+                          style: TextStyle(color: Colors.white70),
+                        ),
                       ],
                     ),
                   )
                 : _error != null
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.videocam_off,
-                                  color: Colors.white70, size: 48),
-                              const SizedBox(height: 16),
-                              Text(_error!,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Colors.white70, fontSize: 14)),
-                            ],
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.videocam_off,
+                            color: Colors.white70,
+                            size: 48,
                           ),
-                        ),
-                      )
-                    : HtmlElementView(viewType: _viewType),
+                          const SizedBox(height: 16),
+                          Text(
+                            _error!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : HtmlElementView(viewType: _viewType),
           ),
           // Capture controls
           Container(

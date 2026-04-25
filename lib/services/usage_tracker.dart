@@ -5,8 +5,8 @@ import '../models/subscription_state.dart';
 
 final usageTrackerProvider =
     StateNotifierProvider<UsageTracker, SubscriptionState>((ref) {
-  return UsageTracker();
-});
+      return UsageTracker();
+    });
 
 /// Tracks daily usage limits for free tier.
 /// In production, this would sync with Supabase.
@@ -21,10 +21,7 @@ class UsageTracker extends StateNotifier<SubscriptionState> {
     if (now.day != _lastResetDate.day ||
         now.month != _lastResetDate.month ||
         now.year != _lastResetDate.year) {
-      state = state.copyWith(
-        dailyOutfitGenerations: 0,
-        dailyFitChecks: 0,
-      );
+      state = state.copyWith(dailyOutfitGenerations: 0, dailyFitChecks: 0);
       _lastResetDate = now;
     }
   }
@@ -60,15 +57,11 @@ class UsageTracker extends StateNotifier<SubscriptionState> {
 
   void recordFitCheck() {
     _resetIfNewDay();
-    state = state.copyWith(
-      dailyFitChecks: state.dailyFitChecks + 1,
-    );
+    state = state.copyWith(dailyFitChecks: state.dailyFitChecks + 1);
   }
 
   void recordItemAdded() {
-    state = state.copyWith(
-      wardrobeItemCount: state.wardrobeItemCount + 1,
-    );
+    state = state.copyWith(wardrobeItemCount: state.wardrobeItemCount + 1);
   }
 
   String get remainingOutfitsText {

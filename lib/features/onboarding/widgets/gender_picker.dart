@@ -6,8 +6,11 @@ class GenderPicker extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onChanged;
 
-  const GenderPicker(
-      {super.key, required this.selected, required this.onChanged});
+  const GenderPicker({
+    super.key,
+    required this.selected,
+    required this.onChanged,
+  });
 
   static const _options = [
     ('woman', 'Woman'),
@@ -26,10 +29,9 @@ class GenderPicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'How do you identify?',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -49,7 +51,9 @@ class GenderPicker extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 18),
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppTheme.primary.withValues(alpha: 0.08)
@@ -79,8 +83,11 @@ class GenderPicker extends StatelessWidget {
                           ),
                         ),
                         if (isSelected)
-                          const Icon(Icons.check_circle,
-                              color: AppTheme.primary, size: 22),
+                          const Icon(
+                            Icons.check_circle,
+                            color: AppTheme.primary,
+                            size: 22,
+                          ),
                       ],
                     ),
                   ),

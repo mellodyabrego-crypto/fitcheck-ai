@@ -33,33 +33,37 @@ class ExportService {
 
     // Pull every table the user can read. Each query is wrapped so partial
     // failures still produce a usable export — degraded > nothing.
-    final profile = await _safeFetch(() => client
-        .from('user_profiles')
-        .select()
-        .eq('user_id', userId)
-        .maybeSingle());
-    final wardrobeItems = await _safeFetch(() =>
-        client.from('wardrobe_items').select().eq('user_id', userId));
+    final profile = await _safeFetch(
+      () => client
+          .from('user_profiles')
+          .select()
+          .eq('user_id', userId)
+          .maybeSingle(),
+    );
+    final wardrobeItems = await _safeFetch(
+      () => client.from('wardrobe_items').select().eq('user_id', userId),
+    );
     final outfits = await _safeFetch(
-        () => client.from('outfits').select().eq('user_id', userId));
-    final outfitItems = await _safeFetch(() => client
-        .from('outfit_items')
-        .select('*, outfits!inner(user_id)')
-        .eq('outfits.user_id', userId));
-    final feedback = await _safeFetch(() => client
-        .from('outfit_feedback')
-        .select()
-        .eq('user_id', userId)
-        .order('created_at', ascending: false));
+      () => client.from('outfits').select().eq('user_id', userId),
+    );
+    final outfitItems = await _safeFetch(
+      () => client
+          .from('outfit_items')
+          .select('*, outfits!inner(user_id)')
+          .eq('outfits.user_id', userId),
+    );
+    final feedback = await _safeFetch(
+      () => client
+          .from('outfit_feedback')
+          .select()
+          .eq('user_id', userId)
+          .order('created_at', ascending: false),
+    );
 
     final payload = {
       'export_version': 1,
       'exported_at': DateTime.now().toUtc().toIso8601String(),
-      'user': {
-        'id': userId,
-        'email': user.email,
-        'created_at': user.createdAt,
-      },
+      'user': {'id': userId, 'email': user.email, 'created_at': user.createdAt},
       'profile': profile,
       'wardrobe_items': wardrobeItems,
       'outfits': outfits,
@@ -99,6 +103,9 @@ class ExportService {
     anchor.remove();
     // Defer revoke — some browsers cancel the download if revoke fires
     // synchronously in the same tick.
-    Future.delayed(const Duration(seconds: 1), () => html.Url.revokeObjectUrl(url));
+    Future.delayed(
+      const Duration(seconds: 1),
+      () => html.Url.revokeObjectUrl(url),
+    );
   }
 }

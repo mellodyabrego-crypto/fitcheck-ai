@@ -37,7 +37,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Crop Top',
       'Tank Top',
       'Hoodie',
-      'Sweater'
+      'Sweater',
     ],
     ClothingCategory.bottoms: [
       'Jeans',
@@ -45,7 +45,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Mini Skirt',
       'Midi Skirt',
       'Shorts',
-      'Trousers'
+      'Trousers',
     ],
     ClothingCategory.dresses: [
       'Maxi Dress',
@@ -53,7 +53,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Wrap Dress',
       'Sundress',
       'Bodycon',
-      'Midi Dress'
+      'Midi Dress',
     ],
     ClothingCategory.shoes: [
       'Sneakers',
@@ -61,7 +61,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Sandals',
       'Boots',
       'Flats',
-      'Mules'
+      'Mules',
     ],
     ClothingCategory.outerwear: [
       'Denim Jacket',
@@ -69,7 +69,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Trench Coat',
       'Puffer',
       'Cardigan',
-      'Leather Jacket'
+      'Leather Jacket',
     ],
     ClothingCategory.accessories: [
       'Belt',
@@ -77,7 +77,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Hat',
       'Sunglasses',
       'Hair Clip',
-      'Necklace'
+      'Necklace',
     ],
     ClothingCategory.bags: [
       'Tote Bag',
@@ -85,7 +85,7 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       'Clutch',
       'Mini Bag',
       'Backpack',
-      'Shoulder Bag'
+      'Shoulder Bag',
     ],
   };
 
@@ -136,22 +136,30 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_a_photo,
-                                  size: 56, color: AppTheme.textSecondary),
+                              Icon(
+                                Icons.add_a_photo,
+                                size: 56,
+                                color: AppTheme.textSecondary,
+                              ),
                               const SizedBox(height: 14),
-                              Text('Tap to add a photo',
-                                  style: TextStyle(
-                                    color: AppTheme.textSecondary,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                  )),
+                              Text(
+                                'Tap to add a photo',
+                                style: TextStyle(
+                                  color: AppTheme.textSecondary,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text('Photos fit best in landscape (4:3).',
-                                  style: TextStyle(
-                                    color: AppTheme.textSecondary
-                                        .withValues(alpha: 0.7),
-                                    fontSize: 12,
-                                  )),
+                              Text(
+                                'Photos fit best in landscape (4:3).',
+                                style: TextStyle(
+                                  color: AppTheme.textSecondary.withValues(
+                                    alpha: 0.7,
+                                  ),
+                                  fontSize: 12,
+                                ),
+                              ),
                             ],
                           ),
                   ),
@@ -222,7 +230,8 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
                     },
                     backgroundColor: AppTheme.primary.withValues(alpha: 0.07),
                     side: BorderSide(
-                        color: AppTheme.primary.withValues(alpha: 0.2)),
+                      color: AppTheme.primary.withValues(alpha: 0.2),
+                    ),
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                   );
                 }).toList(),
@@ -261,8 +270,9 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
 
               // Save button
               ElevatedButton(
-                onPressed:
-                    _imageBytes != null && !_isUploading ? _saveItem : null,
+                onPressed: _imageBytes != null && !_isUploading
+                    ? _saveItem
+                    : null,
                 child: _isUploading
                     ? const SizedBox(
                         height: 20,
@@ -309,7 +319,8 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
     final choice = await showModalBottomSheet<String>(
       context: context,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -318,14 +329,17 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
               padding: EdgeInsets.fromLTRB(20, 16, 20, 4),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Crop to aspect ratio',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                child: Text(
+                  'Crop to aspect ratio',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
               ),
             ),
             ListTile(
-              leading:
-                  const Icon(Icons.crop_landscape, color: AppTheme.primary),
+              leading: const Icon(
+                Icons.crop_landscape,
+                color: AppTheme.primary,
+              ),
               title: const Text('Landscape (4:3)'),
               subtitle: const Text('Best for full outfit photos'),
               onTap: () => Navigator.pop(ctx, 'landscape'),
@@ -375,8 +389,13 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       }
       final x = ((w - cropW) / 2).round();
       final y = ((h - cropH) / 2).round();
-      final out =
-          img.copyCrop(decoded, x: x, y: y, width: cropW, height: cropH);
+      final out = img.copyCrop(
+        decoded,
+        x: x,
+        y: y,
+        width: cropW,
+        height: cropH,
+      );
       return Uint8List.fromList(img.encodeJpg(out, quality: 85));
     } catch (_) {
       return null;
@@ -398,8 +417,11 @@ class _AddItemScreenState extends ConsumerState<AddItemScreen> {
       final supabase = ref.read(supabaseServiceProvider);
       if (supabase == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Sign in to save items to your wardrobe.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sign in to save items to your wardrobe.'),
+            ),
+          );
         }
         setState(() => _isUploading = false);
         return;
@@ -510,8 +532,13 @@ class _ImageEditorScreenState extends State<_ImageEditorScreen> {
         final zh = (h / zoom).round();
         final zx = ((w - zw) / 2).round();
         final zy = ((h - zh) / 2).round();
-        final zoomed =
-            img.copyCrop(decoded, x: zx, y: zy, width: zw, height: zh);
+        final zoomed = img.copyCrop(
+          decoded,
+          x: zx,
+          y: zy,
+          width: zw,
+          height: zh,
+        );
         return _finalize(zoomed, aspect);
       }
       return _finalize(decoded, aspect);
@@ -551,9 +578,13 @@ class _ImageEditorScreenState extends State<_ImageEditorScreen> {
         actions: [
           TextButton(
             onPressed: _saveAsIs,
-            child: const Text('Save',
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w700)),
+            child: const Text(
+              'Save',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),
@@ -630,8 +661,11 @@ class _EditorBtn extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _EditorBtn(
-      {required this.icon, required this.label, required this.onTap});
+  const _EditorBtn({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -645,8 +679,10 @@ class _EditorBtn extends StatelessWidget {
           children: [
             Icon(icon, color: Colors.white, size: 24),
             const SizedBox(height: 4),
-            Text(label,
-                style: const TextStyle(color: Colors.white70, fontSize: 11)),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white70, fontSize: 11),
+            ),
           ],
         ),
       ),

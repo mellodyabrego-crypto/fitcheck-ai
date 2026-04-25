@@ -65,7 +65,8 @@ class NotificationService {
       if (settings.authorizationStatus != AuthorizationStatus.authorized &&
           settings.authorizationStatus != AuthorizationStatus.provisional) {
         debugPrint(
-            '[notifications] Permission not granted: ${settings.authorizationStatus}');
+          '[notifications] Permission not granted: ${settings.authorizationStatus}',
+        );
         return;
       }
       final token = await messaging.getToken(

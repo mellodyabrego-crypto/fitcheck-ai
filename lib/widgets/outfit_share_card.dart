@@ -42,8 +42,11 @@ class OutfitShareCard extends StatelessWidget {
                       color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.checkroom,
-                        color: Colors.white, size: 18),
+                    child: const Icon(
+                      Icons.checkroom,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   const Text(
@@ -58,8 +61,10 @@ class OutfitShareCard extends StatelessWidget {
               ),
               // Occasion badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -163,8 +168,11 @@ class _ShareItemTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(item.category.icon,
-                color: Colors.white.withValues(alpha: 0.9), size: 28),
+            Icon(
+              item.category.icon,
+              color: Colors.white.withValues(alpha: 0.9),
+              size: 28,
+            ),
             const SizedBox(height: 6),
             Text(
               item.name ?? item.category.label,

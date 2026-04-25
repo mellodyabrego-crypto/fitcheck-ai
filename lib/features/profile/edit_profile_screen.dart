@@ -98,8 +98,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   Future<void> _pickDob() async {
     final now = DateTime.now();
     final last = DateTime(now.year - 13, now.month, now.day);
-    final initial =
-        _dob ?? DateTime(now.year - 25, now.month, now.day);
+    final initial = _dob ?? DateTime(now.year - 25, now.month, now.day);
     final picked = await showDatePicker(
       context: context,
       initialDate: initial.isAfter(last) ? last : initial,
@@ -120,8 +119,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         final client = Supabase.instance.client;
         await client.auth.updateUser(
           UserAttributes(
-            email:
-                _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
+            email: _emailCtrl.text.trim().isEmpty
+                ? null
+                : _emailCtrl.text.trim(),
             data: {'full_name': _nameCtrl.text.trim()},
           ),
         );
@@ -156,7 +156,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     if (newPass.length < 6) {
       setState(
-          () => _passwordError = 'Password must be at least 6 characters.');
+        () => _passwordError = 'Password must be at least 6 characters.',
+      );
       return;
     }
     if (newPass != confirm) {
@@ -187,8 +188,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   String _formatDob(DateTime d) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[d.month - 1]} ${d.day}, ${d.year}';
   }
@@ -243,9 +254,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         labelText: 'Date of Birth',
                         prefixIcon: const Icon(Icons.cake_outlined),
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 16),
+                          horizontal: 14,
+                          vertical: 16,
+                        ),
                       ),
                       child: Text(
                         _dob != null ? _formatDob(_dob!) : 'Tap to choose',
@@ -265,15 +279,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       labelText: 'Gender',
                       prefixIcon: const Icon(Icons.wc_outlined),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 14),
+                        horizontal: 14,
+                        vertical: 14,
+                      ),
                     ),
                     items: _genderOptions
-                        .map((opt) => DropdownMenuItem(
-                              value: opt.$1,
-                              child: Text(opt.$2),
-                            ))
+                        .map(
+                          (opt) => DropdownMenuItem(
+                            value: opt.$1,
+                            child: Text(opt.$2),
+                          ),
+                        )
                         .toList(),
                     onChanged: (v) => setState(() => _gender = v),
                   ),
@@ -290,9 +309,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   if (_profileError != null) ...[
                     const SizedBox(height: 10),
-                    Text(_profileError!,
-                        style: TextStyle(
-                            color: Colors.red.shade700, fontSize: 13)),
+                    Text(
+                      _profileError!,
+                      style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                   const SizedBox(height: 18),
                   SizedBox(
@@ -305,7 +328,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white))
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
                           : const Text('Save Changes'),
                     ),
                   ),
@@ -352,9 +378,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   if (_passwordError != null) ...[
                     const SizedBox(height: 10),
-                    Text(_passwordError!,
-                        style: TextStyle(
-                            color: Colors.red.shade700, fontSize: 13)),
+                    Text(
+                      _passwordError!,
+                      style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                   const SizedBox(height: 18),
                   SizedBox(
@@ -363,13 +393,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     child: ElevatedButton(
                       onPressed: _savingPassword ? null : _changePassword,
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.secondary),
+                        backgroundColor: AppTheme.secondary,
+                      ),
                       child: _savingPassword
                           ? const SizedBox(
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white))
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
                           : const Text('Update Password'),
                     ),
                   ),
@@ -427,7 +461,9 @@ class _SectionCard extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w700),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -435,8 +471,9 @@ class _SectionCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(18),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: children),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children,
+            ),
           ),
         ],
       ),
@@ -477,8 +514,10 @@ class _Field extends StatelessWidget {
         prefixIcon: Icon(icon),
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
       ),
     );
   }

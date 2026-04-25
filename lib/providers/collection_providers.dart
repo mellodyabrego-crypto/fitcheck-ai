@@ -38,9 +38,7 @@ class CollectionsNotifier extends StateNotifier<List<OutfitCollection>> {
   }
 
   void rename(String id, String newName) {
-    state = [
-      for (final c in state) c.id == id ? c.copyWith(name: newName) : c,
-    ];
+    state = [for (final c in state) c.id == id ? c.copyWith(name: newName) : c];
   }
 
   void delete(String id) {
@@ -62,7 +60,8 @@ class CollectionsNotifier extends StateNotifier<List<OutfitCollection>> {
       for (final c in state)
         if (c.id == collectionId)
           c.copyWith(
-              outfitIds: c.outfitIds.where((id) => id != outfitId).toList())
+            outfitIds: c.outfitIds.where((id) => id != outfitId).toList(),
+          )
         else
           c,
     ];
@@ -71,5 +70,5 @@ class CollectionsNotifier extends StateNotifier<List<OutfitCollection>> {
 
 final collectionsProvider =
     StateNotifierProvider<CollectionsNotifier, List<OutfitCollection>>(
-  (ref) => CollectionsNotifier(),
-);
+      (ref) => CollectionsNotifier(),
+    );

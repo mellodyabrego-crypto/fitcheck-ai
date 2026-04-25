@@ -6,8 +6,11 @@ class BrandsPicker extends StatefulWidget {
   final List<String> selected;
   final ValueChanged<List<String>> onChanged;
 
-  const BrandsPicker(
-      {super.key, required this.selected, required this.onChanged});
+  const BrandsPicker({
+    super.key,
+    required this.selected,
+    required this.onChanged,
+  });
 
   @override
   State<BrandsPicker> createState() => _BrandsPickerState();
@@ -59,7 +62,8 @@ class _BrandsPickerState extends State<BrandsPicker> {
     if (trimmed.isEmpty || widget.selected.length >= 5) return;
     if (widget.selected
         .map((b) => b.toLowerCase())
-        .contains(trimmed.toLowerCase())) return;
+        .contains(trimmed.toLowerCase()))
+      return;
     widget.onChanged([...widget.selected, trimmed]);
     _controller.clear();
     setState(() => _query = '');
@@ -78,11 +82,15 @@ class _BrandsPickerState extends State<BrandsPicker> {
   @override
   Widget build(BuildContext context) {
     final filtered = _suggestions
-        .where((b) =>
-            _query.isEmpty || b.toLowerCase().contains(_query.toLowerCase()))
-        .where((b) => !widget.selected
-            .map((s) => s.toLowerCase())
-            .contains(b.toLowerCase()))
+        .where(
+          (b) =>
+              _query.isEmpty || b.toLowerCase().contains(_query.toLowerCase()),
+        )
+        .where(
+          (b) => !widget.selected
+              .map((s) => s.toLowerCase())
+              .contains(b.toLowerCase()),
+        )
         .take(15)
         .toList();
 
@@ -96,10 +104,9 @@ class _BrandsPickerState extends State<BrandsPicker> {
           const SizedBox(height: 16),
           Text(
             'Your go-to brands',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -116,17 +123,21 @@ class _BrandsPickerState extends State<BrandsPicker> {
               spacing: 8,
               runSpacing: 8,
               children: widget.selected
-                  .map((brand) => Chip(
-                        label: Text(brand,
-                            style: const TextStyle(
-                                color: AppTheme.primary,
-                                fontWeight: FontWeight.w600)),
-                        backgroundColor:
-                            AppTheme.primary.withValues(alpha: 0.1),
-                        side: const BorderSide(color: AppTheme.primary),
-                        deleteIconColor: AppTheme.primary,
-                        onDeleted: () => _remove(brand),
-                      ))
+                  .map(
+                    (brand) => Chip(
+                      label: Text(
+                        brand,
+                        style: const TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
+                      side: const BorderSide(color: AppTheme.primary),
+                      deleteIconColor: AppTheme.primary,
+                      onDeleted: () => _remove(brand),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 16),
@@ -143,21 +154,26 @@ class _BrandsPickerState extends State<BrandsPicker> {
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _query.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.add_circle,
-                            color: AppTheme.primary),
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: AppTheme.primary,
+                        ),
                         onPressed: () => _add(_query),
                       )
                     : null,
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey.shade300),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide:
-                      const BorderSide(color: AppTheme.primary, width: 2),
+                  borderSide: const BorderSide(
+                    color: AppTheme.primary,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -166,11 +182,14 @@ class _BrandsPickerState extends State<BrandsPicker> {
 
           // Suggestions
           if (canAdd && filtered.isNotEmpty) ...[
-            Text('Popular brands',
-                style: TextStyle(
-                    fontSize: 13,
-                    color: AppTheme.textSecondary,
-                    fontWeight: FontWeight.w500)),
+            Text(
+              'Popular brands',
+              style: TextStyle(
+                fontSize: 13,
+                color: AppTheme.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             const SizedBox(height: 10),
             Expanded(
               child: SingleChildScrollView(
@@ -178,28 +197,37 @@ class _BrandsPickerState extends State<BrandsPicker> {
                   spacing: 8,
                   runSpacing: 8,
                   children: filtered
-                      .map((brand) => GestureDetector(
-                            onTap: () => _add(brand),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.add,
-                                      size: 14, color: AppTheme.textSecondary),
-                                  const SizedBox(width: 4),
-                                  Text(brand,
-                                      style: const TextStyle(fontSize: 13)),
-                                ],
-                              ),
+                      .map(
+                        (brand) => GestureDetector(
+                          onTap: () => _add(brand),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 8,
                             ),
-                          ))
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.add,
+                                  size: 14,
+                                  color: AppTheme.textSecondary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  brand,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ),
@@ -208,13 +236,19 @@ class _BrandsPickerState extends State<BrandsPicker> {
             Center(
               child: Column(
                 children: [
-                  const Icon(Icons.check_circle,
-                      color: AppTheme.primary, size: 40),
+                  const Icon(
+                    Icons.check_circle,
+                    color: AppTheme.primary,
+                    size: 40,
+                  ),
                   const SizedBox(height: 8),
-                  Text("You've added 5 brands — perfect!",
-                      style: TextStyle(
-                          color: AppTheme.primary,
-                          fontWeight: FontWeight.w600)),
+                  Text(
+                    "You've added 5 brands — perfect!",
+                    style: TextStyle(
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ),

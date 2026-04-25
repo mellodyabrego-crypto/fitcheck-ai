@@ -42,8 +42,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // After the first frame, if the logged-in user hasn't completed onboarding,
     // redirect to it. This ensures first-time users (including OAuth arrivals
     // who land on /home directly) still see the questionnaire.
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _maybeRouteToOnboarding());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _maybeRouteToOnboarding(),
+    );
   }
 
   Future<void> _maybeRouteToOnboarding() async {
@@ -70,10 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return WalkthroughOverlay(
       child: Scaffold(
-        body: LazyIndexedStack(
-          index: currentTab,
-          children: _screens,
-        ),
+        body: LazyIndexedStack(index: currentTab, children: _screens),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Colors.white,

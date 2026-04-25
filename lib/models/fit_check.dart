@@ -47,15 +47,15 @@ class FitCheck {
   }
 
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'outfit_id': outfitId,
-        'score': score,
-        'feedback': feedback,
-        'color_harmony_score': colorHarmonyScore,
-        'style_cohesion_score': styleCohesionScore,
-        'occasion_score': occasionScore,
-        'fit_score': fitScore,
-        'improvement_tips': improvementTips,
-        'image_path': imagePath,
-      };
+    'user_id': userId,
+    'outfit_id': outfitId,
+    'score': score,
+    'feedback': feedback,
+    'color_harmony_score': colorHarmonyScore,
+    'style_cohesion_score': styleCohesionScore,
+    'occasion_score': occasionScore,
+    'fit_score': fitScore,
+    'improvement_tips': improvementTips,
+    'image_path': imagePath,
+  };
 }

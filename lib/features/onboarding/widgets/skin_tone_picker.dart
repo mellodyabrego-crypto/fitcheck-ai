@@ -79,7 +79,7 @@ const _seasons = {
       'Jennifer Aniston',
       'Blake Lively',
       'Cameron Diaz',
-      'Sienna Miller'
+      'Sienna Miller',
     ],
   ),
   'summer': _SeasonInfo(
@@ -118,7 +118,7 @@ const _seasons = {
       'Gwyneth Paltrow',
       'Cate Blanchett',
       'Reese Witherspoon',
-      'Taylor Swift'
+      'Taylor Swift',
     ],
   ),
   'autumn': _SeasonInfo(
@@ -311,11 +311,12 @@ class _SkinTonePickerState extends State<SkinTonePicker>
 
     // Real analysis — advance step labels while Gemini runs
     final stepTimer =
-        Stream.periodic(const Duration(milliseconds: 700), (i) => i)
-            .take(_analysisSteps.length - 1)
-            .listen((i) {
-      if (mounted) setState(() => _analysisStepIndex = i + 1);
-    });
+        Stream.periodic(
+          const Duration(milliseconds: 700),
+          (i) => i,
+        ).take(_analysisSteps.length - 1).listen((i) {
+          if (mounted) setState(() => _analysisStepIndex = i + 1);
+        });
 
     try {
       final result = await gemini.analyzeColorSeason(bytes);
@@ -385,10 +386,9 @@ class _SkinTonePickerState extends State<SkinTonePicker>
           const SizedBox(height: 12),
           Text(
             'Your color palette',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(
@@ -439,17 +439,20 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add_a_photo,
-                            size: 36,
-                            color: AppTheme.primary.withValues(alpha: 0.7)),
+                        Icon(
+                          Icons.add_a_photo,
+                          size: 36,
+                          color: AppTheme.primary.withValues(alpha: 0.7),
+                        ),
                         const SizedBox(height: 8),
                         Text(
                           'Upload\nSelfie',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.textSecondary,
-                              fontWeight: FontWeight.w500),
+                            fontSize: 12,
+                            color: AppTheme.textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
@@ -479,17 +482,21 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 ('No heavy filters or edits', Icons.filter_none_outlined),
                 ('Face clearly visible', Icons.face_outlined),
                 ('Natural hair color if possible', Icons.content_cut_outlined),
-              ].map((tip) => Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      children: [
-                        Icon(tip.$2, size: 15, color: AppTheme.primary),
-                        const SizedBox(width: 8),
-                        Text(tip.$1,
-                            style: const TextStyle(fontSize: 12, height: 1.3)),
-                      ],
-                    ),
-                  )),
+              ].map(
+                (tip) => Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    children: [
+                      Icon(tip.$2, size: 15, color: AppTheme.primary),
+                      const SizedBox(width: 8),
+                      Text(
+                        tip.$1,
+                        style: const TextStyle(fontSize: 12, height: 1.3),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -501,8 +508,10 @@ class _SkinTonePickerState extends State<SkinTonePicker>
           child: ElevatedButton.icon(
             onPressed: _pickImage,
             icon: const Icon(Icons.auto_awesome_outlined),
-            label: const Text('Analyze with AI',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+            label: const Text(
+              'Analyze with AI',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -513,8 +522,10 @@ class _SkinTonePickerState extends State<SkinTonePicker>
           child: OutlinedButton.icon(
             onPressed: () => setState(() => _step = _PickerStep.manual),
             icon: const Icon(Icons.palette_outlined),
-            label: const Text('Pick my season manually',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            label: const Text(
+              'Pick my season manually',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppTheme.primary,
               side: BorderSide(color: AppTheme.primary.withValues(alpha: 0.5)),
@@ -524,9 +535,11 @@ class _SkinTonePickerState extends State<SkinTonePicker>
 
         if (_error != null) ...[
           const SizedBox(height: 8),
-          Text(_error!,
-              style: TextStyle(color: Colors.red.shade600, fontSize: 13),
-              textAlign: TextAlign.center),
+          Text(
+            _error!,
+            style: TextStyle(color: Colors.red.shade600, fontSize: 13),
+            textAlign: TextAlign.center,
+          ),
         ],
       ],
     );
@@ -566,8 +579,9 @@ class _SkinTonePickerState extends State<SkinTonePicker>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppTheme.primary
-                      .withValues(alpha: 0.3 + 0.5 * _pulseController.value),
+                  color: AppTheme.primary.withValues(
+                    alpha: 0.3 + 0.5 * _pulseController.value,
+                  ),
                   width: 3,
                 ),
               ),
@@ -602,8 +616,9 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                     _analysisSteps[i],
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight:
-                          isCurrent ? FontWeight.w700 : FontWeight.normal,
+                      fontWeight: isCurrent
+                          ? FontWeight.w700
+                          : FontWeight.normal,
                       color: isCurrent
                           ? AppTheme.textPrimary
                           : AppTheme.textSecondary,
@@ -644,7 +659,9 @@ class _SkinTonePickerState extends State<SkinTonePicker>
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                  color: season.accent.withValues(alpha: 0.3), width: 1.5),
+                color: season.accent.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -660,7 +677,9 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                           // Season badge
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 6),
+                              horizontal: 14,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: season.accent,
                               borderRadius: BorderRadius.circular(20),
@@ -733,15 +752,19 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.auto_awesome,
-                                size: 13, color: season.accent),
+                            Icon(
+                              Icons.auto_awesome,
+                              size: 13,
+                              color: season.accent,
+                            ),
                             const SizedBox(width: 6),
                             Text(
                               'AI Analysis  •  ${_result!.confidence}% confident',
                               style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: season.accent),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: season.accent,
+                              ),
                             ),
                           ],
                         ),
@@ -749,7 +772,10 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                         Text(
                           _result!.reasoning,
                           style: const TextStyle(
-                              fontSize: 12, height: 1.4, color: Colors.black87),
+                            fontSize: 12,
+                            height: 1.4,
+                            color: Colors.black87,
+                          ),
                         ),
                       ],
                     ),
@@ -811,8 +837,10 @@ class _SkinTonePickerState extends State<SkinTonePicker>
             children: [
               Icon(Icons.block, size: 15, color: Colors.red.shade400),
               const SizedBox(width: 6),
-              const Text('Colors to avoid',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+              const Text(
+                'Colors to avoid',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -828,15 +856,22 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                       decoration: BoxDecoration(
                         color: season.avoidColors[i],
                         shape: BoxShape.circle,
-                        border:
-                            Border.all(color: Colors.red.shade300, width: 2),
+                        border: Border.all(
+                          color: Colors.red.shade300,
+                          width: 2,
+                        ),
                       ),
-                      child: Icon(Icons.close,
-                          size: 16, color: Colors.red.shade400),
+                      child: Icon(
+                        Icons.close,
+                        size: 16,
+                        color: Colors.red.shade400,
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    Text(season.avoidNames[i],
-                        style: const TextStyle(fontSize: 10)),
+                    Text(
+                      season.avoidNames[i],
+                      style: const TextStyle(fontSize: 10),
+                    ),
                   ],
                 ),
               );
@@ -851,13 +886,16 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 child: OutlinedButton.icon(
                   onPressed: _reset,
                   icon: const Icon(Icons.refresh, size: 16),
-                  label: const Text('Retake Photo',
-                      style: TextStyle(fontSize: 13)),
+                  label: const Text(
+                    'Retake Photo',
+                    style: TextStyle(fontSize: 13),
+                  ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.textSecondary,
                     side: BorderSide(color: Colors.grey.shade300),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                 ),
@@ -867,13 +905,16 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                 child: OutlinedButton.icon(
                   onPressed: () => setState(() => _step = _PickerStep.manual),
                   icon: const Icon(Icons.tune, size: 16),
-                  label: const Text('Change Season',
-                      style: TextStyle(fontSize: 13)),
+                  label: const Text(
+                    'Change Season',
+                    style: TextStyle(fontSize: 13),
+                  ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.textSecondary,
                     side: BorderSide(color: Colors.grey.shade300),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                 ),
@@ -941,9 +982,10 @@ class _SkinTonePickerState extends State<SkinTonePicker>
         Text(
           'Which season best describes your coloring?',
           style: TextStyle(
-              color: AppTheme.textSecondary,
-              fontSize: 13,
-              fontStyle: FontStyle.italic),
+            color: AppTheme.textSecondary,
+            fontSize: 13,
+            fontStyle: FontStyle.italic,
+          ),
         ),
         const SizedBox(height: 14),
         Expanded(
@@ -965,8 +1007,9 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                             : Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color:
-                              isSelected ? season.accent : Colors.grey.shade200,
+                          color: isSelected
+                              ? season.accent
+                              : Colors.grey.shade200,
                           width: isSelected ? 2 : 1,
                         ),
                       ),
@@ -978,17 +1021,19 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                               Row(
                                 children: season.palette
                                     .take(4)
-                                    .map((c) => Container(
-                                          width: 16,
-                                          height: 16,
-                                          margin:
-                                              const EdgeInsets.only(right: 2),
-                                          decoration: BoxDecoration(
-                                            color: c,
-                                            borderRadius:
-                                                BorderRadius.circular(4),
+                                    .map(
+                                      (c) => Container(
+                                        width: 16,
+                                        height: 16,
+                                        margin: const EdgeInsets.only(right: 2),
+                                        decoration: BoxDecoration(
+                                          color: c,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
                                           ),
-                                        ))
+                                        ),
+                                      ),
+                                    )
                                     .toList(),
                               ),
                               const SizedBox(height: 3),
@@ -996,17 +1041,19 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                                 children: season.palette
                                     .skip(4)
                                     .take(4)
-                                    .map((c) => Container(
-                                          width: 16,
-                                          height: 16,
-                                          margin:
-                                              const EdgeInsets.only(right: 2),
-                                          decoration: BoxDecoration(
-                                            color: c,
-                                            borderRadius:
-                                                BorderRadius.circular(4),
+                                    .map(
+                                      (c) => Container(
+                                        width: 16,
+                                        height: 16,
+                                        margin: const EdgeInsets.only(right: 2),
+                                        decoration: BoxDecoration(
+                                          color: c,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
                                           ),
-                                        ))
+                                        ),
+                                      ),
+                                    )
                                     .toList(),
                               ),
                             ],
@@ -1030,49 +1077,64 @@ class _SkinTonePickerState extends State<SkinTonePicker>
                                 Text(
                                   season.subtitle,
                                   style: TextStyle(
-                                      fontSize: 11,
-                                      color: AppTheme.textSecondary),
+                                    fontSize: 11,
+                                    color: AppTheme.textSecondary,
+                                  ),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   season.traits,
                                   style: const TextStyle(
-                                      fontSize: 11, height: 1.4),
+                                    fontSize: 11,
+                                    height: 1.4,
+                                  ),
                                 ),
                                 const SizedBox(height: 6),
                                 Wrap(
                                   spacing: 4,
                                   runSpacing: 4,
                                   children: season.celebs
-                                      .map((name) => Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 3),
-                                            decoration: BoxDecoration(
-                                              color: season.accent
-                                                  .withValues(alpha: 0.12),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                      .map(
+                                        (name) => Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 3,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: season.accent.withValues(
+                                              alpha: 0.12,
                                             ),
-                                            child: Text(
-                                              name,
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                                color: season.accent,
-                                              ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
                                             ),
-                                          ))
+                                          ),
+                                          child: Text(
+                                            name,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: season.accent,
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                       .toList(),
                                 ),
                               ],
                             ),
                           ),
                           if (isSelected)
-                            Icon(Icons.check_circle,
-                                color: season.accent, size: 22)
+                            Icon(
+                              Icons.check_circle,
+                              color: season.accent,
+                              size: 22,
+                            )
                           else
-                            Icon(Icons.radio_button_unchecked,
-                                color: Colors.grey.shade400, size: 22),
+                            Icon(
+                              Icons.radio_button_unchecked,
+                              color: Colors.grey.shade400,
+                              size: 22,
+                            ),
                         ],
                       ),
                     ),

@@ -67,29 +67,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/auth',
-        builder: (context, state) => const AuthScreen(),
-      ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
-      ),
+      GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),
+      GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
       GoRoute(
         path: '/wardrobe/add',
         builder: (context, state) => const AddItemScreen(),
       ),
       GoRoute(
         path: '/outfit/:id',
-        builder: (context, state) => OutfitScreen(
-          outfitId: state.pathParameters['id']!,
-        ),
+        builder: (context, state) =>
+            OutfitScreen(outfitId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: '/fit-check/:outfitId',
-        builder: (context, state) => FitCheckScreen(
-          outfitId: state.pathParameters['outfitId']!,
-        ),
+        builder: (context, state) =>
+            FitCheckScreen(outfitId: state.pathParameters['outfitId']!),
       ),
       GoRoute(
         path: '/paywall',
@@ -119,10 +111,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/walkthrough',
         builder: (context, state) => const WalkthroughScreen(),
       ),
-      GoRoute(
-        path: '/terms',
-        builder: (context, state) => LegalScreen.terms(),
-      ),
+      GoRoute(path: '/terms', builder: (context, state) => LegalScreen.terms()),
       GoRoute(
         path: '/privacy',
         builder: (context, state) => LegalScreen.privacy(),

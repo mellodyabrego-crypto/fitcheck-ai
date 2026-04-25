@@ -51,10 +51,9 @@ class SizesPicker extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Your sizes',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
@@ -84,12 +83,16 @@ class SizesPicker extends StatelessWidget {
             // Shoe size — horizontal scroll
             Row(
               children: [
-                const Icon(Icons.do_not_step,
-                    color: AppTheme.textSecondary, size: 20),
+                const Icon(
+                  Icons.do_not_step,
+                  color: AppTheme.textSecondary,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
-                const Text('Shoes (US)',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Shoes (US)',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -123,10 +126,12 @@ class SizesPicker extends StatelessWidget {
                         size,
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight:
-                              isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color:
-                              isSelected ? Colors.white : AppTheme.textPrimary,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? Colors.white
+                              : AppTheme.textPrimary,
                         ),
                       ),
                     ),
@@ -166,9 +171,10 @@ class _SizeRow extends StatelessWidget {
           children: [
             Icon(icon, color: AppTheme.textSecondary, size: 20),
             const SizedBox(width: 8),
-            Text(label,
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -185,8 +191,9 @@ class _SizeRow extends StatelessWidget {
                     height: 44,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color:
-                          isSelected ? AppTheme.primary : Colors.grey.shade100,
+                      color: isSelected
+                          ? AppTheme.primary
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: isSelected
@@ -198,8 +205,9 @@ class _SizeRow extends StatelessWidget {
                       size,
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: isSelected ? Colors.white : AppTheme.textPrimary,
                       ),
                     ),

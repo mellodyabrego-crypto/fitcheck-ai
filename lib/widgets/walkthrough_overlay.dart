@@ -26,8 +26,9 @@ void _saveWalkthroughSeen() {
 }
 
 // Tracks whether the user has seen the walkthrough (persisted across sessions)
-final walkthroughSeenProvider =
-    StateProvider<bool>((ref) => _loadWalkthroughSeen());
+final walkthroughSeenProvider = StateProvider<bool>(
+  (ref) => _loadWalkthroughSeen(),
+);
 
 class WalkthroughOverlay extends ConsumerStatefulWidget {
   final Widget child;
@@ -147,23 +148,29 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
 
   void _goToStep(int next) {
     setState(() => _step = next);
-    Analytics.track(AnalyticsEvents.walkthroughStepReached,
-        props: {'step': next});
+    Analytics.track(
+      AnalyticsEvents.walkthroughStepReached,
+      props: {'step': next},
+    );
   }
 
   void _complete() {
     ref.read(walkthroughSeenProvider.notifier).state = true;
     _saveWalkthroughSeen();
-    Analytics.track(AnalyticsEvents.walkthroughCompleted,
-        props: {'final_step': _step});
+    Analytics.track(
+      AnalyticsEvents.walkthroughCompleted,
+      props: {'final_step': _step},
+    );
     Navigator.pop(context);
   }
 
   void _skip() {
     ref.read(walkthroughSeenProvider.notifier).state = true;
     _saveWalkthroughSeen();
-    Analytics.track(AnalyticsEvents.walkthroughSkipped,
-        props: {'step_when_skipped': _step});
+    Analytics.track(
+      AnalyticsEvents.walkthroughSkipped,
+      props: {'step_when_skipped': _step},
+    );
     Navigator.pop(context);
   }
 
@@ -197,17 +204,18 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                  _steps.length,
-                  (i) => AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        width: i == _step ? 20 : 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: i == _step ? step.color : Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      )),
+                _steps.length,
+                (i) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  width: i == _step ? 20 : 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: i == _step ? step.color : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 24),
 
@@ -226,19 +234,27 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
             // Title
             Semantics(
               header: true,
-              child: Text(step.title,
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: step.color)),
+              child: Text(
+                step.title,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: step.color,
+                ),
+              ),
             ),
             const SizedBox(height: 12),
 
             // Body
-            Text(step.body,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 14, height: 1.6, color: AppTheme.textSecondary)),
+            Text(
+              step.body,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                height: 1.6,
+                color: AppTheme.textSecondary,
+              ),
+            ),
             const SizedBox(height: 28),
 
             // Buttons
@@ -262,8 +278,9 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
                         _goToStep(_step + 1);
                       }
                     },
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: step.color),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: step.color,
+                    ),
                     child: Text(isLast ? "Let's Go!" : 'Next'),
                   ),
                 ),
@@ -275,9 +292,10 @@ class _WalkthroughDialogState extends ConsumerState<_WalkthroughDialog> {
             const SizedBox(height: 10),
             TextButton(
               onPressed: _skip,
-              child: const Text('Skip tour',
-                  style:
-                      TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+              child: const Text(
+                'Skip tour',
+                style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+              ),
             ),
           ],
         ),
@@ -291,9 +309,10 @@ class _Step {
   final String title;
   final String body;
   final Color color;
-  const _Step(
-      {required this.icon,
-      required this.title,
-      required this.body,
-      required this.color});
+  const _Step({
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.color,
+  });
 }

@@ -26,7 +26,9 @@ String? _lsGet(String k) {
 void _lsSet(String k, String v) {
   try {
     html.window.localStorage[k] = v;
-  } catch (_) {/* quota */}
+  } catch (_) {
+    /* quota */
+  }
 }
 
 const _kBrands = 'fitcheck_brands';
@@ -50,14 +52,18 @@ final favoriteShopsProvider = StateProvider<List<_ShopLink>>((ref) {
   if (raw != null && raw.isNotEmpty) {
     try {
       initial = (jsonDecode(raw) as List)
-          .map((e) =>
-              _ShopLink(name: e['name'] as String, url: e['url'] as String))
+          .map(
+            (e) =>
+                _ShopLink(name: e['name'] as String, url: e['url'] as String),
+          )
           .toList();
     } catch (_) {}
   }
   ref.listenSelf((prev, next) {
-    _lsSet(_kShops,
-        jsonEncode(next.map((s) => {'name': s.name, 'url': s.url}).toList()));
+    _lsSet(
+      _kShops,
+      jsonEncode(next.map((s) => {'name': s.name, 'url': s.url}).toList()),
+    );
   });
   return initial;
 });
@@ -161,11 +167,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     CircleAvatar(
                       radius: 52,
                       backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
-                      backgroundImage:
-                          photo != null ? MemoryImage(photo) : null,
+                      backgroundImage: photo != null
+                          ? MemoryImage(photo)
+                          : null,
                       child: photo == null
-                          ? const Icon(Icons.person,
-                              size: 52, color: AppTheme.primary)
+                          ? const Icon(
+                              Icons.person,
+                              size: 52,
+                              color: AppTheme.primary,
+                            )
                           : null,
                     ),
                     Positioned(
@@ -177,8 +187,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           color: AppTheme.primary,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.camera_alt,
-                            size: 16, color: Colors.white),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -189,8 +202,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 kDemoMode
                     ? 'Demo User'
                     : (displayName.isNotEmpty ? displayName : 'Your Name'),
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: 6),
 
@@ -201,8 +216,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   onTap: () => _editUsername(username),
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: username.isEmpty
                           ? Colors.grey.shade100
@@ -240,11 +257,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Icon(Icons.edit,
-                            size: 12,
-                            color: username.isEmpty
-                                ? AppTheme.textSecondary
-                                : AppTheme.primary.withValues(alpha: 0.6)),
+                        Icon(
+                          Icons.edit,
+                          size: 12,
+                          color: username.isEmpty
+                              ? AppTheme.textSecondary
+                              : AppTheme.primary.withValues(alpha: 0.6),
+                        ),
                       ],
                     ),
                   ),
@@ -253,17 +272,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text('FREE',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.textSecondary)),
+                child: const Text(
+                  'FREE',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 20),
@@ -278,10 +302,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.primary,
                     side: BorderSide(
-                        color: AppTheme.primary.withValues(alpha: 0.4)),
+                      color: AppTheme.primary.withValues(alpha: 0.4),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                 ),
               ),
@@ -316,8 +342,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 title: 'Favorite Shops',
                 icon: Icons.shopping_bag,
                 trailing: IconButton(
-                  icon:
-                      const Icon(Icons.add, color: AppTheme.primary, size: 20),
+                  icon: const Icon(
+                    Icons.add,
+                    color: AppTheme.primary,
+                    size: 20,
+                  ),
                   onPressed: () => _showAddShopDialog(),
                 ),
                 child: _FavoriteShopsSection(),
@@ -342,11 +371,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 child: Column(
                   children: [
-                    const Text('Upgrade to Pro',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700)),
+                    const Text(
+                      'Upgrade to Pro',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     const Text(
                       'Unlimited outfits, no watermarks, weather-based daily picks',
@@ -357,8 +389,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ElevatedButton(
                       onPressed: () => context.push('/paywall'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: AppTheme.primary),
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppTheme.primary,
+                      ),
                       child: const Text('See Plans'),
                     ),
                   ],
@@ -400,14 +433,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 decoration: InputDecoration(
                   prefixIcon: const Padding(
                     padding: EdgeInsets.only(left: 14, right: 4),
-                    child: Text('@',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.primary)),
+                    child: Text(
+                      '@',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primary,
+                      ),
+                    ),
                   ),
-                  prefixIconConstraints:
-                      const BoxConstraints(minWidth: 0, minHeight: 0),
+                  prefixIconConstraints: const BoxConstraints(
+                    minWidth: 0,
+                    minHeight: 0,
+                  ),
                   labelText: 'Username',
                   hintText: 'e.g. fashionista',
                   errorText: error,
@@ -419,8 +457,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: const Text('Cancel')),
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () {
                 final val = ctrl.text.trim().replaceAll('@', '');
@@ -449,16 +488,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final source = await showModalBottomSheet<String>(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Wrap(children: [
-          ListTile(
+        child: Wrap(
+          children: [
+            ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Camera'),
-              onTap: () => Navigator.pop(ctx, 'camera')),
-          ListTile(
+              onTap: () => Navigator.pop(ctx, 'camera'),
+            ),
+            ListTile(
               leading: const Icon(Icons.photo_library),
               title: const Text('Gallery'),
-              onTap: () => Navigator.pop(ctx, 'gallery')),
-        ]),
+              onTap: () => Navigator.pop(ctx, 'gallery'),
+            ),
+          ],
+        ),
       ),
     );
     if (source == null) return;
@@ -507,14 +550,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   labelText: 'Website URL',
                   hintText: 'https://...',
                   suffixIcon: suggestion != null
-                      ? const Icon(Icons.check_circle,
-                          color: Colors.green, size: 18)
+                      ? const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 18,
+                        )
                       : null,
                   helperText: suggestion != null
                       ? 'Auto-filled from known stores'
                       : null,
-                  helperStyle:
-                      const TextStyle(color: Colors.green, fontSize: 11),
+                  helperStyle: const TextStyle(
+                    color: Colors.green,
+                    fontSize: 11,
+                  ),
                 ),
                 keyboardType: TextInputType.url,
               ),
@@ -522,15 +570,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: const Text('Cancel')),
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
             ElevatedButton(
               onPressed: () {
                 if (nameCtrl.text.isNotEmpty) {
                   final shops = [...ref.read(favoriteShopsProvider)];
                   if (shops.length < 5) {
-                    shops
-                        .add(_ShopLink(name: nameCtrl.text, url: urlCtrl.text));
+                    shops.add(
+                      _ShopLink(name: nameCtrl.text, url: urlCtrl.text),
+                    );
                     ref.read(favoriteShopsProvider.notifier).state = shops;
                   }
                   Navigator.pop(ctx);
@@ -560,7 +610,7 @@ class _SizesSection extends ConsumerWidget {
     '9.5',
     '10',
     '10.5',
-    '11'
+    '11',
   ];
 
   @override
@@ -573,22 +623,27 @@ class _SizesSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SizeRow(
-            label: 'Tops',
-            sizes: _clothingSizes,
-            selected: topSize,
-            onChanged: (v) => ref.read(topSizeProvider.notifier).state = v),
+          label: 'Tops',
+          sizes: _clothingSizes,
+          selected: topSize,
+          onChanged: (v) => ref.read(topSizeProvider.notifier).state = v,
+        ),
         const SizedBox(height: 16),
         _SizeRow(
-            label: 'Bottoms',
-            sizes: _clothingSizes,
-            selected: bottomSize,
-            onChanged: (v) => ref.read(bottomSizeProvider.notifier).state = v),
+          label: 'Bottoms',
+          sizes: _clothingSizes,
+          selected: bottomSize,
+          onChanged: (v) => ref.read(bottomSizeProvider.notifier).state = v,
+        ),
         const SizedBox(height: 16),
-        const Text('Shoes (US)',
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textSecondary)),
+        const Text(
+          'Shoes (US)',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textSecondary,
+          ),
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 36,
@@ -609,14 +664,17 @@ class _SizesSection extends ConsumerWidget {
                     color: sel ? AppTheme.primary : Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: sel ? AppTheme.primary : Colors.grey.shade300),
+                      color: sel ? AppTheme.primary : Colors.grey.shade300,
+                    ),
                   ),
-                  child: Text(s,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
-                        color: sel ? Colors.white : AppTheme.textPrimary,
-                      )),
+                  child: Text(
+                    s,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+                      color: sel ? Colors.white : AppTheme.textPrimary,
+                    ),
+                  ),
                 ),
               );
             },
@@ -633,22 +691,26 @@ class _SizeRow extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onChanged;
 
-  const _SizeRow(
-      {required this.label,
-      required this.sizes,
-      required this.selected,
-      required this.onChanged});
+  const _SizeRow({
+    required this.label,
+    required this.sizes,
+    required this.selected,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textSecondary)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textSecondary,
+          ),
+        ),
         const SizedBox(height: 8),
         Row(
           children: sizes.map((s) {
@@ -666,14 +728,17 @@ class _SizeRow extends StatelessWidget {
                       color: sel ? AppTheme.primary : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: sel ? AppTheme.primary : Colors.grey.shade300),
+                        color: sel ? AppTheme.primary : Colors.grey.shade300,
+                      ),
                     ),
-                    child: Text(s,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
-                          color: sel ? Colors.white : AppTheme.textPrimary,
-                        )),
+                    child: Text(
+                      s,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: sel ? FontWeight.w700 : FontWeight.w500,
+                        color: sel ? Colors.white : AppTheme.textPrimary,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -691,108 +756,109 @@ class _ColorPaletteSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final seasons = [
-      _SeasonPalette(
-          'Spring',
-          [
-            const Color(0xFFF9A8D4),
-            const Color(0xFFFDE68A),
-            const Color(0xFF86EFAC),
-            const Color(0xFFFCA5A5),
-            const Color(0xFFFED7AA),
-            const Color(0xFFBFDBFE),
-          ],
-          const Color(0xFFF9A8D4)),
-      _SeasonPalette(
-          'Summer',
-          [
-            const Color(0xFFC4B5FD),
-            const Color(0xFF93C5FD),
-            const Color(0xFFA5F3FC),
-            const Color(0xFFF9A8D4),
-            const Color(0xFFE2E8F0),
-            const Color(0xFF6EE7B7),
-          ],
-          const Color(0xFFC4B5FD)),
-      _SeasonPalette(
-          'Autumn',
-          [
-            const Color(0xFFB45309),
-            const Color(0xFFD97706),
-            const Color(0xFF92400E),
-            const Color(0xFF78350F),
-            const Color(0xFFDC8A32),
-            const Color(0xFF6B7280),
-          ],
-          const Color(0xFFD97706)),
-      _SeasonPalette(
-          'Winter',
-          [
-            const Color(0xFF1E40AF),
-            const Color(0xFF7C3AED),
-            const Color(0xFF111827),
-            const Color(0xFFDC2626),
-            const Color(0xFFF9FAFB),
-            const Color(0xFF065F46),
-          ],
-          const Color(0xFF7C3AED)),
+      _SeasonPalette('Spring', [
+        const Color(0xFFF9A8D4),
+        const Color(0xFFFDE68A),
+        const Color(0xFF86EFAC),
+        const Color(0xFFFCA5A5),
+        const Color(0xFFFED7AA),
+        const Color(0xFFBFDBFE),
+      ], const Color(0xFFF9A8D4)),
+      _SeasonPalette('Summer', [
+        const Color(0xFFC4B5FD),
+        const Color(0xFF93C5FD),
+        const Color(0xFFA5F3FC),
+        const Color(0xFFF9A8D4),
+        const Color(0xFFE2E8F0),
+        const Color(0xFF6EE7B7),
+      ], const Color(0xFFC4B5FD)),
+      _SeasonPalette('Autumn', [
+        const Color(0xFFB45309),
+        const Color(0xFFD97706),
+        const Color(0xFF92400E),
+        const Color(0xFF78350F),
+        const Color(0xFFDC8A32),
+        const Color(0xFF6B7280),
+      ], const Color(0xFFD97706)),
+      _SeasonPalette('Winter', [
+        const Color(0xFF1E40AF),
+        const Color(0xFF7C3AED),
+        const Color(0xFF111827),
+        const Color(0xFFDC2626),
+        const Color(0xFFF9FAFB),
+        const Color(0xFF065F46),
+      ], const Color(0xFF7C3AED)),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...seasons.map((s) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration:
-                        BoxDecoration(color: s.accent, shape: BoxShape.circle),
+        ...seasons.map(
+          (s) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: s.accent,
+                    shape: BoxShape.circle,
                   ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: 56,
-                    child: Text(s.name,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w600)),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 56,
+                  child: Text(
+                    s.name,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  const SizedBox(width: 8),
-                  Row(
-                    children: s.colors
-                        .map((c) => Container(
-                              width: 22,
-                              height: 22,
-                              margin: const EdgeInsets.only(right: 4),
-                              decoration: BoxDecoration(
-                                color: c,
-                                shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.white, width: 1.5),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color:
-                                          Colors.black.withValues(alpha: 0.1),
-                                      blurRadius: 2)
-                                ],
+                ),
+                const SizedBox(width: 8),
+                Row(
+                  children: s.colors
+                      .map(
+                        (c) => Container(
+                          width: 22,
+                          height: 22,
+                          margin: const EdgeInsets.only(right: 4),
+                          decoration: BoxDecoration(
+                            color: c,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 2,
                               ),
-                            ))
-                        .toList(),
-                  ),
-                ],
-              ),
-            )),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+        ),
         const Divider(height: 20),
-        const Text('Overall Favorites',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+        const Text(
+          'Overall Favorites',
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           children: ['Hot Pink', 'Ivory', 'Camel', 'Black', 'Coral']
-              .map((c) => Chip(
-                    label: Text(c, style: const TextStyle(fontSize: 12)),
-                    backgroundColor: AppTheme.primary.withValues(alpha: 0.08),
-                  ))
+              .map(
+                (c) => Chip(
+                  label: Text(c, style: const TextStyle(fontSize: 12)),
+                  backgroundColor: AppTheme.primary.withValues(alpha: 0.08),
+                ),
+              )
               .toList(),
         ),
       ],
@@ -877,41 +943,59 @@ class _FavoriteShopsSection extends ConsumerWidget {
 
     return Column(
       children: shops
-          .map((shop) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.store,
-                      color: AppTheme.primary, size: 18),
+          .map(
+            (shop) => ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                title: Text(shop.name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14)),
-                subtitle: shop.url.isNotEmpty
-                    ? Text(shop.url,
-                        style: const TextStyle(
-                            fontSize: 11, color: AppTheme.textSecondary),
-                        overflow: TextOverflow.ellipsis)
-                    : null,
-                trailing: shop.url.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.open_in_new,
-                            size: 16, color: AppTheme.primary),
-                        onPressed: () async {
-                          final uri = Uri.parse(shop.url.startsWith('http')
+                child: const Icon(
+                  Icons.store,
+                  color: AppTheme.primary,
+                  size: 18,
+                ),
+              ),
+              title: Text(
+                shop.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+              subtitle: shop.url.isNotEmpty
+                  ? Text(
+                      shop.url,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.textSecondary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  : null,
+              trailing: shop.url.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(
+                        Icons.open_in_new,
+                        size: 16,
+                        color: AppTheme.primary,
+                      ),
+                      onPressed: () async {
+                        final uri = Uri.parse(
+                          shop.url.startsWith('http')
                               ? shop.url
-                              : 'https://${shop.url}');
-                          if (await canLaunchUrl(uri)) launchUrl(uri);
-                        },
-                      )
-                    : null,
-              ))
+                              : 'https://${shop.url}',
+                        );
+                        if (await canLaunchUrl(uri)) launchUrl(uri);
+                      },
+                    )
+                  : null,
+            ),
+          )
           .toList(),
     );
   }
@@ -921,14 +1005,30 @@ class _FavoriteShopsSection extends ConsumerWidget {
 
 class _SocialMediaSection extends ConsumerWidget {
   static const _platforms = [
-    _SocialPlatform('Instagram', Icons.camera_alt, Color(0xFFE1306C),
-        'https://instagram.com'),
     _SocialPlatform(
-        'TikTok', Icons.music_note, Color(0xFF000000), 'https://tiktok.com'),
+      'Instagram',
+      Icons.camera_alt,
+      Color(0xFFE1306C),
+      'https://instagram.com',
+    ),
     _SocialPlatform(
-        'Snapchat', Icons.camera, Color(0xFFFFFC00), 'https://snapchat.com'),
+      'TikTok',
+      Icons.music_note,
+      Color(0xFF000000),
+      'https://tiktok.com',
+    ),
     _SocialPlatform(
-        'Facebook', Icons.facebook, Color(0xFF1877F2), 'https://facebook.com'),
+      'Snapchat',
+      Icons.camera,
+      Color(0xFFFFFC00),
+      'https://snapchat.com',
+    ),
+    _SocialPlatform(
+      'Facebook',
+      Icons.facebook,
+      Color(0xFF1877F2),
+      'https://facebook.com',
+    ),
   ];
 
   @override
@@ -960,7 +1060,9 @@ class _SocialMediaSection extends ConsumerWidget {
                     hintStyle: const TextStyle(fontSize: 12),
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                   ),
                   style: const TextStyle(fontSize: 13),
                   onChanged: (v) {
@@ -974,9 +1076,11 @@ class _SocialMediaSection extends ConsumerWidget {
               IconButton(
                 icon: Icon(Icons.open_in_new, color: p.color, size: 18),
                 onPressed: () async {
-                  final uri = Uri.parse(handle.isNotEmpty
-                      ? '${p.baseUrl}/${handle.replaceAll('@', '')}'
-                      : p.baseUrl);
+                  final uri = Uri.parse(
+                    handle.isNotEmpty
+                        ? '${p.baseUrl}/${handle.replaceAll('@', '')}'
+                        : p.baseUrl,
+                  );
                   if (await canLaunchUrl(uri)) launchUrl(uri);
                 },
                 padding: EdgeInsets.zero,
@@ -1029,9 +1133,13 @@ class _SectionCard extends StatelessWidget {
               Icon(icon, color: AppTheme.primary, size: 18),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
               if (trailing != null) trailing!,
             ],

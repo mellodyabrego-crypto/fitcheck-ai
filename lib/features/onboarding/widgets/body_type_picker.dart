@@ -31,9 +31,9 @@ class BodyTypePicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Your body type',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -85,8 +85,9 @@ class BodyTypePicker extends StatelessWidget {
                           label,
                           style: TextStyle(
                             fontSize: 15,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
                             color: isSelected
                                 ? AppTheme.primary
                                 : AppTheme.textPrimary,

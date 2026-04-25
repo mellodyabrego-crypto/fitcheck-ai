@@ -25,67 +25,75 @@ Future<void> main() async {
   // Sentry wraps runApp so unhandled framework + zone errors are captured.
   // No-op when SENTRY_DSN dart-define isn't set.
   await Observability.bootstrap(() async {
-    runZonedGuarded(() async {
-      try {
+    runZonedGuarded(
+      () async {
         try {
-          await dotenv.load(fileName: '.env');
-        } catch (_) {
-          // .env not available (e.g. web production) — dart-define values will be used
-        }
-
-        // Supabase init is isolated so a failure here cannot crash the whole
-        // app. The rest of the code is null-safe when Supabase is missing.
-        final supabaseUrl = AppConstants.supabaseUrl;
-        final supabaseKey = AppConstants.supabaseAnonKey;
-        if (!kDemoMode && supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {
-          _clearStaleSupabaseSessions(supabaseUrl);
           try {
-            await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
-          } catch (e, st) {
-            debugPrint('SUPABASE INIT FAILED (continuing): $e\n$st');
-            await Observability.capture(e, st,
-                tags: {'phase': 'supabase_init'});
-            _nukeSupabaseLocalStorage();
+            await dotenv.load(fileName: '.env');
+          } catch (_) {
+            // .env not available (e.g. web production) — dart-define values will be used
+          }
+
+          // Supabase init is isolated so a failure here cannot crash the whole
+          // app. The rest of the code is null-safe when Supabase is missing.
+          final supabaseUrl = AppConstants.supabaseUrl;
+          final supabaseKey = AppConstants.supabaseAnonKey;
+          if (!kDemoMode && supabaseUrl.isNotEmpty && supabaseKey.isNotEmpty) {
+            _clearStaleSupabaseSessions(supabaseUrl);
             try {
               await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
-            } catch (e2, st2) {
-              await Observability.capture(e2, st2,
-                  tags: {'phase': 'supabase_init_retry'});
+            } catch (e, st) {
+              debugPrint('SUPABASE INIT FAILED (continuing): $e\n$st');
+              await Observability.capture(
+                e,
+                st,
+                tags: {'phase': 'supabase_init'},
+              );
+              _nukeSupabaseLocalStorage();
+              try {
+                await Supabase.initialize(
+                  url: supabaseUrl,
+                  anonKey: supabaseKey,
+                );
+              } catch (e2, st2) {
+                await Observability.capture(
+                  e2,
+                  st2,
+                  tags: {'phase': 'supabase_init_retry'},
+                );
+              }
             }
           }
+
+          // PostHog init — no-op if POSTHOG_API_KEY isn't set.
+          await Analytics.setup();
+
+          // FCM init — no-op if FIREBASE_* dart-defines aren't set. Must come
+          // AFTER Supabase init because token registration writes to device_tokens.
+          await NotificationService().bootstrap();
+
+          // Identify the signed-in user with both Sentry + PostHog if a session
+          // exists at boot. Auth controller should also call these on sign-in.
+          try {
+            final user = Supabase.instance.client.auth.currentUser;
+            if (user != null) {
+              await Observability.setUser(id: user.id, email: user.email);
+              await Analytics.identify(user.id);
+            }
+          } catch (_) {}
+
+          runApp(const ProviderScope(child: GRWMApp()));
+        } catch (e, st) {
+          await Observability.capture(e, st, tags: {'phase': 'startup'});
+          runApp(_ErrorApp(message: '$e', stack: st.toString()));
+          debugPrint('STARTUP ERROR: $e\n$st');
         }
-
-        // PostHog init — no-op if POSTHOG_API_KEY isn't set.
-        await Analytics.setup();
-
-        // FCM init — no-op if FIREBASE_* dart-defines aren't set. Must come
-        // AFTER Supabase init because token registration writes to device_tokens.
-        await NotificationService().bootstrap();
-
-        // Identify the signed-in user with both Sentry + PostHog if a session
-        // exists at boot. Auth controller should also call these on sign-in.
-        try {
-          final user = Supabase.instance.client.auth.currentUser;
-          if (user != null) {
-            await Observability.setUser(id: user.id, email: user.email);
-            await Analytics.identify(user.id);
-          }
-        } catch (_) {}
-
-        runApp(
-          const ProviderScope(
-            child: GRWMApp(),
-          ),
-        );
-      } catch (e, st) {
-        await Observability.capture(e, st, tags: {'phase': 'startup'});
-        runApp(_ErrorApp(message: '$e', stack: st.toString()));
-        debugPrint('STARTUP ERROR: $e\n$st');
-      }
-    }, (error, stack) {
-      Observability.capture(error, stack, tags: {'phase': 'zone'});
-      debugPrint('ZONE ERROR: $error\n$stack');
-    });
+      },
+      (error, stack) {
+        Observability.capture(error, stack, tags: {'phase': 'zone'});
+        debugPrint('ZONE ERROR: $error\n$stack');
+      },
+    );
   });
 }
 
@@ -151,23 +159,30 @@ class _ErrorApp extends StatelessWidget {
               children: [
                 const Icon(Icons.error_outline, color: Colors.red, size: 48),
                 const SizedBox(height: 16),
-                const Text('App failed to start',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text(
+                  'App failed to start',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 12),
-                SelectableText(message,
-                    style: const TextStyle(fontSize: 13, color: Colors.red)),
+                SelectableText(
+                  message,
+                  style: const TextStyle(fontSize: 13, color: Colors.red),
+                ),
                 if (stack != null) ...[
                   const SizedBox(height: 20),
-                  const Text('Stack trace:',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Stack trace:',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
-                  SelectableText(stack!,
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontFamily: 'monospace',
-                          color: Colors.black87)),
+                  SelectableText(
+                    stack!,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontFamily: 'monospace',
+                      color: Colors.black87,
+                    ),
+                  ),
                 ],
                 const SizedBox(height: 24),
                 ElevatedButton.icon(

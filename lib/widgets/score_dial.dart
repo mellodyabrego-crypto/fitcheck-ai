@@ -33,10 +33,7 @@ class _ScoreDialState extends State<ScoreDial>
     _animation = Tween<double>(
       begin: 0,
       end: widget.score / 100,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _controller.forward();
   }
 

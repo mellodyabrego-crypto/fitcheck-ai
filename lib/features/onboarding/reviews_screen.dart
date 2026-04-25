@@ -15,25 +15,25 @@ class ReviewsScreen extends StatelessWidget {
       'Sienna R.',
       'New York, NY',
       5,
-      '“My closet finally feels intentional. I open the app every morning and I’m dressed in five minutes.”'
+      '“My closet finally feels intentional. I open the app every morning and I’m dressed in five minutes.”',
     ),
     (
       'Mae C.',
       'Austin, TX',
       5,
-      '“The color season analysis was scarily accurate. I stopped buying olive — and I’ve never gotten more compliments.”'
+      '“The color season analysis was scarily accurate. I stopped buying olive — and I’ve never gotten more compliments.”',
     ),
     (
       'Priya S.',
       'Toronto, ON',
       5,
-      '“I travel for work and pack three outfits in 10 minutes now. The weather-aware suggestions are actually useful.”'
+      '“I travel for work and pack three outfits in 10 minutes now. The weather-aware suggestions are actually useful.”',
     ),
     (
       'Rachel M.',
       'London, UK',
       5,
-      '“I’ve tried every wardrobe app. This is the first one that feels like a stylist, not a spreadsheet.”'
+      '“I’ve tried every wardrobe app. This is the first one that feels like a stylist, not a spreadsheet.”',
     ),
   ];
 
@@ -67,7 +67,9 @@ class ReviewsScreen extends StatelessWidget {
                     Text(
                       'Examples of feedback we hope to hear from you.',
                       style: TextStyle(
-                          fontSize: 14, color: AppTheme.textSecondary),
+                        fontSize: 14,
+                        color: AppTheme.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     // FTC + App Store: placeholder testimonials must be visibly
@@ -75,25 +77,32 @@ class ReviewsScreen extends StatelessWidget {
                     // before paid acquisition.
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: AppTheme.accent.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                            color: AppTheme.accent.withValues(alpha: 0.4)),
+                          color: AppTheme.accent.withValues(alpha: 0.4),
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.info_outline,
-                              size: 13, color: AppTheme.primaryDeep),
+                          Icon(
+                            Icons.info_outline,
+                            size: 13,
+                            color: AppTheme.primaryDeep,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             'Illustrative — quotes will be real once we launch publicly.',
                             style: TextStyle(
-                                fontSize: 11.5,
-                                color: AppTheme.primaryDeep,
-                                fontWeight: FontWeight.w600),
+                              fontSize: 11.5,
+                              color: AppTheme.primaryDeep,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -128,7 +137,9 @@ class ReviewsScreen extends StatelessWidget {
                     child: const Text(
                       'Continue',
                       style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -180,8 +191,9 @@ class _ReviewCard extends StatelessWidget {
                 child: Text(
                   name.substring(0, 1),
                   style: TextStyle(
-                      color: AppTheme.primaryDeep,
-                      fontWeight: FontWeight.w800),
+                    color: AppTheme.primaryDeep,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -189,20 +201,27 @@ class _ReviewCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 14)),
-                    Text(city,
-                        style: TextStyle(
-                            fontSize: 12, color: AppTheme.textSecondary)),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      city,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Row(
                 children: List.generate(
                   stars,
-                  (_) => Icon(Icons.star,
-                      size: 14, color: AppTheme.accent),
+                  (_) => Icon(Icons.star, size: 14, color: AppTheme.accent),
                 ),
               ),
             ],
@@ -211,7 +230,10 @@ class _ReviewCard extends StatelessWidget {
           Text(
             quote,
             style: const TextStyle(
-                fontSize: 14, height: 1.5, color: AppTheme.textPrimary),
+              fontSize: 14,
+              height: 1.5,
+              color: AppTheme.textPrimary,
+            ),
           ),
         ],
       ),

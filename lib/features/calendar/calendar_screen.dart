@@ -59,12 +59,14 @@ class _PhotoStorage {
   }
 }
 
-final calendarLogsProvider =
-    StateProvider<Map<DateTime, List<OutfitLog>>>((ref) => {});
+final calendarLogsProvider = StateProvider<Map<DateTime, List<OutfitLog>>>(
+  (ref) => {},
+);
 
 // Stores outfit photos per day (taken date → bytes list), persisted to localStorage
 final calendarPhotosProvider = StateProvider<Map<DateTime, List<Uint8List>>>(
-    (ref) => _PhotoStorage.load());
+  (ref) => _PhotoStorage.load(),
+);
 
 final selectedDayProvider = StateProvider<DateTime>((ref) => DateTime.now());
 final focusedDayProvider = StateProvider<DateTime>((ref) => DateTime.now());
@@ -97,10 +99,7 @@ class CalendarScreen extends ConsumerWidget {
               },
               eventLoader: (day) {
                 final key = DateTime(day.year, day.month, day.day);
-                return [
-                  ...(logs[key] ?? []),
-                  ...(photos[key] ?? []),
-                ];
+                return [...(logs[key] ?? []), ...(photos[key] ?? [])];
               },
               calendarBuilders: CalendarBuilders(
                 markerBuilder: (ctx, day, events) {
@@ -140,9 +139,15 @@ class CalendarScreen extends ConsumerWidget {
                 defaultBuilder: (ctx, day, _) =>
                     _DayCell(day: day, weather: weatherAsync.value),
                 selectedBuilder: (ctx, day, _) => _DayCell(
-                    day: day, weather: weatherAsync.value, isSelected: true),
+                  day: day,
+                  weather: weatherAsync.value,
+                  isSelected: true,
+                ),
                 todayBuilder: (ctx, day, _) => _DayCell(
-                    day: day, weather: weatherAsync.value, isToday: true),
+                  day: day,
+                  weather: weatherAsync.value,
+                  isToday: true,
+                ),
               ),
               calendarStyle: const CalendarStyle(
                 markerSize: 6,
@@ -163,14 +168,21 @@ class CalendarScreen extends ConsumerWidget {
               error: (_, __) => const SizedBox(height: 8),
               data: (weather) {
                 final key = DateTime(
-                    selectedDay.year, selectedDay.month, selectedDay.day);
+                  selectedDay.year,
+                  selectedDay.month,
+                  selectedDay.day,
+                );
                 final w = weather[key];
                 if (w == null) return const SizedBox(height: 8);
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: w.color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(14),
@@ -183,24 +195,31 @@ class CalendarScreen extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(w.description,
-                              style: TextStyle(
-                                  color: w.color,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14)),
-                          Text(w.tempRange,
-                              style: TextStyle(
-                                  color: w.color.withValues(alpha: 0.8),
-                                  fontSize: 12)),
+                          Text(
+                            w.description,
+                            style: TextStyle(
+                              color: w.color,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            w.tempRange,
+                            style: TextStyle(
+                              color: w.color.withValues(alpha: 0.8),
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                       const Spacer(),
                       Text(
                         '${selectedDay.month}/${selectedDay.day}',
                         style: TextStyle(
-                            color: w.color,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13),
+                          color: w.color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
@@ -211,7 +230,10 @@ class CalendarScreen extends ConsumerWidget {
             // Day content
             Expanded(
               child: _SelectedDayContent(
-                  selectedDay: selectedDay, logs: logs, photos: photos),
+                selectedDay: selectedDay,
+                logs: logs,
+                photos: photos,
+              ),
             ),
           ],
         ),
@@ -230,7 +252,8 @@ class CalendarScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (_) => _LogOutfitSheet(day: day),
     );
   }
@@ -262,8 +285,8 @@ class _DayCell extends StatelessWidget {
         color: isSelected
             ? AppTheme.primary
             : isToday
-                ? AppTheme.primary.withValues(alpha: 0.2)
-                : null,
+            ? AppTheme.primary.withValues(alpha: 0.2)
+            : null,
         shape: BoxShape.circle,
       ),
       child: Column(
@@ -278,8 +301,11 @@ class _DayCell extends StatelessWidget {
             ),
           ),
           if (w != null)
-            Icon(w.icon,
-                size: 13, color: isSelected ? Colors.white70 : w.color),
+            Icon(
+              w.icon,
+              size: 13,
+              color: isSelected ? Colors.white70 : w.color,
+            ),
         ],
       ),
     );
@@ -311,15 +337,23 @@ class _SelectedDayContent extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.event_note,
-                size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.4)),
+            Icon(
+              Icons.event_note,
+              size: 48,
+              color: AppTheme.textSecondary.withValues(alpha: 0.4),
+            ),
             const SizedBox(height: 12),
-            const Text('No outfit logged for this day',
-                style: TextStyle(fontSize: 16)),
+            const Text(
+              'No outfit logged for this day',
+              style: TextStyle(fontSize: 16),
+            ),
             const SizedBox(height: 8),
-            Text('Tap + to log what you wore',
-                style: TextStyle(
-                    color: AppTheme.textSecondary.withValues(alpha: 0.6))),
+            Text(
+              'Tap + to log what you wore',
+              style: TextStyle(
+                color: AppTheme.textSecondary.withValues(alpha: 0.6),
+              ),
+            ),
           ],
         ),
       );
@@ -331,28 +365,35 @@ class _SelectedDayContent extends ConsumerWidget {
         if (dayPhotos.isNotEmpty) ...[
           const Padding(
             padding: EdgeInsets.only(top: 8, bottom: 10),
-            child: Text('My Looks',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+            child: Text(
+              'My Looks',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+            ),
           ),
-          ...dayPhotos.map((bytes) => Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                height: 280,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.primary.withValues(alpha: 0.15),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+          ...dayPhotos.map(
+            (bytes) => Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              height: 280,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primary.withValues(alpha: 0.15),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.memory(
+                  bytes,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: Image.memory(bytes,
-                      fit: BoxFit.cover, width: double.infinity),
-                ),
-              )),
+              ),
+            ),
+          ),
           const SizedBox(height: 4),
         ],
         ...dayLogs.map((log) {
@@ -377,8 +418,10 @@ class _SelectedDayContent extends ConsumerWidget {
                 ),
                 child: const Icon(Icons.style, color: AppTheme.primary),
               ),
-              title: const Text('Outfit logged',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              title: const Text(
+                'Outfit logged',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               subtitle: log.notes != null ? Text(log.notes!) : null,
             ),
           );
@@ -412,8 +455,11 @@ class _AiOutfitLogCard extends StatelessWidget {
               color: AppTheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.auto_awesome,
-                color: AppTheme.primary, size: 22),
+            child: const Icon(
+              Icons.auto_awesome,
+              color: AppTheme.primary,
+              size: 22,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -424,7 +470,9 @@ class _AiOutfitLogCard extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppTheme.primary,
                         borderRadius: BorderRadius.circular(8),
@@ -432,17 +480,21 @@ class _AiOutfitLogCard extends StatelessWidget {
                       child: Text(
                         store.outfit.occasion?.toUpperCase() ?? 'AI OUTFIT',
                         style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700),
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Text('AI Generated',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: AppTheme.textSecondary,
-                            fontWeight: FontWeight.w500)),
+                    const Text(
+                      'AI Generated',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -453,17 +505,23 @@ class _AiOutfitLogCard extends StatelessWidget {
                         .map((i) => i.name ?? i.category.label)
                         .join(' · '),
                     style: const TextStyle(
-                        fontSize: 12, color: AppTheme.textSecondary),
+                      fontSize: 12,
+                      color: AppTheme.textSecondary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 if (notes != null && notes!.isNotEmpty) ...[
                   const SizedBox(height: 2),
-                  Text(notes!,
-                      style: const TextStyle(
-                          fontSize: 12, color: AppTheme.textSecondary),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                  Text(
+                    notes!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ],
             ),
@@ -512,8 +570,9 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
       helpText: 'Which day is this outfit for?',
     );
     if (picked != null) {
-      setState(() =>
-          _selectedDate = DateTime(picked.year, picked.month, picked.day));
+      setState(
+        () => _selectedDate = DateTime(picked.year, picked.month, picked.day),
+      );
     }
   }
 
@@ -521,23 +580,28 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
     final source = await showModalBottomSheet<String>(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Wrap(children: [
-          ListTile(
+        child: Wrap(
+          children: [
+            ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Camera'),
-              onTap: () => Navigator.pop(ctx, 'camera')),
-          ListTile(
+              onTap: () => Navigator.pop(ctx, 'camera'),
+            ),
+            ListTile(
               leading: const Icon(Icons.photo_library),
               title: const Text('Gallery'),
-              onTap: () => Navigator.pop(ctx, 'gallery')),
-          ListTile(
+              onTap: () => Navigator.pop(ctx, 'gallery'),
+            ),
+            ListTile(
               leading: const Icon(Icons.auto_awesome, color: AppTheme.primary),
               title: const Text('Select AI Generated Outfit'),
               onTap: () {
                 Navigator.pop(ctx);
                 _pickAiOutfit();
-              }),
-        ]),
+              },
+            ),
+          ],
+        ),
       ),
     );
     if (source == null) return;
@@ -557,8 +621,11 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
   void _pickAiOutfit() {
     final store = ref.read(localOutfitStoreProvider);
     if (store.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('No AI outfits generated yet — tap Generate first!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No AI outfits generated yet — tap Generate first!'),
+        ),
+      );
       return;
     }
 
@@ -566,7 +633,8 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.5,
@@ -578,17 +646,19 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2)),
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
             const SizedBox(height: 12),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Select AI Outfit',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                child: Text(
+                  'Select AI Outfit',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -607,8 +677,10 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
                         color: AppTheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.auto_awesome,
-                          color: AppTheme.primary),
+                      child: const Icon(
+                        Icons.auto_awesome,
+                        color: AppTheme.primary,
+                      ),
                     ),
                     title: Text(
                       s.outfit.occasion?.toUpperCase() ?? 'OUTFIT',
@@ -643,13 +715,17 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
 
   void _save() {
     // Use the user-selected date instead of the day they were originally viewing
-    final key =
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+    final key = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    );
 
     // Save photo first (always, if picked)
     if (_photo != null) {
-      final photos =
-          Map<DateTime, List<Uint8List>>.from(ref.read(calendarPhotosProvider));
+      final photos = Map<DateTime, List<Uint8List>>.from(
+        ref.read(calendarPhotosProvider),
+      );
       photos[key] = [...(photos[key] ?? []), _photo!];
       ref.read(calendarPhotosProvider.notifier).state = photos;
       final persisted = _PhotoStorage.save(photos);
@@ -671,8 +747,9 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
     final hasNotes = _notesCtrl.text.trim().isNotEmpty;
     final hasAiOutfit = _selectedAiOutfitId != null;
     if (hasNotes || hasAiOutfit) {
-      final logs =
-          Map<DateTime, List<OutfitLog>>.from(ref.read(calendarLogsProvider));
+      final logs = Map<DateTime, List<OutfitLog>>.from(
+        ref.read(calendarLogsProvider),
+      );
       logs[key] = [
         ...(logs[key] ?? []),
         OutfitLog(
@@ -682,7 +759,7 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
           wornDate: key,
           notes: _notesCtrl.text.isEmpty ? null : _notesCtrl.text,
           createdAt: DateTime.now(),
-        )
+        ),
       ];
       ref.read(calendarLogsProvider.notifier).state = logs;
     }
@@ -704,8 +781,10 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('Log Outfit',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+            const Text(
+              'Log Outfit',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 12),
 
             // ── Date picker ──
@@ -713,38 +792,52 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
               onTap: _pickDate,
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.accent.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
-                  border:
-                      Border.all(color: AppTheme.accent.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppTheme.accent.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.calendar_today,
-                        size: 18, color: AppTheme.accent),
+                    const Icon(
+                      Icons.calendar_today,
+                      size: 18,
+                      color: AppTheme.accent,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Date',
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textSecondary)),
+                          const Text(
+                            'Date',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textSecondary,
+                            ),
+                          ),
                           Text(
                             '${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}',
                             style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w700),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.edit_calendar,
-                        size: 16, color: AppTheme.accent),
+                    const Icon(
+                      Icons.edit_calendar,
+                      size: 16,
+                      color: AppTheme.accent,
+                    ),
                   ],
                 ),
               ),
@@ -754,25 +847,32 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
             // AI Outfit badge (when one is selected)
             if (_selectedAiOutfitLabel != null) ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: AppTheme.primary.withValues(alpha: 0.25)),
+                    color: AppTheme.primary.withValues(alpha: 0.25),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.auto_awesome,
-                        color: AppTheme.primary, size: 18),
+                    const Icon(
+                      Icons.auto_awesome,
+                      color: AppTheme.primary,
+                      size: 18,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'AI Outfit: $_selectedAiOutfitLabel',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.primary),
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primary,
+                        ),
                       ),
                     ),
                     GestureDetector(
@@ -780,8 +880,11 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
                         _selectedAiOutfitId = null;
                         _selectedAiOutfitLabel = null;
                       }),
-                      child: const Icon(Icons.close,
-                          size: 16, color: AppTheme.primary),
+                      child: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: AppTheme.primary,
+                      ),
                     ),
                   ],
                 ),
@@ -803,17 +906,24 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
                   child: _photo != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.memory(_photo!, fit: BoxFit.cover))
+                          child: Image.memory(_photo!, fit: BoxFit.cover),
+                        )
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.add_a_photo,
-                                size: 36, color: AppTheme.textSecondary),
+                            const Icon(
+                              Icons.add_a_photo,
+                              size: 36,
+                              color: AppTheme.textSecondary,
+                            ),
                             const SizedBox(height: 8),
-                            Text('Add photo or select AI outfit',
-                                style: TextStyle(
-                                    color: AppTheme.textSecondary,
-                                    fontSize: 13)),
+                            Text(
+                              'Add photo or select AI outfit',
+                              style: TextStyle(
+                                color: AppTheme.textSecondary,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                 ),
@@ -827,14 +937,20 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.auto_awesome,
-                        size: 15, color: AppTheme.primary),
+                    const Icon(
+                      Icons.auto_awesome,
+                      size: 15,
+                      color: AppTheme.primary,
+                    ),
                     const SizedBox(width: 4),
-                    Text('or pick from AI Outfits',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: AppTheme.primary,
-                            fontWeight: FontWeight.w600)),
+                    Text(
+                      'or pick from AI Outfits',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -852,10 +968,7 @@ class _LogOutfitSheetState extends ConsumerState<_LogOutfitSheet> {
             ),
             const SizedBox(height: 20),
 
-            ElevatedButton(
-              onPressed: _save,
-              child: const Text('Save'),
-            ),
+            ElevatedButton(onPressed: _save, child: const Text('Save')),
           ],
         ),
       ),

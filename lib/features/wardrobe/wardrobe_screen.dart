@@ -12,8 +12,9 @@ import 'item_detail_screen.dart';
 import 'closet_placeholder.dart';
 
 // null = folder view, a category = filtered items view
-final selectedCategoryProvider =
-    StateProvider<ClothingCategory?>((ref) => null);
+final selectedCategoryProvider = StateProvider<ClothingCategory?>(
+  (ref) => null,
+);
 final _showingFolderView = StateProvider<bool>((ref) => true);
 
 class WardrobeScreen extends ConsumerWidget {
@@ -42,10 +43,12 @@ class WardrobeScreen extends ConsumerWidget {
       body: WithDecorations(
         sparse: true,
         child: showFolders
-            ? _FolderGrid(onCategoryTap: (cat) {
-                ref.read(selectedCategoryProvider.notifier).state = cat;
-                ref.read(_showingFolderView.notifier).state = false;
-              })
+            ? _FolderGrid(
+                onCategoryTap: (cat) {
+                  ref.read(selectedCategoryProvider.notifier).state = cat;
+                  ref.read(_showingFolderView.notifier).state = false;
+                },
+              )
             : _ItemsGrid(category: selectedCategory),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -62,8 +65,10 @@ class WardrobeScreen extends ConsumerWidget {
         ),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
-        extendedPadding:
-            const EdgeInsets.symmetric(horizontal: 22, vertical: 4),
+        extendedPadding: const EdgeInsets.symmetric(
+          horizontal: 22,
+          vertical: 4,
+        ),
         extendedIconLabelSpacing: 10,
       ),
     );
@@ -132,13 +137,15 @@ class _FolderGrid extends ConsumerWidget {
                 childAspectRatio: 0.9,
                 children: [
                   // Category folders — gold outline design, no background images
-                  ...ClothingCategory.values.map((cat) => _FolderTile(
-                        icon: cat.icon,
-                        label: cat.label,
-                        count: counts[cat] ?? 0,
-                        color: _categoryColor(cat),
-                        onTap: () => onCategoryTap(cat),
-                      )),
+                  ...ClothingCategory.values.map(
+                    (cat) => _FolderTile(
+                      icon: cat.icon,
+                      label: cat.label,
+                      count: counts[cat] ?? 0,
+                      color: _categoryColor(cat),
+                      onTap: () => onCategoryTap(cat),
+                    ),
+                  ),
                   // Your Runway Creations
                   _FolderTile(
                     icon: Icons.auto_awesome,
@@ -227,8 +234,10 @@ class _FolderTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.10),
                 shape: BoxShape.circle,
-                border:
-                    Border.all(color: color.withValues(alpha: 0.30), width: 1),
+                border: Border.all(
+                  color: color.withValues(alpha: 0.30),
+                  width: 1,
+                ),
               ),
               alignment: Alignment.center,
               child: emoji != null
@@ -255,11 +264,14 @@ class _FolderTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: color.withValues(alpha: 0.30)),
                 ),
-                child: Text(badge!,
-                    style: TextStyle(
-                        fontSize: 9,
-                        color: color,
-                        fontWeight: FontWeight.w700)),
+                child: Text(
+                  badge!,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: color,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               )
             else
               Text(
@@ -305,26 +317,33 @@ class _ItemsGrid extends ConsumerWidget {
             if (isSample)
               Container(
                 margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: AppTheme.primary.withValues(alpha: 0.2)),
+                    color: AppTheme.primary.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.auto_awesome,
-                        size: 16, color: AppTheme.primary),
+                    const Icon(
+                      Icons.auto_awesome,
+                      size: 16,
+                      color: AppTheme.primary,
+                    ),
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
                         'Example items — tap + to add your own!',
                         style: TextStyle(
-                            fontSize: 13,
-                            color: AppTheme.primary,
-                            fontWeight: FontWeight.w500),
+                          fontSize: 13,
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -350,10 +369,10 @@ class _ItemsGrid extends ConsumerWidget {
                       onViewDetails: isSample
                           ? null
                           : () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => ItemDetailScreen(item: item),
-                                ),
+                              MaterialPageRoute(
+                                builder: (_) => ItemDetailScreen(item: item),
                               ),
+                            ),
                     ),
                   );
                 },

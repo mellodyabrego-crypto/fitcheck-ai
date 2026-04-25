@@ -13,8 +13,10 @@ import '../../services/supabase_service.dart';
 import 'outfit_controller.dart';
 import 'outfit_history_screen.dart';
 
-final outfitDetailProvider =
-    FutureProvider.family<_OutfitDetail, String>((ref, outfitId) async {
+final outfitDetailProvider = FutureProvider.family<_OutfitDetail, String>((
+  ref,
+  outfitId,
+) async {
   // Check local in-memory store first (for locally generated outfits)
   final localStore = ref.read(localOutfitStoreProvider);
   final local = findLocalOutfit(localStore, outfitId);
@@ -22,8 +24,9 @@ final outfitDetailProvider =
     return _OutfitDetail(
       outfit: local.outfit,
       items: local.items
-          .map((wi) =>
-              _OutfitItemDetail(slot: wi.category.name, wardrobeItem: wi))
+          .map(
+            (wi) => _OutfitItemDetail(slot: wi.category.name, wardrobeItem: wi),
+          )
           .toList(),
     );
   }
@@ -40,38 +43,41 @@ final outfitDetailProvider =
       ),
       items: [
         _OutfitItemDetail(
-            slot: 'top',
-            wardrobeItem: WardrobeItem(
-              id: '1',
-              userId: 'demo',
-              category: ClothingCategory.tops,
-              color: 'White',
-              imagePath: 'demo',
-              name: 'White Tee',
-              createdAt: DateTime.now(),
-            )),
+          slot: 'top',
+          wardrobeItem: WardrobeItem(
+            id: '1',
+            userId: 'demo',
+            category: ClothingCategory.tops,
+            color: 'White',
+            imagePath: 'demo',
+            name: 'White Tee',
+            createdAt: DateTime.now(),
+          ),
+        ),
         _OutfitItemDetail(
-            slot: 'bottom',
-            wardrobeItem: WardrobeItem(
-              id: '3',
-              userId: 'demo',
-              category: ClothingCategory.bottoms,
-              color: 'Dark Blue',
-              imagePath: 'demo',
-              name: 'Slim Jeans',
-              createdAt: DateTime.now(),
-            )),
+          slot: 'bottom',
+          wardrobeItem: WardrobeItem(
+            id: '3',
+            userId: 'demo',
+            category: ClothingCategory.bottoms,
+            color: 'Dark Blue',
+            imagePath: 'demo',
+            name: 'Slim Jeans',
+            createdAt: DateTime.now(),
+          ),
+        ),
         _OutfitItemDetail(
-            slot: 'shoes',
-            wardrobeItem: WardrobeItem(
-              id: '5',
-              userId: 'demo',
-              category: ClothingCategory.shoes,
-              color: 'White',
-              imagePath: 'demo',
-              name: 'White Sneakers',
-              createdAt: DateTime.now(),
-            )),
+          slot: 'shoes',
+          wardrobeItem: WardrobeItem(
+            id: '5',
+            userId: 'demo',
+            category: ClothingCategory.shoes,
+            color: 'White',
+            imagePath: 'demo',
+            name: 'White Sneakers',
+            createdAt: DateTime.now(),
+          ),
+        ),
       ],
     );
   }
@@ -85,8 +91,9 @@ final outfitDetailProvider =
     final wardrobeItems = await supabase.getWardrobeItems();
 
     final itemsWithDetails = outfitItems.map((oi) {
-      final wardrobeItem =
-          wardrobeItems.where((wi) => wi.id == oi.wardrobeItemId).firstOrNull;
+      final wardrobeItem = wardrobeItems
+          .where((wi) => wi.id == oi.wardrobeItemId)
+          .firstOrNull;
       return _OutfitItemDetail(slot: oi.slot, wardrobeItem: wardrobeItem);
     }).toList();
 
@@ -122,9 +129,9 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
       context.pushReplacement('/outfit/${newOutfit.id}');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to regenerate: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to regenerate: $e')));
     } finally {
       if (mounted) setState(() => _isRegenerating = false);
     }
@@ -152,11 +159,12 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                   .where((i) => i.wardrobeItem != null)
                   .map((i) => i.wardrobeItem!)
                   .toList();
-              final shared =
-                  await ref.read(shareServiceProvider).shareOutfitCard(
-                        occasion: detail.outfit.occasion ?? 'outfit',
-                        items: items,
-                      );
+              final shared = await ref
+                  .read(shareServiceProvider)
+                  .shareOutfitCard(
+                    occasion: detail.outfit.occasion ?? 'outfit',
+                    items: items,
+                  );
               if (!shared && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -185,7 +193,9 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                     alignment: Alignment.centerLeft,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: AppTheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
@@ -236,16 +246,16 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.auto_awesome,
-                            color: AppTheme.primary, size: 20),
+                        const Icon(
+                          Icons.auto_awesome,
+                          color: AppTheme.primary,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             detail.outfit.reasoning!,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              height: 1.5,
-                            ),
+                            style: const TextStyle(fontSize: 15, height: 1.5),
                           ),
                         ),
                       ],
@@ -259,17 +269,20 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
                   onPressed: _isRegenerating
                       ? null
                       : () =>
-                          _generateAgain(detail.outfit.occasion ?? 'casual'),
+                            _generateAgain(detail.outfit.occasion ?? 'casual'),
                   icon: _isRegenerating
                       ? const SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: AppTheme.primary),
+                            strokeWidth: 2,
+                            color: AppTheme.primary,
+                          ),
                         )
                       : const Icon(Icons.refresh),
-                  label:
-                      Text(_isRegenerating ? 'Generating…' : 'Generate Again'),
+                  label: Text(
+                    _isRegenerating ? 'Generating…' : 'Generate Again',
+                  ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.primary,
                     side: const BorderSide(color: AppTheme.primary, width: 1.5),
@@ -338,9 +351,11 @@ class _FeedbackRowState extends ConsumerState<_FeedbackRow> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(signal == 'love'
-            ? 'Got it — we\'ll lean into this vibe.'
-            : 'Got it — we\'ll steer away from looks like this.'),
+        content: Text(
+          signal == 'love'
+              ? 'Got it — we\'ll lean into this vibe.'
+              : 'Got it — we\'ll steer away from looks like this.',
+        ),
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () async {
@@ -365,15 +380,14 @@ class _FeedbackRowState extends ConsumerState<_FeedbackRow> {
           child: OutlinedButton.icon(
             onPressed: _signal == 'love' ? null : () => _vote('love'),
             icon: Icon(
-              _signal == 'love'
-                  ? Icons.favorite
-                  : Icons.favorite_border,
+              _signal == 'love' ? Icons.favorite : Icons.favorite_border,
               color: _signal == 'love' ? AppTheme.primary : null,
             ),
             label: Text(_signal == 'love' ? 'Loved' : 'Love it'),
             style: OutlinedButton.styleFrom(
-              foregroundColor:
-                  _signal == 'love' ? AppTheme.primary : AppTheme.textPrimary,
+              foregroundColor: _signal == 'love'
+                  ? AppTheme.primary
+                  : AppTheme.textPrimary,
               side: BorderSide(
                 color: _signal == 'love'
                     ? AppTheme.primary
@@ -389,9 +403,7 @@ class _FeedbackRowState extends ConsumerState<_FeedbackRow> {
           child: OutlinedButton.icon(
             onPressed: _signal == 'meh' ? null : () => _vote('meh'),
             icon: Icon(
-              _signal == 'meh'
-                  ? Icons.thumb_down
-                  : Icons.thumb_down_outlined,
+              _signal == 'meh' ? Icons.thumb_down : Icons.thumb_down_outlined,
             ),
             label: Text(_signal == 'meh' ? 'Skipped' : 'Not for me'),
             style: OutlinedButton.styleFrom(
@@ -479,8 +491,9 @@ class _OutfitItemCard extends StatelessWidget {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -492,8 +505,11 @@ class _OutfitItemCard extends StatelessWidget {
                         errorBuilder: (_, __, ___) => Container(
                           color: _colorFromName(wi.color),
                           child: Center(
-                            child: Icon(wi.category.icon ?? Icons.checkroom,
-                                size: 32, color: Colors.white70),
+                            child: Icon(
+                              wi.category.icon ?? Icons.checkroom,
+                              size: 32,
+                              color: Colors.white70,
+                            ),
                           ),
                         ),
                         loadingBuilder: (ctx, child, prog) {
@@ -501,8 +517,8 @@ class _OutfitItemCard extends StatelessWidget {
                           return Container(
                             color: Colors.grey.shade100,
                             child: const Center(
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2)),
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
                           );
                         },
                       )
@@ -551,14 +567,20 @@ class _OutfitItemCard extends StatelessWidget {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.shopping_bag_outlined,
-                                color: Colors.white70, size: 11),
+                            Icon(
+                              Icons.shopping_bag_outlined,
+                              color: Colors.white70,
+                              size: 11,
+                            ),
                             SizedBox(width: 3),
-                            Text('Shop',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600)),
+                            Text(
+                              'Shop',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                       ),

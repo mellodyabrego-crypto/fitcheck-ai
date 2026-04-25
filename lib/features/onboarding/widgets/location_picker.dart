@@ -66,16 +66,57 @@ class LocationPicker extends StatefulWidget {
   ];
 
   static const _usStates = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-    'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
-    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
-    'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-    'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-    'West Virginia', 'Wisconsin', 'Wyoming', 'District of Columbia',
+    'Alabama',
+    'Alaska',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'Florida',
+    'Georgia',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Carolina',
+    'North Dakota',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Pennsylvania',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming',
+    'District of Columbia',
   ];
 }
 
@@ -121,10 +162,9 @@ class _LocationPickerState extends State<LocationPicker> {
           const SizedBox(height: 16),
           Text(
             'Where do you live?',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -133,11 +173,14 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
           const SizedBox(height: 24),
 
-          Text('Country',
-              style: TextStyle(
-                  fontSize: 13,
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            'Country',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppTheme.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -152,8 +195,9 @@ class _LocationPickerState extends State<LocationPicker> {
                 value: widget.country,
                 hint: const Text('Choose your country'),
                 items: LocationPicker._countries
-                    .map((c) =>
-                        DropdownMenuItem<String>(value: c, child: Text(c)))
+                    .map(
+                      (c) => DropdownMenuItem<String>(value: c, child: Text(c)),
+                    )
                     .toList(),
                 onChanged: (v) {
                   widget.onCountryChanged(v);
@@ -166,11 +210,14 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
           const SizedBox(height: 20),
 
-          Text(isUs ? 'State' : 'State / Region',
-              style: TextStyle(
-                  fontSize: 13,
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            isUs ? 'State' : 'State / Region',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppTheme.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 8),
           if (isUs)
             Container(
@@ -186,8 +233,10 @@ class _LocationPickerState extends State<LocationPicker> {
                   value: widget.state,
                   hint: const Text('Choose your state'),
                   items: LocationPicker._usStates
-                      .map((s) =>
-                          DropdownMenuItem<String>(value: s, child: Text(s)))
+                      .map(
+                        (s) =>
+                            DropdownMenuItem<String>(value: s, child: Text(s)),
+                      )
                       .toList(),
                   onChanged: widget.onStateChanged,
                 ),

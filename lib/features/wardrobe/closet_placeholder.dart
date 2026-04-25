@@ -27,12 +27,18 @@ class ClosetPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (kClosetPlaceholderStyle) {
-      ClosetPlaceholderStyle.editorial =>
-        _EditorialPlaceholder(category: category, onAdd: onAdd),
-      ClosetPlaceholderStyle.sketched =>
-        _SketchedPlaceholder(category: category, onAdd: onAdd),
-      ClosetPlaceholderStyle.mannequin =>
-        _MannequinPlaceholder(category: category, onAdd: onAdd),
+      ClosetPlaceholderStyle.editorial => _EditorialPlaceholder(
+        category: category,
+        onAdd: onAdd,
+      ),
+      ClosetPlaceholderStyle.sketched => _SketchedPlaceholder(
+        category: category,
+        onAdd: onAdd,
+      ),
+      ClosetPlaceholderStyle.mannequin => _MannequinPlaceholder(
+        category: category,
+        onAdd: onAdd,
+      ),
     };
   }
 }
@@ -95,8 +101,9 @@ class _EditorialPlaceholder extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.white,
                     border: Border.all(
-                        color: AppTheme.primary.withValues(alpha: 0.35),
-                        width: 1.5),
+                      color: AppTheme.primary.withValues(alpha: 0.35),
+                      width: 1.5,
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: Icon(
@@ -134,7 +141,10 @@ class _EditorialPlaceholder extends StatelessWidget {
               'Add your first piece — every great wardrobe starts with one.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 13.5, color: AppTheme.textSecondary, height: 1.5),
+                fontSize: 13.5,
+                color: AppTheme.textSecondary,
+                height: 1.5,
+              ),
             ),
           ),
           if (onAdd != null) ...[
@@ -199,10 +209,7 @@ class _SketchedPlaceholder extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             'A blank $label is a blessing',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Padding(
@@ -211,7 +218,10 @@ class _SketchedPlaceholder extends StatelessWidget {
               'Snap or upload a piece — we\'ll handle the rest.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 13.5, color: AppTheme.textSecondary, height: 1.5),
+                fontSize: 13.5,
+                color: AppTheme.textSecondary,
+                height: 1.5,
+              ),
             ),
           ),
           if (onAdd != null) ...[
@@ -232,7 +242,11 @@ class _Ring extends StatelessWidget {
   final double diameter;
   final Color color;
   final double alpha;
-  const _Ring({required this.diameter, required this.color, required this.alpha});
+  const _Ring({
+    required this.diameter,
+    required this.color,
+    required this.alpha,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -273,12 +287,15 @@ class _MannequinPlaceholder extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.only(top: 36),
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: AppTheme.accent.withValues(alpha: 0.5)),
+                      color: AppTheme.accent.withValues(alpha: 0.5),
+                    ),
                   ),
                   child: Text(
                     label.toUpperCase(),
@@ -309,7 +326,10 @@ class _MannequinPlaceholder extends StatelessWidget {
               'Add a piece and watch your $label come to life.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 13.5, color: AppTheme.textSecondary, height: 1.5),
+                fontSize: 13.5,
+                color: AppTheme.textSecondary,
+                height: 1.5,
+              ),
             ),
           ),
           if (onAdd != null) ...[

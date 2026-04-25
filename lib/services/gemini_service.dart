@@ -45,13 +45,17 @@ class StyleProfileContext {
   String renderForPrompt() {
     final parts = <String>[];
     if (colorSeason != null && colorSeason!.isNotEmpty) {
-      parts.add('Color season: $colorSeason — pick colors that flatter this season.');
+      parts.add(
+        'Color season: $colorSeason — pick colors that flatter this season.',
+      );
     }
     if (colorPreferences.isNotEmpty) {
       parts.add('Favorite colors: ${colorPreferences.join(", ")}.');
     }
     if (bodyType != null && bodyType!.isNotEmpty) {
-      parts.add('Body type: $bodyType — favor silhouettes that flatter this shape.');
+      parts.add(
+        'Body type: $bodyType — favor silhouettes that flatter this shape.',
+      );
     }
     if (aesthetics.isNotEmpty) {
       parts.add('Aesthetics she loves: ${aesthetics.join(", ")}.');
@@ -60,18 +64,22 @@ class StyleProfileContext {
       parts.add('Brands she shops: ${brands.join(", ")}.');
     }
     if (shoeSize != null && shoeSize!.isNotEmpty) {
-      parts.add('Shoe size: $shoeSize — only suggest shoes available in this size.');
+      parts.add(
+        'Shoe size: $shoeSize — only suggest shoes available in this size.',
+      );
     }
     if (topSize != null || bottomSize != null) {
       parts.add(
-          'Sizes — top: ${topSize ?? "?"}, bottom: ${bottomSize ?? "?"}.');
+        'Sizes — top: ${topSize ?? "?"}, bottom: ${bottomSize ?? "?"}.',
+      );
     }
     if (recentAccepts.isNotEmpty) {
       parts.add('Recently loved looks: ${recentAccepts.take(5).join("; ")}.');
     }
     if (recentRejects.isNotEmpty) {
       parts.add(
-          'Recently rejected looks (avoid these vibes): ${recentRejects.take(5).join("; ")}.');
+        'Recently rejected looks (avoid these vibes): ${recentRejects.take(5).join("; ")}.',
+      );
     }
     return parts.join('\n');
   }
@@ -91,36 +99,46 @@ String _occasionConstraints(String occasion) {
       o.contains('hike') ||
       o.contains('yoga')) {
     rules.add(
-        '- ATHLETIC OCCASION: shoes MUST be sneakers or technical trainers. NO heels, NO sandals, NO loafers, NO flats with bows. NO blazers, NO clutches, NO statement jewelry. Pick performance fabric (cotton, technical, knit), not silk/satin.');
+      '- ATHLETIC OCCASION: shoes MUST be sneakers or technical trainers. NO heels, NO sandals, NO loafers, NO flats with bows. NO blazers, NO clutches, NO statement jewelry. Pick performance fabric (cotton, technical, knit), not silk/satin.',
+    );
   }
   if (o.contains('beach') || o.contains('pool')) {
     rules.add(
-        '- BEACH/POOL: swimwear or breathable cover-up + sandals/flat slides. NO heels, NO heavy jewelry that tarnishes in salt water.');
+      '- BEACH/POOL: swimwear or breathable cover-up + sandals/flat slides. NO heels, NO heavy jewelry that tarnishes in salt water.',
+    );
   }
   if (o.contains('summer') || o.contains('hot') || o.contains('warm')) {
     rules.add(
-        '- WARM WEATHER: NO heavy outerwear, NO knits, NO boots. Light fabrics (linen, cotton, silk).');
+      '- WARM WEATHER: NO heavy outerwear, NO knits, NO boots. Light fabrics (linen, cotton, silk).',
+    );
   }
   if (o.contains('winter') || o.contains('snow') || o.contains('cold')) {
     rules.add(
-        '- COLD WEATHER: include a coat or layered outerwear. NO open-toe shoes, NO bare legs without tights.');
+      '- COLD WEATHER: include a coat or layered outerwear. NO open-toe shoes, NO bare legs without tights.',
+    );
   }
   if (o.contains('rain') || o.contains('wet')) {
     rules.add(
-        '- RAINY WEATHER: closed-toe waterproof shoes only. Suggest a trench or rain layer.');
+      '- RAINY WEATHER: closed-toe waterproof shoes only. Suggest a trench or rain layer.',
+    );
   }
-  if (o.contains('work') || o.contains('office') || o.contains('meeting') ||
+  if (o.contains('work') ||
+      o.contains('office') ||
+      o.contains('meeting') ||
       o.contains('interview')) {
     rules.add(
-        '- WORK/OFFICE: tailored, polished. NO crop tops showing midriff, NO ultra-mini skirts, NO see-through fabrics. Closed-toe or low-block-heel.');
+      '- WORK/OFFICE: tailored, polished. NO crop tops showing midriff, NO ultra-mini skirts, NO see-through fabrics. Closed-toe or low-block-heel.',
+    );
   }
   if (o.contains('formal') || o.contains('wedding') || o.contains('gala')) {
     rules.add(
-        '- FORMAL: midi or floor-length dress, or elevated suit. Heels or dressy flats. Statement jewelry encouraged.');
+      '- FORMAL: midi or floor-length dress, or elevated suit. Heels or dressy flats. Statement jewelry encouraged.',
+    );
   }
   if (o.contains('date') && !o.contains('first')) {
     rules.add(
-        '- DATE: feminine, elevated. One statement piece (top OR shoes OR bag), not all three.');
+      '- DATE: feminine, elevated. One statement piece (top OR shoes OR bag), not all three.',
+    );
   }
 
   if (rules.isEmpty) return '';
@@ -174,8 +192,10 @@ class GeminiService {
           );
         }
         if (response.statusCode == 429) {
-          throw GeminiRateLimitException(_extractErrorMessage(response.body) ??
-              'You have hit today\'s AI usage limit. It resets at midnight UTC.');
+          throw GeminiRateLimitException(
+            _extractErrorMessage(response.body) ??
+                'You have hit today\'s AI usage limit. It resets at midnight UTC.',
+          );
         }
         if (response.statusCode == 413) {
           throw const GeminiInputTooLargeException(
@@ -220,7 +240,8 @@ class GeminiService {
         body['candidates']?[0]?['content']?['parts']?[0]?['text'] as String?;
     if (text == null || text.isEmpty) {
       throw GeminiResponseException(
-          'AI returned an empty response for $op. Try again in a moment.');
+        'AI returned an empty response for $op. Try again in a moment.',
+      );
     }
     try {
       return parseTolerantJson(text);
@@ -231,7 +252,8 @@ class GeminiService {
         extra: {'sample': e.rawSample},
       );
       throw GeminiResponseException(
-          'AI gave a malformed answer. Tap retry — it usually clears up.');
+        'AI gave a malformed answer. Tap retry — it usually clears up.',
+      );
     }
   }
 
@@ -284,18 +306,12 @@ Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" labe
 }''',
             },
             {
-              'inline_data': {
-                'mime_type': 'image/jpeg',
-                'data': base64Image,
-              },
+              'inline_data': {'mime_type': 'image/jpeg', 'data': base64Image},
             },
           ],
         },
       ],
-      'generationConfig': {
-        'temperature': 0.3,
-        'maxOutputTokens': 512,
-      },
+      'generationConfig': {'temperature': 0.3, 'maxOutputTokens': 512},
     });
 
     if (response.statusCode == 429) {
@@ -306,7 +322,8 @@ Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" labe
     }
     if (response.statusCode != 200) {
       throw GeminiResponseException(
-          'Gemini API error ${response.statusCode}: ${response.body}');
+        'Gemini API error ${response.statusCode}: ${response.body}',
+      );
     }
 
     final result = _parseAiResponse(response, 'color_season');
@@ -328,9 +345,11 @@ Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" labe
       final decoded = img.decodeImage(bytes);
       if (decoded == null) return bytes;
       final resized = decoded.width > 800 || decoded.height > 800
-          ? img.copyResize(decoded,
+          ? img.copyResize(
+              decoded,
               width: decoded.width > decoded.height ? 800 : -1,
-              height: decoded.height >= decoded.width ? 800 : -1)
+              height: decoded.height >= decoded.width ? 800 : -1,
+            )
           : decoded;
       return Uint8List.fromList(img.encodeJpg(resized, quality: 85));
     } catch (_) {
@@ -353,23 +372,18 @@ Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" labe
 {"score": <number 1-100>, "feedback": "<2-3 sentences of constructive feedback>"}''',
             },
             {
-              'inline_data': {
-                'mime_type': 'image/png',
-                'data': base64Image,
-              },
+              'inline_data': {'mime_type': 'image/png', 'data': base64Image},
             },
           ],
         },
       ],
-      'generationConfig': {
-        'temperature': 0.7,
-        'maxOutputTokens': 256,
-      },
+      'generationConfig': {'temperature': 0.7, 'maxOutputTokens': 256},
     });
 
     if (response.statusCode != 200) {
       throw GeminiResponseException(
-          'Gemini API error: ${response.statusCode} ${response.body}');
+        'Gemini API error: ${response.statusCode} ${response.body}',
+      );
     }
 
     final result = _parseAiResponse(response, 'fit_check_image');
@@ -393,18 +407,23 @@ Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" labe
     }
     if (items.isEmpty) {
       throw const GeminiResponseException(
-          'This outfit has no items to analyze. Add at least one piece first.');
+        'This outfit has no items to analyze. Add at least one piece first.',
+      );
     }
 
     final itemList = items
-        .map((i) => '- ${i["name"] ?? i["category"]} '
-            '(${i["color"] ?? "unspecified"}, ${i["category"]})')
+        .map(
+          (i) =>
+              '- ${i["name"] ?? i["category"]} '
+              '(${i["color"] ?? "unspecified"}, ${i["category"]})',
+        )
         .join('\n');
 
     final profilePart = profile.renderForPrompt();
     final constraints = _occasionConstraints(occasion);
 
-    final prompt = '''You are a women's fashion stylist scoring a real outfit. Be honest, kind, and specific.
+    final prompt =
+        '''You are a women's fashion stylist scoring a real outfit. Be honest, kind, and specific.
 
 OCCASION: $occasion
 
@@ -443,9 +462,9 @@ Respond with ONLY valid JSON. No markdown fences. No leading "JSON" label.
       'contents': [
         {
           'parts': [
-            {'text': prompt}
-          ]
-        }
+            {'text': prompt},
+          ],
+        },
       ],
       'generationConfig': {'temperature': 0.6, 'maxOutputTokens': 600},
     });
@@ -455,7 +474,8 @@ Respond with ONLY valid JSON. No markdown fences. No leading "JSON" label.
     }
     if (response.statusCode != 200) {
       throw GeminiResponseException(
-          'Gemini API error: ${response.statusCode} ${response.body}');
+        'Gemini API error: ${response.statusCode} ${response.body}',
+      );
     }
 
     final result = _parseAiResponse(response, 'fit_check_text');
@@ -473,7 +493,8 @@ Respond with ONLY valid JSON. No markdown fences. No leading "JSON" label.
       occasionFit: clamp(result['occasion_fit']),
       versatility: clamp(result['versatility']),
       headline: result['headline'] as String? ?? 'Solid fit',
-      feedback: result['feedback'] as String? ??
+      feedback:
+          result['feedback'] as String? ??
           'A workable look — small tweaks will lift it further.',
       tips: ((result['tips'] as List?) ?? const [])
           .map((e) => e.toString())
@@ -494,11 +515,11 @@ Respond with ONLY valid JSON. No markdown fences. No leading "JSON" label.
   }) async {
     if (!isGeminiConfigured) {
       throw const GeminiApiKeyException(
-          'AI outfit generation is not configured on the server yet.');
+        'AI outfit generation is not configured on the server yet.',
+      );
     }
 
-    final ctx = profile ??
-        StyleProfileContext(colorSeason: colorSeason);
+    final ctx = profile ?? StyleProfileContext(colorSeason: colorSeason);
 
     final itemContext = items != null && items.isNotEmpty
         ? 'User wardrobe items:\n${items.map((i) => '- ${i['name']} (${i['color']}, ${i['category']}) id:${i['id']}').join('\n')}'
@@ -564,9 +585,9 @@ Respond with ONLY valid JSON (no markdown, no leading "JSON" label):
         'contents': [
           {
             'parts': [
-              {'text': prompt}
-            ]
-          }
+              {'text': prompt},
+            ],
+          },
         ],
         'generationConfig': {'temperature': 0.85, 'maxOutputTokens': 600},
       });
@@ -576,7 +597,8 @@ Respond with ONLY valid JSON (no markdown, no leading "JSON" label):
       }
       if (response.statusCode != 200) {
         throw GeminiResponseException(
-            'Gemini API error: ${response.statusCode}.');
+          'Gemini API error: ${response.statusCode}.',
+        );
       }
 
       final result = _parseAiResponse(response, 'outfit_generation');
@@ -585,7 +607,8 @@ Respond with ONLY valid JSON (no markdown, no leading "JSON" label):
         title: result['title'] as String? ?? '$occasion Look',
         reasoning: result['reasoning'] as String? ?? '',
         styleScore: (result['styleScore'] as num?)?.toInt() ?? 8,
-        selectedItemIds: (result['selectedItemIds'] as List?)
+        selectedItemIds:
+            (result['selectedItemIds'] as List?)
                 ?.map((e) => e.toString())
                 .toList() ??
             [],

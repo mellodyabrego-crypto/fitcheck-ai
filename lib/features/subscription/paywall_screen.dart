@@ -28,8 +28,10 @@ class PaywallScreen extends StatelessWidget {
 
                 // Pro badge
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [AppTheme.primary, AppTheme.accent],
@@ -49,10 +51,7 @@ class PaywallScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Text(
                   'Unlock Pro — Coming Soon',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
                 Padding(
@@ -96,18 +95,12 @@ class PaywallScreen extends StatelessWidget {
                 // Price
                 const Text(
                   '\$6.99 / week',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '3-day free trial',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppTheme.textSecondary,
-                  ),
+                  style: TextStyle(fontSize: 16, color: AppTheme.textSecondary),
                 ),
                 const SizedBox(height: 20),
 
@@ -118,14 +111,17 @@ class PaywallScreen extends StatelessWidget {
                     onPressed: null, // Disabled until payments ship
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
-                      disabledBackgroundColor:
-                          AppTheme.primary.withValues(alpha: 0.5),
+                      disabledBackgroundColor: AppTheme.primary.withValues(
+                        alpha: 0.5,
+                      ),
                       disabledForegroundColor: Colors.white,
                     ),
                     child: const Text(
                       'Coming Soon',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -133,10 +129,7 @@ class PaywallScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Want early access? Email us when Pro is ready.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.textSecondary,
-                  ),
+                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
                 ),
               ],
             ),

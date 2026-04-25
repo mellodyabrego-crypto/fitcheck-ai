@@ -37,9 +37,9 @@ class AestheticPicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'What\'s your style?',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -93,8 +93,9 @@ class AestheticPicker extends StatelessWidget {
                           label,
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                            fontWeight: isSelected
+                                ? FontWeight.w700
+                                : FontWeight.w500,
                             color: isSelected
                                 ? AppTheme.primary
                                 : AppTheme.textPrimary,
@@ -103,8 +104,11 @@ class AestheticPicker extends StatelessWidget {
                         if (isSelected)
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
-                            child: Icon(Icons.check_circle,
-                                color: AppTheme.primary, size: 16),
+                            child: Icon(
+                              Icons.check_circle,
+                              color: AppTheme.primary,
+                              size: 16,
+                            ),
                           ),
                       ],
                     ),

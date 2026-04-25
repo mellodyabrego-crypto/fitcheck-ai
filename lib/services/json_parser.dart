@@ -56,10 +56,7 @@ Map<String, dynamic> parseTolerantJson(String text) {
   }
 
   final sample = text.length > 400 ? '${text.substring(0, 400)}…' : text;
-  throw JsonParseFailure(
-    'Could not parse AI response as JSON.',
-    sample,
-  );
+  throw JsonParseFailure('Could not parse AI response as JSON.', sample);
 }
 
 // ASCII-only source. We build the zero-width / BOM character set at runtime
@@ -87,8 +84,10 @@ Iterable<String> _normalizeCandidates(String raw) sync* {
   if (stripped != raw) yield stripped;
 
   // Strip "JSON" / "json" prefix label that lives outside the braces
-  final labelStripped =
-      stripped.replaceFirst(RegExp(r'^\s*(?:json|JSON)\s*[:\-]?\s*'), '');
+  final labelStripped = stripped.replaceFirst(
+    RegExp(r'^\s*(?:json|JSON)\s*[:\-]?\s*'),
+    '',
+  );
   if (labelStripped != stripped) yield labelStripped;
 
   // Smart quotes → straight quotes (fashion prose loves curly quotes)
@@ -100,7 +99,9 @@ Iterable<String> _normalizeCandidates(String raw) sync* {
   if (quotesNormalized != labelStripped) yield quotesNormalized;
 
   // Strip trailing commas before `}` or `]` (a common Gemini glitch)
-  final noTrailingCommas =
-      quotesNormalized.replaceAll(RegExp(r',(\s*[}\]])'), r'$1');
+  final noTrailingCommas = quotesNormalized.replaceAll(
+    RegExp(r',(\s*[}\]])'),
+    r'$1',
+  );
   if (noTrailingCommas != quotesNormalized) yield noTrailingCommas;
 }

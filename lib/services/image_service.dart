@@ -18,9 +18,7 @@ class ImageService {
   /// Pick from camera. On web over HTTP, camera may be blocked by the browser.
   /// Returns null if the user cancels OR if camera is unavailable.
   /// [onCameraBlocked] is called if the camera throws so the caller can show a message.
-  Future<Uint8List?> pickFromCamera({
-    void Function()? onCameraBlocked,
-  }) async {
+  Future<Uint8List?> pickFromCamera({void Function()? onCameraBlocked}) async {
     try {
       final file = await _picker.pickImage(
         source: ImageSource.camera,
@@ -78,21 +76,30 @@ class ImageService {
                   backgroundColor: Color(0xFFD8A7B1),
                   child: Icon(Icons.camera_alt, color: Colors.white, size: 20),
                 ),
-                title: const Text('Take a Photo',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
-                subtitle: Text(kIsWeb
-                    ? 'Opens camera (allow access in browser)'
-                    : 'Use your camera'),
+                title: const Text(
+                  'Take a Photo',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  kIsWeb
+                      ? 'Opens camera (allow access in browser)'
+                      : 'Use your camera',
+                ),
                 onTap: () => Navigator.pop(ctx, 'camera'),
               ),
               ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Color(0xFFC6A96B),
-                  child:
-                      Icon(Icons.photo_library, color: Colors.white, size: 20),
+                  child: Icon(
+                    Icons.photo_library,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
-                title: const Text('Upload from Device',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
+                title: const Text(
+                  'Upload from Device',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
                 subtitle: const Text('Pick an existing photo'),
                 onTap: () => Navigator.pop(ctx, 'gallery'),
               ),
@@ -136,8 +143,11 @@ class ImageService {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.info_outline,
-                        color: Colors.white, size: 18),
+                    const Icon(
+                      Icons.info_outline,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(

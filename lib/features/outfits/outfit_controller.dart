@@ -23,8 +23,9 @@ class LocalOutfitStore {
   const LocalOutfitStore({required this.outfit, required this.items});
 }
 
-final localOutfitStoreProvider =
-    StateProvider<List<LocalOutfitStore>>((ref) => []);
+final localOutfitStoreProvider = StateProvider<List<LocalOutfitStore>>(
+  (ref) => [],
+);
 
 // Helper to get an outfit + its items by id from the local store
 LocalOutfitStore? findLocalOutfit(List<LocalOutfitStore> store, String id) {
@@ -37,8 +38,9 @@ LocalOutfitStore? findLocalOutfit(List<LocalOutfitStore> store, String id) {
 
 // ─── Controller ───────────────────────────────────────────────────────────────
 
-final outfitControllerProvider =
-    AsyncNotifierProvider<OutfitController, void>(OutfitController.new);
+final outfitControllerProvider = AsyncNotifierProvider<OutfitController, void>(
+  OutfitController.new,
+);
 
 class OutfitController extends AsyncNotifier<void> {
   @override
@@ -75,13 +77,15 @@ class OutfitController extends AsyncNotifier<void> {
     // that's the user's wardrobe or the curated trending pool — so Gemini can
     // select real item ids that we can render afterwards.
     final itemPayload = sourceItems
-        .map((i) => {
-              'id': i.id,
-              'name': i.name ?? i.category.label,
-              'color': i.color ?? 'unknown',
-              'category': i.category.name,
-              if (i.brand != null) 'brand': i.brand!,
-            })
+        .map(
+          (i) => {
+            'id': i.id,
+            'name': i.name ?? i.category.label,
+            'color': i.color ?? 'unknown',
+            'category': i.category.name,
+            if (i.brand != null) 'brand': i.brand!,
+          },
+        )
         .toList();
 
     // Pull the user's full style profile (sizes, aesthetics, brands, body type,
@@ -130,8 +134,8 @@ class OutfitController extends AsyncNotifier<void> {
     // returned too few IDs (or none that matched), fall back to the default picker.
     List<WardrobeItem> selectedItems = result.selectedItemIds.isNotEmpty
         ? sourceItems
-            .where((i) => result.selectedItemIds.contains(i.id))
-            .toList()
+              .where((i) => result.selectedItemIds.contains(i.id))
+              .toList()
         : [];
 
     if (selectedItems.length < 4) {
@@ -158,15 +162,20 @@ class OutfitController extends AsyncNotifier<void> {
     );
 
     // Persist in local store
-    ref.read(localOutfitStoreProvider.notifier).update(
-          (list) =>
-              [...list, LocalOutfitStore(outfit: outfit, items: selectedItems)],
+    ref
+        .read(localOutfitStoreProvider.notifier)
+        .update(
+          (list) => [
+            ...list,
+            LocalOutfitStore(outfit: outfit, items: selectedItems),
+          ],
         );
 
     // Auto-save to My Photos (AI-generated card with first item's image)
     final firstWithUrl = selectedItems.cast<WardrobeItem?>().firstWhere(
-        (i) => i?.imagePath.startsWith('http') ?? false,
-        orElse: () => null);
+      (i) => i?.imagePath.startsWith('http') ?? false,
+      orElse: () => null,
+    );
     final photo = RatedPhoto(
       networkUrl: firstWithUrl?.imagePath,
       isAiGenerated: true,
@@ -187,8 +196,11 @@ class OutfitController extends AsyncNotifier<void> {
 
   /// Ensure an outfit has the essentials: (top+bottom OR dress) + shoes + bag + accessory.
   /// If a slot is missing, pull the first matching item from sourceItems.
-  List<WardrobeItem> _topUpMissingSlots(List<WardrobeItem> current,
-      List<WardrobeItem> sourceItems, String occasion) {
+  List<WardrobeItem> _topUpMissingSlots(
+    List<WardrobeItem> current,
+    List<WardrobeItem> sourceItems,
+    String occasion,
+  ) {
     final result = List<WardrobeItem>.from(current);
     final has = <String, bool>{
       for (final c in [
@@ -198,16 +210,14 @@ class OutfitController extends AsyncNotifier<void> {
         'shoes',
         'bags',
         'accessories',
-        'outerwear'
+        'outerwear',
       ])
         c: result.any((i) => i.category.name == c),
     };
 
-    WardrobeItem? firstFrom(String cat) =>
-        sourceItems.cast<WardrobeItem?>().firstWhere(
-              (i) => i?.category.name == cat,
-              orElse: () => null,
-            );
+    WardrobeItem? firstFrom(String cat) => sourceItems
+        .cast<WardrobeItem?>()
+        .firstWhere((i) => i?.category.name == cat, orElse: () => null);
 
     // Top/dress is required
     if (!has['tops']! && !has['dresses']!) {
@@ -241,16 +251,21 @@ class OutfitController extends AsyncNotifier<void> {
   /// Pick a sensible default outfit when Gemini returns no item IDs.
   /// Always returns 5–6 items: top/dress + bottom + shoes + bag + 1-2 accessories.
   List<WardrobeItem> _pickDefaultItems(
-      List<WardrobeItem> items, String occasion, String? colorSeason) {
+    List<WardrobeItem> items,
+    String occasion,
+    String? colorSeason,
+  ) {
     final tops = items.where((i) => i.category.name == 'tops').toList();
     final bottoms = items.where((i) => i.category.name == 'bottoms').toList();
     final shoes = items.where((i) => i.category.name == 'shoes').toList();
     final dresses = items.where((i) => i.category.name == 'dresses').toList();
     final bags = items.where((i) => i.category.name == 'bags').toList();
-    final accessories =
-        items.where((i) => i.category.name == 'accessories').toList();
-    final outerwear =
-        items.where((i) => i.category.name == 'outerwear').toList();
+    final accessories = items
+        .where((i) => i.category.name == 'accessories')
+        .toList();
+    final outerwear = items
+        .where((i) => i.category.name == 'outerwear')
+        .toList();
 
     final result = <WardrobeItem>[];
 
@@ -335,17 +350,21 @@ class OutfitController extends AsyncNotifier<void> {
   }
 
   Future<void> _trySaveToSupabase(
-      Outfit outfit, List<WardrobeItem> items) async {
+    Outfit outfit,
+    List<WardrobeItem> items,
+  ) async {
     try {
       final supabase = ref.read(supabaseServiceProvider);
       if (supabase == null) return; // no backend — local store suffices
       final outfitData = outfit.toJson();
       final outfitItems = items
-          .map((i) => {
-                'id': const Uuid().v4(),
-                'wardrobe_item_id': i.id,
-                'slot': i.category.name,
-              })
+          .map(
+            (i) => {
+              'id': const Uuid().v4(),
+              'wardrobe_item_id': i.id,
+              'slot': i.category.name,
+            },
+          )
           .toList();
       await supabase.createOutfit(outfitData, outfitItems);
     } catch (_) {

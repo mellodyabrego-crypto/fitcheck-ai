@@ -22,9 +22,7 @@ class LegalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Semantics(header: true, child: Text(title)),
-      ),
+      appBar: AppBar(title: Semantics(header: true, child: Text(title))),
       body: WithDecorations(
         sparse: true,
         child: SafeArea(

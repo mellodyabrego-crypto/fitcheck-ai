@@ -30,10 +30,10 @@ class OutfitLog {
   }
 
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'outfit_id': outfitId,
-        'worn_date': wornDate.toIso8601String().split('T').first,
-        'notes': notes,
-        'selfie_image_path': selfieImagePath,
-      };
+    'user_id': userId,
+    'outfit_id': outfitId,
+    'worn_date': wornDate.toIso8601String().split('T').first,
+    'notes': notes,
+    'selfie_image_path': selfieImagePath,
+  };
 }

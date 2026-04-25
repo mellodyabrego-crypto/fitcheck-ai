@@ -16,20 +16,20 @@ import '../auth/auth_controller.dart';
 
 final _settingsProfileProvider =
     FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
-  if (kDemoMode) return null;
-  try {
-    final client = Supabase.instance.client;
-    final userId = client.auth.currentUser?.id;
-    if (userId == null) return null;
-    return await client
-        .from('user_profiles')
-        .select('notifications_enabled, notification_time')
-        .eq('user_id', userId)
-        .maybeSingle();
-  } catch (_) {
-    return null;
-  }
-});
+      if (kDemoMode) return null;
+      try {
+        final client = Supabase.instance.client;
+        final userId = client.auth.currentUser?.id;
+        if (userId == null) return null;
+        return await client
+            .from('user_profiles')
+            .select('notifications_enabled, notification_time')
+            .eq('user_id', userId)
+            .maybeSingle();
+      } catch (_) {
+        return null;
+      }
+    });
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -73,8 +73,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       if (mounted) {
         // Roll back the optimistic update on failure.
         setState(() => _localNotifOverride = !v);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Could not update — try again. ($e)')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not update — try again. ($e)')),
+        );
       }
     }
   }
@@ -99,8 +100,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Future<void> _pickReminderTime(String? current) async {
     final initial = _parseTime(current) ?? const TimeOfDay(hour: 8, minute: 0);
-    final picked =
-        await showTimePicker(context: context, initialTime: initial);
+    final picked = await showTimePicker(context: context, initialTime: initial);
     if (picked == null || !mounted) return;
     final hh = picked.hour.toString().padLeft(2, '0');
     final mm = picked.minute.toString().padLeft(2, '0');
@@ -125,8 +125,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       Observability.capture(e, st, tags: {'op': 'settings.reminder_time'});
       if (mounted) {
         setState(() => _localReminderTimeOverride = null);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Could not save reminder time. ($e)')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not save reminder time. ($e)')),
+        );
       }
     }
   }
@@ -151,19 +152,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     try {
       await ref.read(exportServiceProvider).exportWardrobeJson();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Export downloaded — check your browser downloads.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Export downloaded — check your browser downloads.'),
+          ),
+        );
       }
     } on ExportException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     } catch (e, st) {
       Observability.capture(e, st, tags: {'op': 'settings.export'});
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Export failed — $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Export failed — $e')));
       }
     } finally {
       if (mounted) setState(() => _exporting = false);
@@ -183,8 +189,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(_, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(_, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(_, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -225,8 +232,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.pop(_, false),
-                  child: const Text('Cancel')),
+                onPressed: () => Navigator.pop(_, false),
+                child: const Text('Cancel'),
+              ),
               TextButton(
                 onPressed: ok ? () => Navigator.pop(_, true) : null,
                 style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -247,16 +255,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context.go('/auth');
     } on AccountException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text(e.message),
-            backgroundColor: Colors.red.shade700));
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
       }
     } catch (e, st) {
       Observability.capture(e, st, tags: {'op': 'settings.delete_account'});
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             content: Text('Couldn\'t delete account. $e'),
-            backgroundColor: Colors.red.shade700));
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _deleting = false);
@@ -271,8 +285,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     // means the round-trip succeeded and the provider is now authoritative.
     final persistedNotif =
         (profileAsync.valueOrNull?['notifications_enabled'] as bool?);
-    if (_localNotifOverride != null &&
-        persistedNotif == _localNotifOverride) {
+    if (_localNotifOverride != null && persistedNotif == _localNotifOverride) {
       _localNotifOverride = null;
     }
     final persistedTime =
@@ -338,8 +351,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               // Greyed out subtitle when notifications are off — visual cue.
               trailing: notifEnabled
                   ? const Icon(Icons.chevron_right, size: 20)
-                  : Icon(Icons.lock_outline,
-                      size: 18, color: AppTheme.textSecondary),
+                  : Icon(
+                      Icons.lock_outline,
+                      size: 18,
+                      color: AppTheme.textSecondary,
+                    ),
             ),
 
             const SizedBox(height: 16),
@@ -403,7 +419,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   side: const BorderSide(color: Colors.red),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: const Text('Sign Out'),
               ),
@@ -422,9 +439,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         height: 18,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Text('Delete Account',
+                    : Text(
+                        'Delete Account',
                         style: TextStyle(
-                            color: Colors.red.shade400, fontSize: 14)),
+                          color: Colors.red.shade400,
+                          fontSize: 14,
+                        ),
+                      ),
               ),
             ),
 
@@ -478,10 +499,13 @@ class _SettingsTile extends StatelessWidget {
       leading: Icon(icon, color: AppTheme.textSecondary),
       title: Text(title, style: const TextStyle(fontSize: 15)),
       subtitle: subtitle != null
-          ? Text(subtitle!,
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13))
+          ? Text(
+              subtitle!,
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+            )
           : null,
-      trailing: trailing ??
+      trailing:
+          trailing ??
           (onTap != null ? const Icon(Icons.chevron_right, size: 20) : null),
       onTap: onTap,
     );

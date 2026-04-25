@@ -6,8 +6,11 @@ class ReferralPicker extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onChanged;
 
-  const ReferralPicker(
-      {super.key, required this.selected, required this.onChanged});
+  const ReferralPicker({
+    super.key,
+    required this.selected,
+    required this.onChanged,
+  });
 
   static const _options = [
     ('app_store', 'App Store', Icons.apps),
@@ -30,10 +33,9 @@ class ReferralPicker extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'How did you hear about us?',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(
@@ -53,7 +55,9 @@ class ReferralPicker extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 18, vertical: 14),
+                      horizontal: 18,
+                      vertical: 14,
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppTheme.primary.withValues(alpha: 0.08)
@@ -68,11 +72,13 @@ class ReferralPicker extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(icon,
-                            size: 20,
-                            color: isSelected
-                                ? AppTheme.primary
-                                : AppTheme.textSecondary),
+                        Icon(
+                          icon,
+                          size: 20,
+                          color: isSelected
+                              ? AppTheme.primary
+                              : AppTheme.textSecondary,
+                        ),
                         const SizedBox(width: 14),
                         Expanded(
                           child: Text(
@@ -89,8 +95,11 @@ class ReferralPicker extends StatelessWidget {
                           ),
                         ),
                         if (isSelected)
-                          const Icon(Icons.check_circle,
-                              color: AppTheme.primary, size: 20),
+                          const Icon(
+                            Icons.check_circle,
+                            color: AppTheme.primary,
+                            size: 20,
+                          ),
                       ],
                     ),
                   ),
