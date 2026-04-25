@@ -1,7 +1,24 @@
-# Hostile-Review Hardening — Hand-off
+# Hand-off
 
-This branch implements every item from the 2026-04-18 hostile review. Below is
-exactly what changed, why, and the **manual steps** needed before it ships.
+## ⚠️ Who does what
+
+**Mellody owns the Supabase backend** (`ntfgkukhjfzbmumhyqzq`). Anything in
+this document tagged **`[MELLODY]`** must be run by her — Ben does not have
+project-level access to her Supabase. Steps tagged **`[BEN]`** are codebase /
+git / Cloudflare-side and Ben handles those.
+
+If you are reading this fresh after a `git pull`, read this hand-off
+top-to-bottom before deploying. The new code paths are inert without the
+backend setup steps.
+
+---
+
+Two batches of work live in this repo:
+- **2026-04-18** — Hostile-review hardening (sections below).
+- **2026-04-25** — Onboarding v2, real Fit Check, Settings activation, soft
+  delete, Fashion infinite-scroll, FCM push pipeline. See
+  [§ "2026-04-25 — manual steps"](#2026-04-25--manual-steps) below for the
+  follow-on setup.
 
 > Color palette and overall visual identity are unchanged. Foreground colors
 > were re-pointed at existing `AppTheme.primaryDeep` (already in the palette)
@@ -13,35 +30,34 @@ exactly what changed, why, and the **manual steps** needed before it ships.
 
 In order:
 
-1. **Install new packages.** From `fitcheck-mellody/`:
+1. **`[BEN]` Install new packages.** From `fitcheck-mellody/`:
    ```bash
    /Users/nelly/development/flutter/bin/flutter pub get
    ```
    New deps: `sentry_flutter ^8.10.1`, `posthog_flutter ^4.10.0`.
 
-2. **Apply the database migration.** In Supabase SQL editor for project
+2. **`[MELLODY]` Apply the database migration.** In Supabase SQL editor for project
    `ntfgkukhjfzbmumhyqzq`, paste and run:
    `supabase/migrations/20260418_quota_and_storage_lockdown.sql`.
 
-3. **Re-deploy the Gemini edge function — *without* the `--no-verify-jwt`
-   flag.** The new function REQUIRES a real Supabase JWT.
+3. **`[MELLODY]` Re-deploy the Gemini edge function — *without* the
+   `--no-verify-jwt` flag.** The new function REQUIRES a real Supabase JWT.
    ```bash
-   export SUPABASE_ACCESS_TOKEN=<your PAT>
+   export SUPABASE_ACCESS_TOKEN=<Mellody's Supabase PAT>
    npx supabase functions deploy gemini-proxy \
      --project-ref ntfgkukhjfzbmumhyqzq
    ```
-   ⚠️ **Verify the project-ref.** The old edge function source code referenced
-   `fgwrnlibomamlzbzibol`; CLAUDE.md uses `ntfgkukhjfzbmumhyqzq`. Make sure
-   the deploy hits the same project that the Flutter web build points to
-   (whichever ref is in your `--dart-define=SUPABASE_URL=...`).
+   ⚠️ **Verify the project-ref.** Must match the project the Flutter build
+   points to (`--dart-define=SUPABASE_URL=...`).
 
-4. **Set/confirm secrets on the same Supabase project:**
+4. **`[MELLODY]` Set/confirm secrets on the same Supabase project:**
    ```bash
-   npx supabase secrets set GEMINI_API_KEY=<key> --project-ref <ref>
+   npx supabase secrets set GEMINI_API_KEY=<key> \
+     --project-ref ntfgkukhjfzbmumhyqzq
    # SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are auto-injected by Supabase.
    ```
 
-5. **Tighten the storage bucket in the Supabase dashboard:**
+5. **`[MELLODY]` Tighten the storage bucket in the Supabase dashboard:**
    Storage → `wardrobe-images` → Settings:
    - Public: ❌ (already off)
    - File size limit: **2 MB**
@@ -49,7 +65,7 @@ In order:
    (The Flutter client now also rejects oversize / non-image files, but the
    bucket setting is the authoritative server-side gate.)
 
-6. **Add GitHub Actions repo secrets** (Settings → Secrets → Actions):
+6. **`[BEN]` Add GitHub Actions repo secrets** (Settings → Secrets → Actions):
    - `SENTRY_DSN` — from sentry.io project settings
    - `POSTHOG_API_KEY` — from posthog.com project settings
    - (existing) `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `CLOUDFLARE_API_TOKEN`,
@@ -58,7 +74,7 @@ In order:
    Both new secrets are **optional** — the app runs fine if they're empty;
    the wrappers just no-op.
 
-7. **Smoke test locally:**
+7. **`[BEN]` Smoke test locally:**
    ```bash
    /Users/nelly/development/flutter/bin/flutter run -d web-server \
      --web-port 3003 --web-hostname 0.0.0.0 \
@@ -161,3 +177,150 @@ covers — track them in `ROADMAP.md` instead:
 
 These are tracked in `ROADMAP.md` under the appropriate user-tier (most are
 1K-tier work).
+
+---
+
+## 2026-04-25 — manual steps
+
+This second batch added: onboarding v2 (DOB / gender / location / referral /
+permissions + reviews + walkthrough screens), real AI Fit Check, real share
+card, hard occasion rules in outfit prompts, learn-from-history outfit loop,
+new closet placeholder direction, larger Shop category icons, infinite-scroll
+Fashion tab, real Export Wardrobe, real Delete Account (soft delete via ban),
+active notification toggles, and the FCM push pipeline scaffolding.
+
+### A. `[MELLODY]` Apply DB migrations (in this order)
+
+In Supabase SQL editor for project `ntfgkukhjfzbmumhyqzq` (Mellody's project —
+Ben does not have access; he can copy the SQL into Slack/email and Mellody
+pastes it into her dashboard):
+
+1. `supabase/migrations/20260425_onboarding_v2_and_soft_delete.sql`
+   - Adds `dob`, `country`, `state`, `referral_source`, `weather_opt_in`,
+     `deleted_at` columns to `user_profiles`.
+   - RLS guard so deleted users can't read/update their profile row.
+   - New `outfit_feedback` table for the learn-from-history loop.
+2. `supabase/migrations/20260425_device_tokens_and_reminder_cron.sql`
+   - Adds `device_tokens` table.
+   - Installs the per-minute pg_cron schedule that calls `send-daily-reminder`.
+   - **Pre-req:** in Database → Extensions, enable **`pg_cron`** and **`pg_net`**.
+
+After applying #2, also run once (in the same SQL editor):
+```sql
+alter database postgres set "app.settings.supabase_url"
+  = 'https://ntfgkukhjfzbmumhyqzq.supabase.co';
+alter database postgres set "app.settings.supabase_service_role_key"
+  = '<SERVICE_ROLE_KEY>'; -- found in Project Settings → API
+```
+
+### B. `[MELLODY]` Deploy the new edge functions
+
+Mellody runs these from her machine (she needs the Supabase access token / PAT
+for `mellodyabrego-crypto`):
+
+```bash
+export SUPABASE_ACCESS_TOKEN=<Mellody's Supabase PAT>
+npx supabase functions deploy delete-account \
+  --project-ref ntfgkukhjfzbmumhyqzq
+npx supabase functions deploy send-daily-reminder \
+  --project-ref ntfgkukhjfzbmumhyqzq
+```
+
+If Mellody isn't comfortable with the CLI, the function source can also be
+pasted into the Supabase dashboard → Edge Functions → New function.
+
+### C. Push notifications (Phase B)
+
+Notifications are **inert until Firebase is configured**. The code, service
+worker, edge function, and pg_cron schedule are all wired — they just need
+credentials. This step has both Mellody and Ben work; do it in this order:
+
+1. **`[MELLODY]`** Create a Firebase project at console.firebase.google.com.
+2. **`[MELLODY]`** Add a Web app: Project Settings → Your apps → "</>" → register.
+3. **`[MELLODY]`** Copy the SDK config block — you need: `apiKey`, `authDomain`,
+   `projectId`, `storageBucket`, `messagingSenderId`, `appId`. Send these to Ben.
+4. **`[MELLODY]`** Cloud Messaging → Web Push certificates → Generate key pair → save
+   the key as `FIREBASE_VAPID_KEY`. Send to Ben.
+5. **`[MELLODY]`** Project Settings → Service accounts → Generate new private key (JSON).
+   Open the JSON and split into three values (keep the JSON for her records):
+   - `FCM_PROJECT_ID` — the `project_id` field
+   - `FCM_CLIENT_EMAIL` — the `client_email` field
+   - `FCM_PRIVATE_KEY` — the `private_key` field (keep the literal `\n`s, the
+     edge function decodes them)
+6. **`[MELLODY]`** Set Supabase secrets:
+   ```bash
+   npx supabase secrets set \
+     FCM_PROJECT_ID=<...> \
+     FCM_CLIENT_EMAIL=<...> \
+     FCM_PRIVATE_KEY="<paste with \n line breaks intact>" \
+     --project-ref ntfgkukhjfzbmumhyqzq
+   ```
+7. **`[BEN]`** Substitute placeholders in `web/firebase-messaging-sw.js` with the
+   values from step 3 (the worker file is fetched directly by the browser;
+   dart-defines don't reach it). Commit the substituted file.
+8. **`[BEN]`** Add `FIREBASE_*` dart-defines to `.github/workflows/deploy.yml`
+   build step (and the local build command in CLAUDE.md):
+   ```
+   --dart-define=FIREBASE_API_KEY=<...>
+   --dart-define=FIREBASE_PROJECT_ID=<...>
+   --dart-define=FIREBASE_MESSAGING_SENDER_ID=<...>
+   --dart-define=FIREBASE_APP_ID=<...>
+   --dart-define=FIREBASE_AUTH_DOMAIN=<...>
+   --dart-define=FIREBASE_STORAGE_BUCKET=<...>
+   --dart-define=FIREBASE_VAPID_KEY=<...>
+   ```
+9. **`[BEN]`** Add the same `FIREBASE_*` values as GitHub Actions repo secrets.
+10. **`[BEN]`** `flutter pub get` (adds `firebase_core` + `firebase_messaging`).
+
+After all of the above, every minute the pg_cron job will:
+- Find users where `notifications_enabled=true` AND `notification_time=HH:MM`
+  matches the current UTC minute AND `deleted_at IS NULL`
+- Look up their device tokens
+- Send an FCM push titled "Today's look is ready"
+
+The cron uses UTC for v1. Local-time notifications are a follow-up — collect
+each user's IANA timezone (browser `Intl.DateTimeFormat().resolvedOptions().timeZone`)
+and convert at fire time.
+
+### D. Bug fixes & UX changes that need no infra
+
+These shipped in code and apply on the next deploy automatically:
+
+- **Edit Style Preferences** now passes `?retake=true` so the screen no longer
+  bounces back to /home immediately.
+- **Outfit prompt** now refuses obvious mismatches (no heels for workout, no
+  knits for summer, etc.) and pulls in the user's full style profile + last 5
+  accepted/rejected vibes.
+- **Fit Check** is now a real Gemini call against the outfit's items + profile.
+  Display floor is 70 with an honest "Limited match" tag when the underlying
+  score was below 70 (per CLAUDE.md rule #7).
+- **Share Score** captures the result card via `RepaintBoundary` and uses
+  `Share.shareXFiles` (PNG) with text fallback.
+- **JSON parser** now tolerates Gemini's "JSON\n{...}" prefix, smart quotes,
+  trailing commas, markdown fences. Failures are logged to Sentry with a
+  sample of the bad payload.
+- **My Closet empty state** has three premium directions; pick one by changing
+  `kClosetPlaceholderStyle` in `lib/features/wardrobe/closet_placeholder.dart`.
+  Default is `editorial`.
+- **Shop category icons** are now 88×88 with 40-pt icons (was 56×56 with 26-pt).
+  Grid switched 4-cols → 3-cols.
+- **Fashion tab** is now infinite-scroll (cycles the curated women's-fashion
+  list) plus an AppBar search icon that opens Google Image Search for the
+  active category.
+- **Settings** — Daily Outfit Reminder + Reminder Time + Export Wardrobe +
+  Delete Account are real (no more "Coming Soon"). Notifications + reminder
+  time persist to `user_profiles` immediately; Phase B picks them up when FCM
+  ships.
+
+### E. Things still flagged for review
+
+- `lib/features/legal/legal_text.dart` has `<<LEGAL REVIEW>>` blocks marking
+  specific clauses an attorney must look at before paid acquisition.
+- The four illustrative testimonials in `ReviewsScreen` are placeholder copy
+  — swap with real quotes once you have them.
+- Apple Sign-In is **not enabled** (per owner direction). Code in
+  `auth_controller.signInWithApple()` is dormant until the $99/yr Apple Dev
+  account + Service ID + Supabase Apple provider are configured.
+- Background-removal `bg-remove` edge function was **not built** in this batch
+  (no fal.ai / remove.bg key chosen). Revisit when a vendor + key are picked.
+

@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/theme.dart';
 import '../../core/extensions.dart';
+import '../../services/notification_service.dart';
 import '../../widgets/decorative_symbols.dart';
 import 'auth_controller.dart';
 
@@ -100,6 +101,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         } catch (_) {
           // Table not set up yet — go to onboarding
         }
+        // Register the device for push notifications. No-op if FCM isn't
+        // configured or the user previously denied permission.
+        // ignore: unawaited_futures
+        ref.read(notificationServiceProvider).registerForCurrentUser();
         if (mounted) {
           context.go(onboardingDone ? '/home' : '/onboarding');
         }

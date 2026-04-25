@@ -5,17 +5,22 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../main.dart';
 import '../../providers/user_providers.dart';
+import '../../services/notification_service.dart';
 
 import '../../core/theme.dart';
 import '../../widgets/decorative_symbols.dart';
+import 'widgets/dob_picker.dart';
+import 'widgets/gender_picker.dart';
+import 'widgets/location_picker.dart';
 import 'widgets/goal_picker.dart';
-import 'widgets/age_picker.dart';
 import 'widgets/aesthetic_picker.dart';
 import 'widgets/body_type_picker.dart';
 import 'widgets/brands_picker.dart';
 import 'widgets/sizes_picker.dart';
 import 'widgets/skin_tone_picker.dart';
 import 'widgets/color_preference_picker.dart';
+import 'widgets/referral_picker.dart';
+import 'widgets/permissions_picker.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -27,16 +32,17 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _pageController = PageController();
   int _currentPage = 0;
+  bool _isRetake = false;
 
   @override
   void initState() {
     super.initState();
-    // Auto-skip if already complete, UNLESS user explicitly navigated here
-    // to retake the quiz (`/onboarding?retake=true`).
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final retake =
           GoRouterState.of(context).uri.queryParameters['retake'] == 'true';
+      _isRetake = retake;
       if (!kDemoMode && !retake) _skipIfAlreadyOnboarded();
+      if (retake) _hydrateExistingProfile();
     });
   }
 
@@ -58,26 +64,85 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
-  // Page 0 — Goals
+  // Pre-fill values when the user is editing their preferences (retake=true)
+  // so they don't see a blank questionnaire and have to start over.
+  Future<void> _hydrateExistingProfile() async {
+    if (kDemoMode) return;
+    try {
+      final client = Supabase.instance.client;
+      final userId = client.auth.currentUser?.id;
+      if (userId == null) return;
+      final row = await client
+          .from('user_profiles')
+          .select()
+          .eq('user_id', userId)
+          .maybeSingle();
+      if (row == null || !mounted) return;
+      setState(() {
+        if (row['dob'] != null) {
+          _dob = DateTime.tryParse(row['dob'].toString());
+        }
+        _gender = row['gender'] as String?;
+        _country = row['country'] as String?;
+        _state = row['state'] as String?;
+        _selectedGoals
+          ..clear()
+          ..addAll((row['goals'] as List?)?.cast<String>() ?? const []);
+        _selectedBodyType = row['body_type'] as String?;
+        _selectedAesthetics
+          ..clear()
+          ..addAll((row['aesthetics'] as List?)?.cast<String>() ?? const []);
+        _selectedBrands
+          ..clear()
+          ..addAll((row['brands'] as List?)?.cast<String>() ?? const []);
+        _topSize = row['top_size'] as String?;
+        _bottomSize = row['bottom_size'] as String?;
+        _shoeSize = row['shoe_size'] as String?;
+        _skinToneUndertone = row['skin_tone_undertone'] as String?;
+        _selectedColors
+          ..clear()
+          ..addAll(
+              (row['color_preferences'] as List?)?.cast<String>() ?? const []);
+        _referralSource = row['referral_source'] as String?;
+        _notificationsEnabled = row['notifications_enabled'] as bool? ?? false;
+        _weatherOptIn = row['weather_opt_in'] as bool? ?? false;
+      });
+    } catch (_) {
+      // Best-effort prefill — not blocking.
+    }
+  }
+
+  // Page state -------------------------------------------------------
+  // Page 0 — DOB
+  DateTime? _dob;
+  // Page 1 — Gender
+  String? _gender;
+  // Page 2 — Location
+  String? _country;
+  String? _state;
+  // Page 3 — Goals
   final Set<String> _selectedGoals = {};
-  // Page 1 — Age
-  String? _selectedAge;
-  // Page 2 — Body type
+  // Page 4 — Body type
   String? _selectedBodyType;
-  // Page 3 — Aesthetics
+  // Page 5 — Aesthetics
   final Set<String> _selectedAesthetics = {};
-  // Page 4 — Brands (optional)
+  // Page 6 — Brands (optional)
   final List<String> _selectedBrands = [];
-  // Page 5 — Sizes
+  // Page 7 — Sizes
   String? _topSize;
   String? _bottomSize;
   String? _shoeSize;
-  // Page 6 — Skin tone (optional)
+  // Page 8 — Skin tone (optional)
   String? _skinToneUndertone;
-  // Page 7 — Color preferences
+  // Page 9 — Color preferences
   final Set<String> _selectedColors = {};
+  // Page 10 — Referral
+  String? _referralSource;
+  // Page 11 — Permissions
+  bool _notificationsEnabled = false;
+  bool _weatherOptIn = false;
 
-  static const _totalPages = 8;
+  static const _totalPages = 12;
 
   @override
   void dispose() {
@@ -114,16 +179,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         if (userId != null) {
           await client.from('user_profiles').upsert({
             'user_id': userId,
+            'dob': _dob?.toIso8601String().split('T').first,
+            'gender': _gender,
+            'country': _country,
+            'state': _state,
             'aesthetics': _selectedAesthetics.toList(),
             'body_type': _selectedBodyType,
             'color_preferences': _selectedColors.toList(),
             'goals': _selectedGoals.toList(),
-            'age_range': _selectedAge,
             'brands': _selectedBrands,
             'top_size': _topSize,
             'bottom_size': _bottomSize,
             'shoe_size': _shoeSize,
             'skin_tone_undertone': _skinToneUndertone,
+            'referral_source': _referralSource,
+            'notifications_enabled': _notificationsEnabled,
+            'weather_opt_in': _weatherOptIn,
             'onboarding_complete': true,
             'updated_at': DateTime.now().toIso8601String(),
           }, onConflict: 'user_id');
@@ -138,18 +209,27 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       }
     }
 
+    // If the user opted in to reminders during onboarding, register the FCM
+    // token now (no-op if FCM isn't configured). Without this, the toggle
+    // persists but the device_tokens row is never created and the cron has
+    // nothing to send to.
+    if (_notificationsEnabled && !kDemoMode) {
+      // ignore: unawaited_futures
+      ref.read(notificationServiceProvider).registerForCurrentUser();
+    }
+
     // Push user preferences to providers so the rest of the app reflects them immediately.
     if (_topSize != null) ref.read(topSizeProvider.notifier).state = _topSize;
-    if (_bottomSize != null)
+    if (_bottomSize != null) {
       ref.read(bottomSizeProvider.notifier).state = _bottomSize;
-    if (_shoeSize != null)
+    }
+    if (_shoeSize != null) {
       ref.read(shoeSizeProvider.notifier).state = _shoeSize;
+    }
     if (_selectedColors.isNotEmpty) {
       ref.read(favoriteColorsProvider.notifier).state =
           _selectedColors.toList();
     }
-    // The skin-tone picker writes the AI-detected season to the undertone field.
-    // Map it to the four-season palette so Palette Picks can use it.
     final season = _mapUndertoneToSeason(_skinToneUndertone);
     if (season != null) {
       ref.read(colorSeasonProvider.notifier).state = season;
@@ -165,19 +245,29 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ),
       );
     }
-    context.go('/home');
+    // First-time onboarding shows reviews + overview before /home;
+    // a "retake" goes straight back to home.
+    if (_isRetake) {
+      context.go('/home');
+    } else {
+      context.go('/reviews');
+    }
   }
 
   bool get _canProceed {
     return switch (_currentPage) {
-      0 => _selectedGoals.isNotEmpty,
-      1 => _selectedAge != null,
-      2 => _selectedBodyType != null,
-      3 => _selectedAesthetics.isNotEmpty,
-      4 => true, // brands optional
-      5 => _topSize != null,
-      6 => true, // skin tone optional
-      7 => _selectedColors.isNotEmpty,
+      0 => _dob != null,
+      1 => _gender != null,
+      2 => _country != null && (_state != null && _state!.isNotEmpty),
+      3 => _selectedGoals.isNotEmpty,
+      4 => _selectedBodyType != null,
+      5 => _selectedAesthetics.isNotEmpty,
+      6 => true, // brands optional
+      7 => _topSize != null,
+      8 => true, // skin tone optional
+      9 => _selectedColors.isNotEmpty,
+      10 => _referralSource != null,
+      11 => true, // permissions optional — user can decline both
       _ => false,
     };
   }
@@ -193,15 +283,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   static const _pageTitles = [
+    'Birthday',
+    'About You',
+    'Location',
     'Goals',
-    'Age',
     'Body Type',
     'Style',
     'Brands',
     'Sizes',
     'Skin Tone',
     'Colors',
+    'How You Found Us',
+    'Permissions',
   ];
+
+  // Optional pages — show "Optional" chip in the step header
+  static const _optionalPages = {6, 8};
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +326,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           return Expanded(
                             child: Container(
                               height: 4,
-                              margin: const EdgeInsets.symmetric(horizontal: 2),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 1.5),
                               decoration: BoxDecoration(
                                 gradient: i <= _currentPage
                                     ? AppTheme.primaryGradient
@@ -245,7 +343,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () =>
+                          context.go(_isRetake ? '/home' : '/reviews'),
                       child: Text('Skip',
                           style: TextStyle(color: AppTheme.textSecondary)),
                     ),
@@ -266,7 +365,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    if (_currentPage == 4 || _currentPage == 6)
+                    if (_optionalPages.contains(_currentPage))
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Container(
@@ -291,7 +390,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (i) => setState(() => _currentPage = i),
                   children: [
-                    // Page 0 — Goals
+                    DobPicker(
+                      selected: _dob,
+                      onChanged: (v) => setState(() => _dob = v),
+                    ),
+                    GenderPicker(
+                      selected: _gender,
+                      onChanged: (v) => setState(() => _gender = v),
+                    ),
+                    LocationPicker(
+                      country: _country,
+                      state: _state,
+                      onCountryChanged: (v) => setState(() => _country = v),
+                      onStateChanged: (v) => setState(() => _state = v),
+                    ),
                     GoalPicker(
                       selected: _selectedGoals,
                       onChanged: (v) => setState(() {
@@ -302,20 +414,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         }
                       }),
                     ),
-
-                    // Page 1 — Age
-                    AgePicker(
-                      selected: _selectedAge,
-                      onChanged: (v) => setState(() => _selectedAge = v),
-                    ),
-
-                    // Page 2 — Body type
                     BodyTypePicker(
                       selected: _selectedBodyType,
                       onChanged: (v) => setState(() => _selectedBodyType = v),
                     ),
-
-                    // Page 3 — Aesthetics
                     AestheticPicker(
                       selected: _selectedAesthetics,
                       onChanged: (v) => setState(() {
@@ -326,8 +428,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         }
                       }),
                     ),
-
-                    // Page 4 — Brands (optional)
                     BrandsPicker(
                       selected: _selectedBrands,
                       onChanged: (v) => setState(() {
@@ -336,8 +436,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ..addAll(v);
                       }),
                     ),
-
-                    // Page 5 — Sizes
                     SizesPicker(
                       topSize: _topSize,
                       bottomSize: _bottomSize,
@@ -346,15 +444,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       onBottomChanged: (v) => setState(() => _bottomSize = v),
                       onShoeChanged: (v) => setState(() => _shoeSize = v),
                     ),
-
-                    // Page 6 — Skin tone (optional)
                     SkinTonePicker(
                       selectedUndertone: _skinToneUndertone,
                       onUndertoneChanged: (v) =>
                           setState(() => _skinToneUndertone = v),
                     ),
-
-                    // Page 7 — Color preferences
                     ColorPreferencePicker(
                       selected: _selectedColors,
                       onChanged: (v) => setState(() {
@@ -364,6 +458,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           _selectedColors.add(v);
                         }
                       }),
+                    ),
+                    ReferralPicker(
+                      selected: _referralSource,
+                      onChanged: (v) => setState(() => _referralSource = v),
+                    ),
+                    PermissionsPicker(
+                      notificationsEnabled: _notificationsEnabled,
+                      weatherOptIn: _weatherOptIn,
+                      onNotificationsChanged: (v) =>
+                          setState(() => _notificationsEnabled = v),
+                      onWeatherChanged: (v) =>
+                          setState(() => _weatherOptIn = v),
                     ),
                   ],
                 ),

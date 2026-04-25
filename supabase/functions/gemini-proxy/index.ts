@@ -46,6 +46,15 @@ function jsonResponse(status: number, body: unknown): Response {
   });
 }
 
+// base64url → base64 with proper `=` padding before atob. Without padding,
+// roughly 2/3 of token lengths cause atob() to throw — silently turning valid
+// requests into 401s and the whole quota-tracking pipeline into a no-op.
+function b64urlToB64(s: string): string {
+  const std = s.replace(/-/g, "+").replace(/_/g, "/");
+  const pad = std.length % 4;
+  return pad === 0 ? std : std + "=".repeat(4 - pad);
+}
+
 // Parse user id out of the JWT (no signature check — Supabase has already
 // verified it before invoking us, since we are deployed with verify_jwt=true).
 function decodeJwtSub(authHeader: string | null): string | null {
@@ -54,7 +63,7 @@ function decodeJwtSub(authHeader: string | null): string | null {
   const parts = token.split(".");
   if (parts.length !== 3) return null;
   try {
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+    const payload = JSON.parse(atob(b64urlToB64(parts[1])));
     return typeof payload.sub === "string" ? payload.sub : null;
   } catch {
     return null;

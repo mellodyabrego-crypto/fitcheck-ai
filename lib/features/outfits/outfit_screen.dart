@@ -282,6 +282,16 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
 
                 const SizedBox(height: 12),
 
+                // Feedback row — feeds the learn-from-history loop in the
+                // styleProfileContextProvider. Each tap inserts an
+                // outfit_feedback row; undo deletes it (RLS allows owner-delete).
+                _FeedbackRow(
+                  outfitId: outfitId,
+                  occasion: detail.outfit.occasion,
+                ),
+
+                const SizedBox(height: 12),
+
                 // Fit Check button
                 ElevatedButton.icon(
                   onPressed: () => context.push('/fit-check/$outfitId'),
@@ -297,6 +307,106 @@ class _OutfitScreenState extends ConsumerState<OutfitScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _FeedbackRow extends ConsumerStatefulWidget {
+  final String outfitId;
+  final String? occasion;
+
+  const _FeedbackRow({required this.outfitId, this.occasion});
+
+  @override
+  ConsumerState<_FeedbackRow> createState() => _FeedbackRowState();
+}
+
+class _FeedbackRowState extends ConsumerState<_FeedbackRow> {
+  // 'love' | 'meh' | null. Local state for the visual selection; the network
+  // write is fire-and-forget via OutfitController.recordFeedback.
+  String? _signal;
+
+  Future<void> _vote(String signal) async {
+    final controller = ref.read(outfitControllerProvider.notifier);
+    setState(() => _signal = signal);
+    final apiSignal = signal == 'love' ? 'favorite' : 'reject';
+    await controller.recordFeedback(
+      outfitId: widget.outfitId,
+      signal: apiSignal,
+      occasion: widget.occasion,
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(signal == 'love'
+            ? 'Got it — we\'ll lean into this vibe.'
+            : 'Got it — we\'ll steer away from looks like this.'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () async {
+            await controller.recordFeedback(
+              outfitId: widget.outfitId,
+              signal: '${apiSignal}_undo', // sentinel — see controller
+              occasion: widget.occasion,
+            );
+            if (mounted) setState(() => _signal = null);
+          },
+        ),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: _signal == 'love' ? null : () => _vote('love'),
+            icon: Icon(
+              _signal == 'love'
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: _signal == 'love' ? AppTheme.primary : null,
+            ),
+            label: Text(_signal == 'love' ? 'Loved' : 'Love it'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor:
+                  _signal == 'love' ? AppTheme.primary : AppTheme.textPrimary,
+              side: BorderSide(
+                color: _signal == 'love'
+                    ? AppTheme.primary
+                    : AppTheme.textSecondary.withValues(alpha: 0.4),
+                width: _signal == 'love' ? 1.5 : 1,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: _signal == 'meh' ? null : () => _vote('meh'),
+            icon: Icon(
+              _signal == 'meh'
+                  ? Icons.thumb_down
+                  : Icons.thumb_down_outlined,
+            ),
+            label: Text(_signal == 'meh' ? 'Skipped' : 'Not for me'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppTheme.textPrimary,
+              side: BorderSide(
+                color: _signal == 'meh'
+                    ? AppTheme.textPrimary
+                    : AppTheme.textSecondary.withValues(alpha: 0.4),
+                width: _signal == 'meh' ? 1.5 : 1,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

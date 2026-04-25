@@ -7,6 +7,7 @@ import '../../main.dart';
 import '../../models/outfit.dart';
 import '../../models/wardrobe_item.dart';
 import '../../providers/photo_providers.dart';
+import '../../providers/user_providers.dart';
 import '../../services/gemini_service.dart';
 import '../../services/supabase_service.dart';
 import '../../services/weather_service.dart';
@@ -83,10 +84,34 @@ class OutfitController extends AsyncNotifier<void> {
             })
         .toList();
 
+    // Pull the user's full style profile (sizes, aesthetics, brands, body type,
+    // recent accept/reject signals). Returns an empty context if the network
+    // is down — generation still works, just less personalised.
+    StyleProfileContext profile;
+    try {
+      profile = await ref.read(styleProfileContextProvider.future);
+      if (colorSeason != null && (profile.colorSeason == null)) {
+        profile = StyleProfileContext(
+          colorSeason: colorSeason,
+          colorPreferences: profile.colorPreferences,
+          bodyType: profile.bodyType,
+          aesthetics: profile.aesthetics,
+          brands: profile.brands,
+          topSize: profile.topSize,
+          bottomSize: profile.bottomSize,
+          shoeSize: profile.shoeSize,
+          recentAccepts: profile.recentAccepts,
+          recentRejects: profile.recentRejects,
+        );
+      }
+    } catch (_) {
+      profile = StyleProfileContext(colorSeason: colorSeason);
+    }
+
     // Call Gemini
     final result = await gemini.generateOutfit(
       occasion: occasion,
-      colorSeason: colorSeason,
+      profile: profile,
       weather: weatherStr,
       items: itemPayload,
       fromScratch: fromScratch,
@@ -266,6 +291,47 @@ class OutfitController extends AsyncNotifier<void> {
     }
 
     return result;
+  }
+
+  /// Record an accept/reject/favorite signal for an outfit. Feeds the
+  /// "learn from history" loop in `styleProfileContextProvider`.
+  /// Pass a `_undo`-suffixed signal (e.g. 'reject_undo', 'favorite_undo') to
+  /// delete the most recent matching row instead of inserting.
+  Future<void> recordFeedback({
+    required String outfitId,
+    required String signal,
+    String? occasion,
+    String? reason,
+  }) async {
+    if (kDemoMode) return;
+    try {
+      final supabase = ref.read(supabaseServiceProvider);
+      if (supabase == null) return;
+      final userId = supabase.currentUser?.id;
+      if (userId == null) return;
+
+      if (signal.endsWith('_undo')) {
+        final original = signal.substring(0, signal.length - '_undo'.length);
+        await supabase.client
+            .from('outfit_feedback')
+            .delete()
+            .eq('user_id', userId)
+            .eq('outfit_id', outfitId)
+            .eq('signal', original);
+      } else {
+        await supabase.client.from('outfit_feedback').insert({
+          'user_id': userId,
+          'outfit_id': outfitId,
+          'occasion': occasion,
+          'signal': signal,
+          'reason': reason,
+        });
+      }
+      // Invalidate the cached profile context so next generation sees the new feedback.
+      ref.invalidate(styleProfileContextProvider);
+    } catch (_) {
+      // Silent — feedback is best-effort.
+    }
   }
 
   Future<void> _trySaveToSupabase(

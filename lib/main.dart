@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app.dart';
 import 'core/constants.dart';
 import 'services/analytics_service.dart';
+import 'services/notification_service.dart';
 import 'services/observability_service.dart';
 
 /// Set to true to run without Supabase (UI preview mode)
@@ -56,6 +57,10 @@ Future<void> main() async {
 
         // PostHog init — no-op if POSTHOG_API_KEY isn't set.
         await Analytics.setup();
+
+        // FCM init — no-op if FIREBASE_* dart-defines aren't set. Must come
+        // AFTER Supabase init because token registration writes to device_tokens.
+        await NotificationService().bootstrap();
 
         // Identify the signed-in user with both Sentry + PostHog if a session
         // exists at boot. Auth controller should also call these on sign-in.

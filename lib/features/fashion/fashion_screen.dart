@@ -553,6 +553,18 @@ class _FashionScreenState extends State<FashionScreen> {
     super.dispose();
   }
 
+  Future<void> _openGoogleSearch() async {
+    final query = _selectedCategory == 'All'
+        ? "women's fashion outfit ideas 2025"
+        : "women's ${_selectedCategory.toLowerCase()} outfit fashion 2025";
+    final uri = Uri.parse(
+      'https://www.google.com/search?tbm=isch&q=${Uri.encodeQueryComponent(query)}',
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final filtered = _selectedCategory == 'All'
@@ -566,15 +578,30 @@ class _FashionScreenState extends State<FashionScreen> {
         elevation: 0,
         title: const Text('Fashion & Beauty',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        actions: [
+          IconButton(
+            tooltip: 'Search this category on Google',
+            icon: const Icon(Icons.search, color: Colors.white),
+            onPressed: _openGoogleSearch,
+          ),
+        ],
       ),
       body: Stack(
         children: [
           // ── Full-screen TikTok-style vertical PageView ──
+          // itemCount is null so the feed cycles indefinitely — we modulo into
+          // the curated list so users never hit the bottom (per product spec).
+          // Cards are always women's-fashion content; an explicit "Search on
+          // Google" CTA in the AppBar opens the active category in Google
+          // Image Search for unbounded discovery.
           PageView.builder(
             controller: _pageController,
             scrollDirection: Axis.vertical,
-            itemCount: filtered.length,
-            itemBuilder: (ctx, i) => _VideoPage(item: filtered[i]),
+            itemCount: filtered.isEmpty ? 0 : null,
+            itemBuilder: (ctx, i) {
+              if (filtered.isEmpty) return const SizedBox.shrink();
+              return _VideoPage(item: filtered[i % filtered.length]);
+            },
           ),
 
           // ── Category bar pinned below AppBar ──

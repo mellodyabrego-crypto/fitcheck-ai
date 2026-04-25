@@ -15,6 +15,8 @@ import 'features/subscription/paywall_screen.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/profile/edit_profile_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
+import 'features/onboarding/reviews_screen.dart';
+import 'features/onboarding/walkthrough_screen.dart';
 
 // Routes that don't require authentication — kept in sync with the redirect.
 const _publicRoutes = {'/auth', '/terms', '/privacy'};
@@ -108,6 +110,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/reviews',
+        builder: (context, state) => const ReviewsScreen(),
+      ),
+      GoRoute(
+        path: '/walkthrough',
+        builder: (context, state) => const WalkthroughScreen(),
       ),
       GoRoute(
         path: '/terms',

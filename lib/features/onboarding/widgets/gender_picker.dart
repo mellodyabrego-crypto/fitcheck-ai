@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme.dart';
 
-class AgePicker extends StatelessWidget {
+class GenderPicker extends StatelessWidget {
   final String? selected;
   final ValueChanged<String> onChanged;
 
-  const AgePicker({super.key, required this.selected, required this.onChanged});
+  const GenderPicker(
+      {super.key, required this.selected, required this.onChanged});
 
-  static const _ranges = [
-    'Under 18',
-    '18–24',
-    '25–34',
-    '35–44',
-    '45–54',
-    '55+',
+  static const _options = [
+    ('woman', 'Woman'),
+    ('man', 'Man'),
+    ('non_binary', 'Non-Binary'),
+    ('prefer_not', 'Prefer Not to Say'),
   ];
 
   @override
@@ -26,7 +25,7 @@ class AgePicker extends StatelessWidget {
         children: [
           const SizedBox(height: 16),
           Text(
-            'How old are you?',
+            'How do you identify?',
             style: Theme.of(context)
                 .textTheme
                 .headlineSmall
@@ -34,27 +33,26 @@ class AgePicker extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Helps us tailor recommendations to your life stage',
-            style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+            'Her Style Co. is built for women — but we welcome everyone.',
+            style: TextStyle(color: AppTheme.textSecondary, fontSize: 15),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           Expanded(
             child: ListView.separated(
-              itemCount: _ranges.length,
+              itemCount: _options.length,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
-                final range = _ranges[index];
-                final isSelected = selected == range;
-
+                final (id, label) = _options[index];
+                final isSelected = selected == id;
                 return GestureDetector(
-                  onTap: () => onChanged(range),
+                  onTap: () => onChanged(id),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 18, horizontal: 20),
+                        horizontal: 20, vertical: 18),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppTheme.primary.withValues(alpha: 0.1)
+                          ? AppTheme.primary.withValues(alpha: 0.08)
                           : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
@@ -68,7 +66,7 @@ class AgePicker extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            range,
+                            label,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: isSelected
@@ -82,7 +80,7 @@ class AgePicker extends StatelessWidget {
                         ),
                         if (isSelected)
                           const Icon(Icons.check_circle,
-                              color: AppTheme.primary),
+                              color: AppTheme.primary, size: 22),
                       ],
                     ),
                   ),

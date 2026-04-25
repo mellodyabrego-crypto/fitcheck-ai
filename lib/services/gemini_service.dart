@@ -7,10 +7,125 @@ import 'package:image/image.dart' as img;
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../core/constants.dart';
+import 'json_parser.dart';
+import 'observability_service.dart';
 
 final geminiServiceProvider = Provider<GeminiService>((ref) {
   return GeminiService();
 });
+
+/// Profile context used to personalise outfit & fit-check prompts.
+/// All fields are optional; empty strings are skipped in the prompt.
+class StyleProfileContext {
+  final String? colorSeason;
+  final List<String> colorPreferences;
+  final String? bodyType;
+  final List<String> aesthetics;
+  final List<String> brands;
+  final String? topSize;
+  final String? bottomSize;
+  final String? shoeSize;
+  // Most-recent accept/reject signals — see outfit_feedback table.
+  final List<String> recentAccepts;
+  final List<String> recentRejects;
+
+  const StyleProfileContext({
+    this.colorSeason,
+    this.colorPreferences = const [],
+    this.bodyType,
+    this.aesthetics = const [],
+    this.brands = const [],
+    this.topSize,
+    this.bottomSize,
+    this.shoeSize,
+    this.recentAccepts = const [],
+    this.recentRejects = const [],
+  });
+
+  String renderForPrompt() {
+    final parts = <String>[];
+    if (colorSeason != null && colorSeason!.isNotEmpty) {
+      parts.add('Color season: $colorSeason — pick colors that flatter this season.');
+    }
+    if (colorPreferences.isNotEmpty) {
+      parts.add('Favorite colors: ${colorPreferences.join(", ")}.');
+    }
+    if (bodyType != null && bodyType!.isNotEmpty) {
+      parts.add('Body type: $bodyType — favor silhouettes that flatter this shape.');
+    }
+    if (aesthetics.isNotEmpty) {
+      parts.add('Aesthetics she loves: ${aesthetics.join(", ")}.');
+    }
+    if (brands.isNotEmpty) {
+      parts.add('Brands she shops: ${brands.join(", ")}.');
+    }
+    if (shoeSize != null && shoeSize!.isNotEmpty) {
+      parts.add('Shoe size: $shoeSize — only suggest shoes available in this size.');
+    }
+    if (topSize != null || bottomSize != null) {
+      parts.add(
+          'Sizes — top: ${topSize ?? "?"}, bottom: ${bottomSize ?? "?"}.');
+    }
+    if (recentAccepts.isNotEmpty) {
+      parts.add('Recently loved looks: ${recentAccepts.take(5).join("; ")}.');
+    }
+    if (recentRejects.isNotEmpty) {
+      parts.add(
+          'Recently rejected looks (avoid these vibes): ${recentRejects.take(5).join("; ")}.');
+    }
+    return parts.join('\n');
+  }
+}
+
+/// Hard rules layered on top of the prompt depending on the occasion.
+/// Prevents nonsense like "summer workout → strappy heels".
+String _occasionConstraints(String occasion) {
+  final o = occasion.toLowerCase();
+  final rules = <String>[];
+
+  // Anything athletic must be flat-soled, breathable, technical.
+  if (o.contains('workout') ||
+      o.contains('gym') ||
+      o.contains('run') ||
+      o.contains('athletic') ||
+      o.contains('hike') ||
+      o.contains('yoga')) {
+    rules.add(
+        '- ATHLETIC OCCASION: shoes MUST be sneakers or technical trainers. NO heels, NO sandals, NO loafers, NO flats with bows. NO blazers, NO clutches, NO statement jewelry. Pick performance fabric (cotton, technical, knit), not silk/satin.');
+  }
+  if (o.contains('beach') || o.contains('pool')) {
+    rules.add(
+        '- BEACH/POOL: swimwear or breathable cover-up + sandals/flat slides. NO heels, NO heavy jewelry that tarnishes in salt water.');
+  }
+  if (o.contains('summer') || o.contains('hot') || o.contains('warm')) {
+    rules.add(
+        '- WARM WEATHER: NO heavy outerwear, NO knits, NO boots. Light fabrics (linen, cotton, silk).');
+  }
+  if (o.contains('winter') || o.contains('snow') || o.contains('cold')) {
+    rules.add(
+        '- COLD WEATHER: include a coat or layered outerwear. NO open-toe shoes, NO bare legs without tights.');
+  }
+  if (o.contains('rain') || o.contains('wet')) {
+    rules.add(
+        '- RAINY WEATHER: closed-toe waterproof shoes only. Suggest a trench or rain layer.');
+  }
+  if (o.contains('work') || o.contains('office') || o.contains('meeting') ||
+      o.contains('interview')) {
+    rules.add(
+        '- WORK/OFFICE: tailored, polished. NO crop tops showing midriff, NO ultra-mini skirts, NO see-through fabrics. Closed-toe or low-block-heel.');
+  }
+  if (o.contains('formal') || o.contains('wedding') || o.contains('gala')) {
+    rules.add(
+        '- FORMAL: midi or floor-length dress, or elevated suit. Heels or dressy flats. Statement jewelry encouraged.');
+  }
+  if (o.contains('date') && !o.contains('first')) {
+    rules.add(
+        '- DATE: feminine, elevated. One statement piece (top OR shoes OR bag), not all three.');
+  }
+
+  if (rules.isEmpty) return '';
+  return '\n═══ HARD OCCASION RULES — DO NOT BREAK ═══\n${rules.join("\n")}\n';
+}
 
 class GeminiService {
   /// URL of the Supabase edge function that proxies Gemini calls.
@@ -27,13 +142,7 @@ class GeminiService {
     return _proxyUrl.isNotEmpty && AppConstants.supabaseAnonKey.isNotEmpty;
   }
 
-  /// POST a Gemini request through the Supabase edge function.
-  /// `body` should include {'model': '...', 'contents': [...], ...}.
-  /// Adds a 25s timeout, exponential backoff on 5xx/network errors, and
-  /// surfaces 401/429 as typed exceptions so callers can act on them.
   Future<http.Response> _postToGemini(Map<String, dynamic> body) async {
-    // Use the user's session JWT when available so the edge function can
-    // enforce per-user quota. Falls back to the anon key for unauthed paths.
     String authToken = AppConstants.supabaseAnonKey;
     try {
       final session = sb.Supabase.instance.client.auth.currentSession;
@@ -59,7 +168,6 @@ class GeminiService {
             )
             .timeout(const Duration(seconds: 25));
 
-        // Don't retry user-fixable errors.
         if (response.statusCode == 401) {
           throw const GeminiAuthException(
             'Your session has expired. Please sign out and sign back in.',
@@ -75,7 +183,6 @@ class GeminiService {
           );
         }
         if (response.statusCode >= 500 && attempt < 2) {
-          // Retryable server error: wait + retry
           await Future.delayed(Duration(milliseconds: 400 * (1 << attempt)));
           continue;
         }
@@ -107,6 +214,27 @@ class GeminiService {
     return null;
   }
 
+  Map<String, dynamic> _parseAiResponse(http.Response response, String op) {
+    final body = jsonDecode(response.body);
+    final text =
+        body['candidates']?[0]?['content']?['parts']?[0]?['text'] as String?;
+    if (text == null || text.isEmpty) {
+      throw GeminiResponseException(
+          'AI returned an empty response for $op. Try again in a moment.');
+    }
+    try {
+      return parseTolerantJson(text);
+    } on JsonParseFailure catch (e) {
+      // Log to Sentry — every recurrence helps us tighten the prompt
+      Observability.captureMessage(
+        'Gemini JSON parse failed for $op',
+        extra: {'sample': e.rawSample},
+      );
+      throw GeminiResponseException(
+          'AI gave a malformed answer. Tap retry — it usually clears up.');
+    }
+  }
+
   Future<ColorSeasonResult> analyzeColorSeason(Uint8List selfieImage) async {
     if (!isGeminiConfigured) {
       throw const GeminiApiKeyException(
@@ -114,8 +242,6 @@ class GeminiService {
       );
     }
 
-    // Resize image to max 800px and convert to JPEG for consistent delivery
-    // (image_picker ignores maxWidth/maxHeight on Flutter Web)
     final resized = _resizeAndEncodeJpeg(selfieImage);
     final base64Image = base64Encode(resized);
 
@@ -145,11 +271,11 @@ AUTUMN: Warm undertone + muted/rich coloring + medium-to-high contrast. Golden/o
 
 WINTER: Cool undertone + clear/bright OR deep coloring + high contrast. Pink/blue-tinted skin (can be deep ebony to porcelain), blue-black/dark cool brown/silver hair, dark brown/black/cool grey or icy blue eyes. Best colors: true red, royal blue, black, crisp white, emerald, burgundy, charcoal, icy pink.
 
-Respond with ONLY valid JSON (no markdown, no extra text):
+Respond with ONLY valid JSON (no markdown, no extra text, no leading "JSON" label):
 {
   "season": "<SPRING|SUMMER|AUTUMN|WINTER>",
   "confidence": <number 60-99>,
-  "tagline": "<8-12 word poetic description of their coloring, e.g. 'Golden warmth with a sun-kissed glow'>",
+  "tagline": "<8-12 word poetic description of their coloring>",
   "reasoning": "<2-3 sentences explaining exactly what you observed in the photo>",
   "skin_observation": "<one sentence about skin undertone>",
   "hair_observation": "<one sentence about hair coloring>",
@@ -179,21 +305,17 @@ Respond with ONLY valid JSON (no markdown, no extra text):
       );
     }
     if (response.statusCode != 200) {
-      throw Exception(
+      throw GeminiResponseException(
           'Gemini API error ${response.statusCode}: ${response.body}');
     }
 
-    final body = jsonDecode(response.body);
-    final text = body['candidates'][0]['content']['parts'][0]['text'] as String;
-
-    final jsonStr = _extractJson(text);
-    final result = jsonDecode(jsonStr) as Map<String, dynamic>;
+    final result = _parseAiResponse(response, 'color_season');
 
     return ColorSeasonResult(
-      season: (result['season'] as String).toLowerCase(),
-      confidence: (result['confidence'] as num).toInt(),
-      tagline: result['tagline'] as String,
-      reasoning: result['reasoning'] as String,
+      season: ((result['season'] ?? 'autumn') as String).toLowerCase(),
+      confidence: (result['confidence'] as num?)?.toInt() ?? 70,
+      tagline: result['tagline'] as String? ?? '',
+      reasoning: result['reasoning'] as String? ?? '',
       skinObservation: result['skin_observation'] as String? ?? '',
       hairObservation: result['hair_observation'] as String? ?? '',
       eyeObservation: result['eye_observation'] as String? ?? '',
@@ -201,8 +323,6 @@ Respond with ONLY valid JSON (no markdown, no extra text):
     );
   }
 
-  // Resize image to max 800px wide/tall and encode as JPEG
-  // Needed because image_picker ignores size params on Flutter Web
   Uint8List _resizeAndEncodeJpeg(Uint8List bytes) {
     try {
       final decoded = img.decodeImage(bytes);
@@ -214,10 +334,11 @@ Respond with ONLY valid JSON (no markdown, no extra text):
           : decoded;
       return Uint8List.fromList(img.encodeJpg(resized, quality: 85));
     } catch (_) {
-      return bytes; // fall back to original if resize fails
+      return bytes;
     }
   }
 
+  /// Image-based fit check — kept for future "selfie wearing the outfit" flow.
   Future<FitCheckResult> scoreFitCheck(Uint8List outfitImage) async {
     final base64Image = base64Encode(outfitImage);
 
@@ -228,15 +349,7 @@ Respond with ONLY valid JSON (no markdown, no extra text):
           'parts': [
             {
               'text':
-                  '''You are a fashion expert. Rate this outfit on a scale of 1-100 and provide brief feedback.
-
-Consider:
-- Color harmony and coordination
-- Style cohesion (do the pieces match in formality/vibe?)
-- Overall visual appeal
-- Versatility
-
-Respond with ONLY valid JSON:
+                  '''You are a women's fashion stylist. Rate this outfit 1-100. Respond with ONLY valid JSON (no leading "JSON" label, no markdown):
 {"score": <number 1-100>, "feedback": "<2-3 sentences of constructive feedback>"}''',
             },
             {
@@ -255,89 +368,194 @@ Respond with ONLY valid JSON:
     });
 
     if (response.statusCode != 200) {
-      throw Exception(
+      throw GeminiResponseException(
           'Gemini API error: ${response.statusCode} ${response.body}');
     }
 
-    final body = jsonDecode(response.body);
-    final text = body['candidates'][0]['content']['parts'][0]['text'] as String;
-
-    final jsonStr = _extractJson(text);
-    final result = jsonDecode(jsonStr) as Map<String, dynamic>;
-
+    final result = _parseAiResponse(response, 'fit_check_image');
     return FitCheckResult(
-      score: (result['score'] as num).toInt(),
-      feedback: result['feedback'] as String,
+      score: (result['score'] as num?)?.toInt() ?? 70,
+      feedback: result['feedback'] as String? ?? '',
     );
   }
 
-  /// Generate a trend-based outfit concept using Gemini text generation.
-  /// [items] is a JSON-serializable list of wardrobe items (or null for scratch).
-  /// [colorSeason] is e.g. 'Autumn', [weather] is e.g. 'Sunny, 75°F'.
+  /// Text-based fit check — used by the Fit Check screen. Sends the list of
+  /// outfit items + occasion + profile and returns a structured rich result.
+  Future<RichFitCheckResult> scoreFitCheckFromItems({
+    required String occasion,
+    required List<Map<String, String>> items, // [{name, color, category}]
+    required StyleProfileContext profile,
+  }) async {
+    if (!isGeminiConfigured) {
+      throw const GeminiApiKeyException(
+        'AI fit check is not configured on the server yet. Please try again later.',
+      );
+    }
+    if (items.isEmpty) {
+      throw const GeminiResponseException(
+          'This outfit has no items to analyze. Add at least one piece first.');
+    }
+
+    final itemList = items
+        .map((i) => '- ${i["name"] ?? i["category"]} '
+            '(${i["color"] ?? "unspecified"}, ${i["category"]})')
+        .join('\n');
+
+    final profilePart = profile.renderForPrompt();
+    final constraints = _occasionConstraints(occasion);
+
+    final prompt = '''You are a women's fashion stylist scoring a real outfit. Be honest, kind, and specific.
+
+OCCASION: $occasion
+
+OUTFIT ITEMS:
+$itemList
+
+USER PROFILE:
+${profilePart.isEmpty ? '(no profile data)' : profilePart}
+$constraints
+Score the outfit on FOUR criteria, 0-100 each:
+1. color_harmony — do the colors work together AND flatter the user's color season?
+2. style_cohesion — do the items match in formality and vibe?
+3. occasion_fit — is this appropriate for "$occasion"? (penalize hard if it breaks an Occasion Rule above)
+4. versatility — could she re-wear these pieces in other contexts?
+
+Then compute overall as a weighted average (color_harmony 0.25, style_cohesion 0.30, occasion_fit 0.30, versatility 0.15), rounded to nearest integer.
+
+Respond with ONLY valid JSON. No markdown fences. No leading "JSON" label.
+{
+  "overall": <0-100>,
+  "color_harmony": <0-100>,
+  "style_cohesion": <0-100>,
+  "occasion_fit": <0-100>,
+  "versatility": <0-100>,
+  "headline": "<5-8 word verdict like 'Polished, day-to-night ready'>",
+  "feedback": "<2-3 sentences: what works, what to consider>",
+  "tips": [
+    "<actionable tip 1>",
+    "<actionable tip 2>",
+    "<actionable tip 3>"
+  ]
+}''';
+
+    final response = await _postToGemini({
+      'model': 'gemini-2.5-flash',
+      'contents': [
+        {
+          'parts': [
+            {'text': prompt}
+          ]
+        }
+      ],
+      'generationConfig': {'temperature': 0.6, 'maxOutputTokens': 600},
+    });
+
+    if (response.statusCode == 429) {
+      throw const GeminiRateLimitException('Daily AI quota reached.');
+    }
+    if (response.statusCode != 200) {
+      throw GeminiResponseException(
+          'Gemini API error: ${response.statusCode} ${response.body}');
+    }
+
+    final result = _parseAiResponse(response, 'fit_check_text');
+
+    int clamp(num? n, [int fallback = 75]) {
+      if (n == null) return fallback;
+      final v = n.toInt();
+      return v < 0 ? 0 : (v > 100 ? 100 : v);
+    }
+
+    return RichFitCheckResult(
+      overall: clamp(result['overall']),
+      colorHarmony: clamp(result['color_harmony']),
+      styleCohesion: clamp(result['style_cohesion']),
+      occasionFit: clamp(result['occasion_fit']),
+      versatility: clamp(result['versatility']),
+      headline: result['headline'] as String? ?? 'Solid fit',
+      feedback: result['feedback'] as String? ??
+          'A workable look — small tweaks will lift it further.',
+      tips: ((result['tips'] as List?) ?? const [])
+          .map((e) => e.toString())
+          .where((s) => s.isNotEmpty)
+          .toList(),
+    );
+  }
+
+  /// Outfit generation — now profile-aware, occasion-rule-aware, and
+  /// surfaces honest errors instead of silently dropping to a fake fallback.
   Future<GeminiOutfitResult> generateOutfit({
     required String occasion,
-    String? colorSeason,
+    StyleProfileContext? profile,
+    String? colorSeason, // legacy positional, folded into profile
     String? weather,
-    List<Map<String, String>>? items, // [{id, name, color, category, slot}]
+    List<Map<String, String>>? items,
     bool fromScratch = false,
   }) async {
     if (!isGeminiConfigured) {
-      return _fallbackOutfit(occasion, colorSeason);
+      throw const GeminiApiKeyException(
+          'AI outfit generation is not configured on the server yet.');
     }
+
+    final ctx = profile ??
+        StyleProfileContext(colorSeason: colorSeason);
 
     final itemContext = items != null && items.isNotEmpty
         ? 'User wardrobe items:\n${items.map((i) => '- ${i['name']} (${i['color']}, ${i['category']}) id:${i['id']}').join('\n')}'
         : 'Generate a completely fresh trending look (no specific wardrobe items).';
 
-    final paletteCtx = colorSeason != null
-        ? 'User color season: $colorSeason. Choose colors that complement this season.'
-        : '';
-
+    final profilePart = ctx.renderForPrompt();
     final weatherCtx = weather != null
         ? 'Current weather: $weather. Adapt layers/fabric choices accordingly.'
         : '';
+    final constraints = _occasionConstraints(occasion);
 
     final prompt =
-        '''You are an expert WOMEN'S fashion stylist with encyclopedic knowledge of current trends, runway collections, streetwear culture, and modern color theory. You style exclusively for women — never use menswear terminology (e.g. never say "button-up shirt for him", "men's loafers"). Reference brands women actually shop: Zara, Aritzia, Free People, Revolve, SHEIN, Skims, Mango, Uniqlo, Victoria's Secret, Aritzia, Anthropologie, Fashion Nova, Mejuri, Steve Madden.
+        '''You are an expert WOMEN'S fashion stylist with encyclopedic knowledge of current trends, runway collections, streetwear culture, and modern color theory. You style EXCLUSIVELY for women — never use menswear terminology (no "button-up shirt for him", no "men's loafers", no "boyfriend tee"). Reference brands women actually shop: Zara, Aritzia, Free People, Revolve, SHEIN, Skims, Mango, Uniqlo, Anthropologie, Fashion Nova, Mejuri, Steve Madden, Reformation, Madewell.
 
 ═══ CLOTHING TERMINOLOGY — USE THESE PRECISELY ═══
-TOPS: crop top (ends above navel), bralette, blouse (loose/flowy), silk button-down, tank top, camisole, bodysuit, tube top, off-shoulder top, corset top, bustier, cardigan wrap, ribbed tee, puff-sleeve blouse
+TOPS: crop top, bralette, blouse, silk button-down, tank top, camisole, bodysuit, tube top, off-shoulder top, corset top, bustier, cardigan wrap, ribbed tee, puff-sleeve blouse
 BOTTOMS: mini/midi/maxi skirt, tennis skirt, pleated skirt, satin skirt, mini shorts, bermuda shorts, wide-leg trousers, straight-leg jeans, skinny jeans, mom jeans, cargo pants, flare pants, leggings, cycling shorts
-DRESSES: mini dress, midi dress, maxi dress, bodycon dress, wrap dress, slip dress, sundress, sheath dress, A-line dress, shirt dress, tiered dress, cami dress
-OUTERWEAR: oversized blazer, cropped blazer, trench coat, puffer, shearling coat, denim jacket, leather moto jacket, cardigan, kimono
-SHOES: strappy heeled sandals, block-heeled mules, pointed-toe pumps, kitten-heel slingbacks, ankle boots, knee-high boots, western boots, platform sneakers, ballet flats, loafers, gladiator sandals, Mary Janes
+DRESSES: mini, midi, maxi, bodycon, wrap, slip, sundress, sheath, A-line, shirt, tiered, cami
+OUTERWEAR: oversized blazer, cropped blazer, trench, puffer, shearling, denim jacket, leather moto, cardigan, kimono
+SHOES: strappy heeled sandals, block-heeled mules, pointed-toe pumps, kitten-heel slingbacks, ankle boots, knee-high boots, western boots, platform sneakers, ballet flats, loafers, gladiator sandals, Mary Janes, technical trainers, running shoes
 BAGS: mini crossbody, structured tote, clutch, baguette, bucket bag, hobo, top-handle, shoulder bag, saddle bag
-ACCESSORIES (jewelry + more): pendant necklace, layered chain necklace, hoop earrings, stud earrings, statement earrings, huggie earrings, stacking rings, signet ring, chunky bracelet, tennis bracelet, dainty anklet, cat-eye sunglasses, silk scarf, hair claw clip, belt (waist/hip), beret
-TRENDS TO REFERENCE (as of 2025): quiet luxury, coquette, Y2K revival, "clean girl" aesthetic, Scandi minimalism, balletcore, cowboy-chic, western revival, tomato girl summer, mob-wife glam
+ACCESSORIES: pendant necklace, layered chains, hoops, studs, statement earrings, huggies, stacking rings, signet, chunky bracelet, tennis bracelet, anklet, cat-eye sunglasses, silk scarf, hair claw, belt, beret
+TRENDS (2025-2026): quiet luxury, coquette, Y2K revival, "clean girl", Scandi minimalism, balletcore, cowboy-chic, western revival, mob-wife glam, athleisure-elevated
 
 ═══ CRITICAL RULES ═══
-1. EVERY outfit must include ALL of: top/dress + bottom (unless dress) + shoes + bag + at least 2 accessories (one of which is a necklace or earrings).
-2. Minimum 5 items per outfit. Ideal: 6-7 (add a jacket/layer or second accessory).
+1. EVERY outfit must include: top/dress + bottom (unless dress) + shoes + bag + at least 2 accessories.
+2. Minimum 5 items. Ideal: 6-7.
 3. Women's styling — never describe items as unisex or menswear-coded.
-4. Match occasion: work → tailored + polished; date night → elevated + statement; casual → relaxed + layered; party → bold + sparkle.
-5. Use item names EXACTLY as given — never rename.
+4. Match occasion EXACTLY — see hard rules below.
+5. Use item names EXACTLY as given — never rename existing wardrobe items.
+6. If profile lists shoe size, only suggest shoes plausibly available in that size.
+7. Honor the user's recently rejected vibes — don't repeat them.
 
 Occasion: $occasion
-$paletteCtx
 $weatherCtx
+
+USER STYLE PROFILE:
+${profilePart.isEmpty ? '(no profile data — use sensible defaults)' : profilePart}
+
 $itemContext
-
-${fromScratch ? '''Design a complete, on-trend women's outfit from scratch. Pick a real trend from the list above. YOU MUST INCLUDE:
+$constraints
+${fromScratch ? '''Design a complete, on-trend women's outfit from scratch. Include:
 - 1 top OR dress
-- 1 bottom if you chose top (otherwise skip)
-- 1 pair of shoes (exact style — strappy heels vs ankle boots vs loafers, etc.)
-- 1 bag (exact style — clutch vs crossbody vs tote)
-- At least 2 jewelry pieces (e.g. layered gold chain + small hoops + stacking rings)
-- Optional: 1 layer (cardigan, blazer, trench)''' : 'Select WOMEN\'S items from the wardrobe list above. You MUST pick at least 5 items covering: top/dress, bottom (if no dress), shoes, bag, and at least 2 accessories. If the wardrobe is missing a slot, still select what\'s there and mention what is missing in suggestions.'}
+- 1 bottom (if top, not dress)
+- 1 pair of shoes
+- 1 bag
+- At least 2 jewelry/accessory pieces
+- Optional: 1 layer''' : 'Select WOMEN\'S items from the wardrobe above. Pick at least 5 items: top/dress, bottom (if no dress), shoes, bag, and 2+ accessories. Note any missing slot.'}
 
-Respond with ONLY valid JSON (no markdown fences):
+Respond with ONLY valid JSON (no markdown, no leading "JSON" label):
 {
-  "title": "<catchy 3-5 word outfit name reflecting the trend>",
-  "reasoning": "<2-3 sentences: why this works for the occasion + color season + current trend>",
+  "title": "<3-5 word outfit name reflecting the trend>",
+  "reasoning": "<2-3 sentences: why this works for occasion + season + trend>",
   "styleScore": <7-10>,
-  "selectedItemIds": [<item ids — MUST include ids for shoes, bag, and 2+ accessories>],
-  "trendNote": "<one sentence: which 2025 trend inspired this>",
-  "suggestions": "<if any slot is missing from the wardrobe, name what to shop for; otherwise add styling tips (e.g. 'tuck the top in, roll sleeves')>"
+  "selectedItemIds": [<item ids — must include shoes, bag, 2+ accessories>],
+  "trendNote": "<one sentence: which 2025/2026 trend inspired this>",
+  "suggestions": "<missing-slot shopping advice OR styling tips>"
 }''';
 
     try {
@@ -350,22 +568,21 @@ Respond with ONLY valid JSON (no markdown fences):
             ]
           }
         ],
-        'generationConfig': {'temperature': 0.9, 'maxOutputTokens': 512},
+        'generationConfig': {'temperature': 0.85, 'maxOutputTokens': 600},
       });
 
-      if (response.statusCode == 429)
-        throw const GeminiRateLimitException('Rate limit hit');
-      if (response.statusCode != 200)
-        return _fallbackOutfit(occasion, colorSeason);
+      if (response.statusCode == 429) {
+        throw const GeminiRateLimitException('Daily AI quota reached.');
+      }
+      if (response.statusCode != 200) {
+        throw GeminiResponseException(
+            'Gemini API error: ${response.statusCode}.');
+      }
 
-      final body = jsonDecode(response.body);
-      final text =
-          body['candidates'][0]['content']['parts'][0]['text'] as String;
-      final jsonStr = _extractJson(text);
-      final result = jsonDecode(jsonStr) as Map<String, dynamic>;
+      final result = _parseAiResponse(response, 'outfit_generation');
 
       return GeminiOutfitResult(
-        title: result['title'] as String? ?? '$occasion Outfit',
+        title: result['title'] as String? ?? '$occasion Look',
         reasoning: result['reasoning'] as String? ?? '',
         styleScore: (result['styleScore'] as num?)?.toInt() ?? 8,
         selectedItemIds: (result['selectedItemIds'] as List?)
@@ -375,37 +592,17 @@ Respond with ONLY valid JSON (no markdown fences):
         trendNote: result['trendNote'] as String? ?? '',
         suggestions: result['suggestions'] as String? ?? '',
       );
-    } catch (_) {
-      return _fallbackOutfit(occasion, colorSeason);
+    } on GeminiRateLimitException {
+      rethrow;
+    } on GeminiAuthException {
+      rethrow;
+    } on GeminiInputTooLargeException {
+      rethrow;
+    } on GeminiNetworkException {
+      rethrow;
+    } on GeminiResponseException {
+      rethrow;
     }
-  }
-
-  GeminiOutfitResult _fallbackOutfit(String occasion, String? colorSeason) {
-    final palette = colorSeason ?? 'warm';
-    return GeminiOutfitResult(
-      title: '${occasion[0].toUpperCase()}${occasion.substring(1)} Look',
-      reasoning:
-          'A curated $occasion look with colors that complement your $palette palette. '
-          'Clean silhouettes and cohesive tones keep the overall look polished and effortless.',
-      styleScore: 8,
-      selectedItemIds: [],
-      trendNote:
-          'Minimalist-chic is trending across FashionNova and social media this season.',
-      suggestions:
-          'Add a gold-toned accessory to elevate the look and tie the palette together.',
-    );
-  }
-
-  String _extractJson(String text) {
-    final codeBlockMatch =
-        RegExp(r'```(?:json)?\s*([\s\S]*?)```').firstMatch(text);
-    if (codeBlockMatch != null) return codeBlockMatch.group(1)!.trim();
-
-    final start = text.indexOf('{');
-    final end = text.lastIndexOf('}');
-    if (start != -1 && end != -1) return text.substring(start, end + 1);
-
-    return text;
   }
 }
 
@@ -432,6 +629,28 @@ class FitCheckResult {
   final String feedback;
 
   const FitCheckResult({required this.score, required this.feedback});
+}
+
+class RichFitCheckResult {
+  final int overall;
+  final int colorHarmony;
+  final int styleCohesion;
+  final int occasionFit;
+  final int versatility;
+  final String headline;
+  final String feedback;
+  final List<String> tips;
+
+  const RichFitCheckResult({
+    required this.overall,
+    required this.colorHarmony,
+    required this.styleCohesion,
+    required this.occasionFit,
+    required this.versatility,
+    required this.headline,
+    required this.feedback,
+    required this.tips,
+  });
 }
 
 class GeminiRateLimitException implements Exception {
@@ -469,8 +688,15 @@ class GeminiNetworkException implements Exception {
   String toString() => message;
 }
 
+class GeminiResponseException implements Exception {
+  final String message;
+  const GeminiResponseException(this.message);
+  @override
+  String toString() => message;
+}
+
 class ColorSeasonResult {
-  final String season; // 'spring' | 'summer' | 'autumn' | 'winter'
+  final String season;
   final int confidence;
   final String tagline;
   final String reasoning;

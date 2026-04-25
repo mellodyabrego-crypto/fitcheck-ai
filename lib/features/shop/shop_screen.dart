@@ -1025,19 +1025,21 @@ class _ShopHomePage extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 56,
-                        height: 56,
+                        width: 88,
+                        height: 88,
                         decoration: BoxDecoration(
                           color: color.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
+                          border: Border.all(
+                              color: color.withValues(alpha: 0.25), width: 1.5),
                         ),
-                        child: Icon(icon, color: color, size: 26),
+                        child: Icon(icon, color: color, size: 40),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 10),
                       Text(cat,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.w600),
+                              fontSize: 13, fontWeight: FontWeight.w600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
                     ],
@@ -1047,10 +1049,10 @@ class _ShopHomePage extends ConsumerWidget {
               childCount: _catalog.length,
             ),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.9,
+              crossAxisCount: 3,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.95,
             ),
           ),
         ),

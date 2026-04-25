@@ -8,6 +8,7 @@ import '../../core/theme.dart';
 import '../../main.dart';
 import '../../providers/user_providers.dart';
 import '../../widgets/decorative_symbols.dart';
+import '../onboarding/widgets/location_picker.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -23,12 +24,25 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _newPassCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
 
+  // About You section
+  DateTime? _dob;
+  String? _gender;
+  String? _country;
+  String? _state;
+
   bool _savingProfile = false;
   bool _savingPassword = false;
   bool _showNewPass = false;
   bool _showConfirm = false;
   String? _profileError;
   String? _passwordError;
+
+  static const _genderOptions = [
+    ('woman', 'Woman'),
+    ('man', 'Man'),
+    ('non_binary', 'Non-Binary'),
+    ('prefer_not', 'Prefer Not to Say'),
+  ];
 
   @override
   void initState() {
@@ -46,18 +60,54 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     super.dispose();
   }
 
-  void _loadCurrentProfile() {
+  Future<void> _loadCurrentProfile() async {
     if (kDemoMode) {
       _nameCtrl.text = 'Style Queen';
       _emailCtrl.text = 'demo@thecandyshop.com';
       _phoneCtrl.text = '';
       return;
     }
-    final user = Supabase.instance.client.auth.currentUser;
+    final client = Supabase.instance.client;
+    final user = client.auth.currentUser;
     if (user == null) return;
     _emailCtrl.text = user.email ?? '';
     _nameCtrl.text = user.userMetadata?['full_name'] as String? ?? '';
     _phoneCtrl.text = user.phone ?? '';
+
+    try {
+      final row = await client
+          .from('user_profiles')
+          .select('dob, gender, country, state')
+          .eq('user_id', user.id)
+          .maybeSingle();
+      if (row != null && mounted) {
+        setState(() {
+          if (row['dob'] != null) {
+            _dob = DateTime.tryParse(row['dob'].toString());
+          }
+          _gender = row['gender'] as String?;
+          _country = row['country'] as String?;
+          _state = row['state'] as String?;
+        });
+      }
+    } catch (_) {
+      // Best-effort — falls back to empty fields.
+    }
+  }
+
+  Future<void> _pickDob() async {
+    final now = DateTime.now();
+    final last = DateTime(now.year - 13, now.month, now.day);
+    final initial =
+        _dob ?? DateTime(now.year - 25, now.month, now.day);
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial.isAfter(last) ? last : initial,
+      firstDate: DateTime(now.year - 100, 1, 1),
+      lastDate: last,
+      helpText: 'Your date of birth',
+    );
+    if (picked != null && mounted) setState(() => _dob = picked);
   }
 
   Future<void> _saveProfile() async {
@@ -67,16 +117,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     });
     try {
       if (!kDemoMode) {
-        await Supabase.instance.client.auth.updateUser(
+        final client = Supabase.instance.client;
+        await client.auth.updateUser(
           UserAttributes(
             email:
                 _emailCtrl.text.trim().isEmpty ? null : _emailCtrl.text.trim(),
             data: {'full_name': _nameCtrl.text.trim()},
           ),
         );
+        final userId = client.auth.currentUser?.id;
+        if (userId != null) {
+          await client.from('user_profiles').upsert({
+            'user_id': userId,
+            'dob': _dob?.toIso8601String().split('T').first,
+            'gender': _gender,
+            'country': _country,
+            'state': _state,
+            'updated_at': DateTime.now().toIso8601String(),
+          }, onConflict: 'user_id');
+        }
       }
       if (mounted) {
-        // Refresh the display name in the profile page
         ref.read(displayNameProvider.notifier).state = _nameCtrl.text.trim();
         context.showSnackBar('Profile updated!');
       }
@@ -124,6 +185,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 
+  String _formatDob(DateTime d) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    return '${months[d.month - 1]} ${d.day}, ${d.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,7 +204,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // ── Profile info section ──────────────────────────────────
+              // ── Personal info section ─────────────────────────────────
               _SectionCard(
                 title: 'Personal Info',
                 icon: Icons.person_outline,
@@ -155,7 +224,70 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     icon: Icons.email_outlined,
                     inputType: TextInputType.emailAddress,
                   ),
-                  // Phone number update not available (requires SMS provider setup)
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              // ── About You section (DOB, gender, country, state) ───────
+              _SectionCard(
+                title: 'About You',
+                icon: Icons.cake_outlined,
+                children: [
+                  // DOB
+                  InkWell(
+                    onTap: _pickDob,
+                    borderRadius: BorderRadius.circular(12),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Date of Birth',
+                        prefixIcon: const Icon(Icons.cake_outlined),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 16),
+                      ),
+                      child: Text(
+                        _dob != null ? _formatDob(_dob!) : 'Tap to choose',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: _dob != null
+                              ? AppTheme.textPrimary
+                              : AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  DropdownButtonFormField<String>(
+                    value: _gender,
+                    decoration: InputDecoration(
+                      labelText: 'Gender',
+                      prefixIcon: const Icon(Icons.wc_outlined),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 14),
+                    ),
+                    items: _genderOptions
+                        .map((opt) => DropdownMenuItem(
+                              value: opt.$1,
+                              child: Text(opt.$2),
+                            ))
+                        .toList(),
+                    onChanged: (v) => setState(() => _gender = v),
+                  ),
+                  const SizedBox(height: 14),
+                  // Reuse the picker UI for consistency
+                  LocationPicker(
+                    country: _country,
+                    state: _state,
+                    onCountryChanged: (v) => setState(() {
+                      _country = v;
+                      _state = null;
+                    }),
+                    onStateChanged: (v) => setState(() => _state = v),
+                  ),
                   if (_profileError != null) ...[
                     const SizedBox(height: 10),
                     Text(_profileError!,
@@ -283,7 +415,6 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Container(
             padding: const EdgeInsets.fromLTRB(18, 16, 18, 12),
             decoration: BoxDecoration(

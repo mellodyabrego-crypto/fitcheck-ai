@@ -9,6 +9,7 @@ import '../../widgets/decorative_symbols.dart';
 import '../../widgets/clothing_grid_tile.dart';
 import 'wardrobe_controller.dart';
 import 'item_detail_screen.dart';
+import 'closet_placeholder.dart';
 
 // null = folder view, a category = filtered items view
 final selectedCategoryProvider =
@@ -293,24 +294,9 @@ class _ItemsGrid extends ConsumerWidget {
             : source.where((i) => i.category == category).toList();
 
         if (filtered.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(category?.icon ?? Icons.checkroom,
-                    size: 64,
-                    color: AppTheme.textSecondary.withValues(alpha: 0.4)),
-                const SizedBox(height: 16),
-                Text(
-                  'No ${category?.label ?? 'items'} yet',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 8),
-                Text('Tap + to add your first item!',
-                    style: TextStyle(color: AppTheme.textSecondary)),
-              ],
-            ),
+          return ClosetPlaceholder(
+            category: category,
+            onAdd: () => context.push('/wardrobe/add'),
           );
         }
 

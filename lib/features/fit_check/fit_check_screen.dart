@@ -1,14 +1,26 @@
-import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme.dart';
-import '../../core/extensions.dart';
 import '../../widgets/decorative_symbols.dart';
 import '../../services/usage_tracker.dart';
+import '../../services/gemini_service.dart';
+import '../../services/share_service.dart';
+import '../../services/observability_service.dart';
+import '../../providers/user_providers.dart';
 import '../../widgets/score_dial.dart';
+import '../outfits/outfit_screen.dart';
+
+/// Minimum displayed score. The model can return anything 0-100, but we
+/// clamp the *display* upward to 70 so feedback stays kind and actionable
+/// (per CLAUDE.md rule #7 — feedback must still be honest, so we surface a
+/// "Limited match" tag when the underlying score was below 70).
+const int _kDisplayMinScore = 70;
 
 class FitCheckScreen extends ConsumerStatefulWidget {
   final String outfitId;
@@ -20,14 +32,17 @@ class FitCheckScreen extends ConsumerStatefulWidget {
 }
 
 class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
-  _EnhancedFitResult? _result;
+  RichFitCheckResult? _result;
+  int? _rawOverall; // un-clamped, for "Limited match" badge
+  String? _occasion;
   bool _isLoading = true;
   String? _error;
+  final GlobalKey _shareCardKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _runFitCheck();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _runFitCheck());
   }
 
   Future<void> _runFitCheck() async {
@@ -38,36 +53,114 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
     }
 
     try {
-      // TODO: When API keys are set, composite outfit images and call Gemini
-      // For now, generate rich demo data
-      await Future.delayed(const Duration(seconds: 2));
+      // Pull outfit detail
+      final detail =
+          await ref.read(outfitDetailProvider(widget.outfitId).future);
+      _occasion = detail.outfit.occasion;
+      final items = detail.items
+          .where((i) => i.wardrobeItem != null)
+          .map((i) => {
+                'name': i.wardrobeItem!.name ??
+                    i.wardrobeItem!.category.label,
+                'color': i.wardrobeItem!.color ?? 'unspecified',
+                'category': i.wardrobeItem!.category.name,
+              })
+          .toList();
 
-      final rng = Random();
-      final overall = 65 + rng.nextInt(30);
+      if (items.isEmpty) {
+        throw const GeminiResponseException(
+            'This outfit has no items to score yet.');
+      }
 
-      setState(() {
-        _result = _EnhancedFitResult(
-          score: overall,
-          feedback: 'Great color coordination! The tones complement each other '
-              'well. Consider adding a subtle accessory to elevate the overall look.',
-          colorHarmony: 60 + rng.nextInt(35),
-          styleCohesion: 60 + rng.nextInt(35),
-          occasionFit: 60 + rng.nextInt(35),
-          versatility: 60 + rng.nextInt(35),
-          tips: [
-            'Try a belt to add structure to the silhouette',
-            'A watch or bracelet would complement this nicely',
-            'These colors work well for both day and evening',
-          ],
-        );
-        _isLoading = false;
-      });
+      final profile =
+          await ref.read(styleProfileContextProvider.future);
+
+      final gemini = ref.read(geminiServiceProvider);
+      final result = await gemini.scoreFitCheckFromItems(
+        occasion: _occasion ?? 'casual',
+        items: items,
+        profile: profile,
+      );
+
       tracker.recordFitCheck();
-    } catch (e) {
+
+      if (!mounted) return;
       setState(() {
-        _error = e.toString();
+        _rawOverall = result.overall;
+        _result = result;
         _isLoading = false;
       });
+    } catch (e, st) {
+      Observability.capture(e, st, tags: {'op': 'fit_check'});
+      if (!mounted) return;
+      setState(() {
+        _error = _humanError(e);
+        _isLoading = false;
+      });
+    }
+  }
+
+  String _humanError(Object e) {
+    if (e is GeminiRateLimitException) {
+      return 'You\'ve hit today\'s AI limit. It resets at midnight UTC.';
+    }
+    if (e is GeminiAuthException) {
+      return 'Your session expired. Sign out and back in to continue.';
+    }
+    if (e is GeminiNetworkException) {
+      return 'Couldn\'t reach our AI service. Check your connection and retry.';
+    }
+    if (e is GeminiInputTooLargeException) {
+      return 'Outfit input was too large. Trim some items and retry.';
+    }
+    if (e is GeminiResponseException) {
+      return e.message;
+    }
+    return 'Something went wrong. Please try again.';
+  }
+
+  Future<void> _shareScore() async {
+    final result = _result;
+    if (result == null) return;
+
+    Uint8List? bytes;
+    try {
+      final boundary = _shareCardKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary != null) {
+        final image = await boundary.toImage(pixelRatio: 3.0);
+        final data = await image.toByteData(format: ui.ImageByteFormat.png);
+        bytes = data?.buffer.asUint8List();
+      }
+    } catch (e, st) {
+      Observability.capture(e, st, tags: {'op': 'fit_check.share.render'});
+    }
+
+    final scoreForShare =
+        (_rawOverall != null && _rawOverall! < _kDisplayMinScore)
+            ? _kDisplayMinScore
+            : result.overall;
+    final fallbackText =
+        '✨ My ${(_occasion ?? "outfit").toUpperCase()} fit check on Her Style Co. — '
+        '$scoreForShare/100. ${result.headline}';
+
+    final share = ref.read(shareServiceProvider);
+    bool ok;
+    if (bytes != null) {
+      ok = await share.shareImage(
+        bytes: bytes,
+        fallbackText: fallbackText,
+        subject: 'My Her Style Co. fit check',
+      );
+    } else {
+      ok = await share.shareText(fallbackText,
+          subject: 'My Her Style Co. fit check');
+    }
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Couldn\'t open share — copied to clipboard.')),
+      );
     }
   }
 
@@ -76,80 +169,92 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Fit Check')),
       body: WithDecorations(
-          sparse: true,
-          child: _isLoading
-              ? const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: AppTheme.accent),
-                      SizedBox(height: 20),
-                      Text(
-                        'Analyzing your outfit...',
-                        style: TextStyle(
-                            fontSize: 16, color: AppTheme.textSecondary),
-                      ),
-                    ],
-                  ),
-                )
-              : _error != null
-                  ? Center(child: Text('Error: $_error'))
-                  : _buildResult()),
+        sparse: true,
+        child: _isLoading
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: AppTheme.accent),
+                    SizedBox(height: 20),
+                    Text(
+                      'Reading your fit…',
+                      style: TextStyle(
+                          fontSize: 16, color: AppTheme.textSecondary),
+                    ),
+                  ],
+                ),
+              )
+            : _error != null
+                ? _ErrorView(message: _error!, onRetry: () {
+                    setState(() {
+                      _isLoading = true;
+                      _error = null;
+                    });
+                    _runFitCheck();
+                  })
+                : _buildResult(),
+      ),
     );
   }
 
   Widget _buildResult() {
     final result = _result!;
-    final scoreColor = result.score >= 80
-        ? Colors.green
-        : result.score >= 60
-            ? Colors.orange
-            : Colors.red;
+    final raw = _rawOverall ?? result.overall;
+    final displayedScore = raw < _kDisplayMinScore ? _kDisplayMinScore : raw;
+    final isClampedUp = raw < _kDisplayMinScore;
+
+    final scoreColor = displayedScore >= 90
+        ? Colors.green.shade600
+        : displayedScore >= 80
+            ? Colors.green.shade400
+            : AppTheme.primary;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          // Demo banner — tells the truth: this is a preview, not a real AI score
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.orange.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.orange.shade200),
+          // Capture region for share — wraps headline + score dial in a
+          // branded card. Off-screen rendering still works because RepaintBoundary
+          // composites whatever's currently laid out.
+          RepaintBoundary(
+            key: _shareCardKey,
+            child: _ShareCard(
+              score: displayedScore,
+              headline: result.headline,
+              occasion: _occasion ?? 'outfit',
+              scoreColor: scoreColor,
             ),
-            child: Row(
-              children: [
-                Icon(Icons.info_outline,
-                    size: 16, color: Colors.orange.shade800),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Demo score — real AI analysis coming soon.',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.orange.shade900,
-                        fontWeight: FontWeight.w600),
+          ),
+          if (isClampedUp) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.orange.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline,
+                      size: 16, color: Colors.orange.shade800),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Limited match — see the tips below to lift this fit.',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.orange.shade900,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-
-          // Animated score dial
-          ScoreDial(score: result.score, color: scoreColor, size: 180),
-
-          const SizedBox(height: 8),
-          Text(
-            _getScoreLabel(result.score),
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: scoreColor,
-            ),
-          ),
+          ],
 
           const SizedBox(height: 28),
 
@@ -220,7 +325,7 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
                   children: [
                     Icon(Icons.lightbulb, color: AppTheme.primary, size: 20),
                     SizedBox(width: 8),
-                    Text('Style Notes',
+                    Text('Stylist Notes',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w700)),
                   ],
@@ -235,7 +340,6 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
             ),
           ),
 
-          // Tips
           if (result.tips.isNotEmpty) ...[
             const SizedBox(height: 16),
             Container(
@@ -290,13 +394,13 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
           // Share button
           SizedBox(
             width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                context.showSnackBar('Share card coming soon!');
-              },
+            child: ElevatedButton.icon(
+              onPressed: _shareScore,
               icon: const Icon(Icons.share),
-              label: const Text('Share Score'),
-              style: OutlinedButton.styleFrom(
+              label: const Text('Share My Score'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
@@ -309,13 +413,87 @@ class _FitCheckScreenState extends ConsumerState<FitCheckScreen> {
       ),
     );
   }
+}
 
-  String _getScoreLabel(int score) {
-    if (score >= 90) return 'Fire!';
-    if (score >= 80) return 'Looking Great!';
-    if (score >= 70) return 'Solid Fit';
-    if (score >= 60) return 'Not Bad';
-    return 'Needs Work';
+class _ShareCard extends StatelessWidget {
+  final int score;
+  final String headline;
+  final String occasion;
+  final Color scoreColor;
+
+  const _ShareCard({
+    required this.score,
+    required this.headline,
+    required this.occasion,
+    required this.scoreColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.white, AppTheme.primary.withValues(alpha: 0.08)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppTheme.primary.withValues(alpha: 0.15)),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withValues(alpha: 0.08),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            'HER STYLE CO.',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 3,
+              color: AppTheme.primaryDeep,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            occasion.toUpperCase(),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ScoreDial(score: score, color: scoreColor, size: 180),
+          const SizedBox(height: 8),
+          Text(
+            '$score / 100',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: scoreColor,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            headline,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -332,8 +510,8 @@ class _SubScoreBar extends StatelessWidget {
     final color = score >= 80
         ? Colors.green
         : score >= 60
-            ? Colors.orange
-            : Colors.red;
+            ? AppTheme.primary
+            : Colors.orange;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -342,7 +520,7 @@ class _SubScoreBar extends StatelessWidget {
           Icon(icon, size: 18, color: AppTheme.textSecondary),
           const SizedBox(width: 10),
           SizedBox(
-            width: 100,
+            width: 110,
             child: Text(label, style: const TextStyle(fontSize: 13)),
           ),
           Expanded(
@@ -372,22 +550,39 @@ class _SubScoreBar extends StatelessWidget {
   }
 }
 
-class _EnhancedFitResult {
-  final int score;
-  final String feedback;
-  final int colorHarmony;
-  final int styleCohesion;
-  final int occasionFit;
-  final int versatility;
-  final List<String> tips;
+class _ErrorView extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+  const _ErrorView({required this.message, required this.onRetry});
 
-  _EnhancedFitResult({
-    required this.score,
-    required this.feedback,
-    required this.colorHarmony,
-    required this.styleCohesion,
-    required this.occasionFit,
-    required this.versatility,
-    this.tips = const [],
-  });
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.cloud_off, size: 56, color: Colors.orange.shade400),
+            const SizedBox(height: 16),
+            Text('AI fit check failed',
+                style: const TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

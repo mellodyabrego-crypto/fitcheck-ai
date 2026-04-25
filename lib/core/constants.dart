@@ -13,6 +13,21 @@ const _dartDefPosthogHost = String.fromEnvironment('POSTHOG_HOST',
 const _dartDefAppEnv =
     String.fromEnvironment('APP_ENV', defaultValue: 'production');
 
+// Firebase web SDK config for push notifications. All optional — empty values
+// mean notifications are inert (no FCM token registration, no service worker
+// init). Match the keys to the Firebase console → Project Settings → SDK
+// snippet.
+const _dartDefFirebaseApiKey = String.fromEnvironment('FIREBASE_API_KEY');
+const _dartDefFirebaseProjectId = String.fromEnvironment('FIREBASE_PROJECT_ID');
+const _dartDefFirebaseMessagingSenderId =
+    String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID');
+const _dartDefFirebaseAppId = String.fromEnvironment('FIREBASE_APP_ID');
+const _dartDefFirebaseAuthDomain =
+    String.fromEnvironment('FIREBASE_AUTH_DOMAIN');
+const _dartDefFirebaseStorageBucket =
+    String.fromEnvironment('FIREBASE_STORAGE_BUCKET');
+const _dartDefFirebaseVapidKey = String.fromEnvironment('FIREBASE_VAPID_KEY');
+
 String _pickEnv(String compileTime, String key) {
   if (compileTime.isNotEmpty) return compileTime;
   return dotenv.env[key] ?? '';
@@ -35,6 +50,28 @@ abstract class AppConstants {
           ? _pickEnv(_dartDefPosthogHost, 'POSTHOG_HOST')
           : 'https://us.i.posthog.com';
   static String get appEnv => _dartDefAppEnv;
+
+  // Firebase web — push notifications
+  static String get firebaseApiKey =>
+      _pickEnv(_dartDefFirebaseApiKey, 'FIREBASE_API_KEY');
+  static String get firebaseProjectId =>
+      _pickEnv(_dartDefFirebaseProjectId, 'FIREBASE_PROJECT_ID');
+  static String get firebaseMessagingSenderId => _pickEnv(
+      _dartDefFirebaseMessagingSenderId, 'FIREBASE_MESSAGING_SENDER_ID');
+  static String get firebaseAppId =>
+      _pickEnv(_dartDefFirebaseAppId, 'FIREBASE_APP_ID');
+  static String get firebaseAuthDomain =>
+      _pickEnv(_dartDefFirebaseAuthDomain, 'FIREBASE_AUTH_DOMAIN');
+  static String get firebaseStorageBucket =>
+      _pickEnv(_dartDefFirebaseStorageBucket, 'FIREBASE_STORAGE_BUCKET');
+  static String get firebaseVapidKey =>
+      _pickEnv(_dartDefFirebaseVapidKey, 'FIREBASE_VAPID_KEY');
+  static bool get isFcmConfigured =>
+      firebaseApiKey.isNotEmpty &&
+      firebaseProjectId.isNotEmpty &&
+      firebaseMessagingSenderId.isNotEmpty &&
+      firebaseAppId.isNotEmpty &&
+      firebaseVapidKey.isNotEmpty;
 
   static const String wardrobeBucket = 'wardrobe-images';
   static const String claudeModel = 'claude-sonnet-4-20250514';

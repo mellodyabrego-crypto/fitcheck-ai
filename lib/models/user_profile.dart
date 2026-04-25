@@ -12,7 +12,7 @@ class UserProfile {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  // New onboarding fields
+  // Onboarding fields
   final List<String> goals;
   final String? ageRange;
   final List<String> brands;
@@ -20,6 +20,17 @@ class UserProfile {
   final String? bottomSize;
   final String? shoeSize;
   final String? skinToneUndertone;
+
+  // 2026-04-25 — added with the women-focused onboarding refresh
+  final DateTime? dob;
+  final String? country;
+  final String? state;
+  final String? referralSource;
+  final bool weatherOptIn;
+
+  // Soft-delete marker. Account deletion bans the user via admin API and
+  // sets this timestamp; all profile/wardrobe rows are preserved for analytics.
+  final DateTime? deletedAt;
 
   const UserProfile({
     required this.id,
@@ -41,9 +52,24 @@ class UserProfile {
     this.bottomSize,
     this.shoeSize,
     this.skinToneUndertone,
+    this.dob,
+    this.country,
+    this.state,
+    this.referralSource,
+    this.weatherOptIn = false,
+    this.deletedAt,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
+    DateTime? parseDate(dynamic v) {
+      if (v == null) return null;
+      try {
+        return DateTime.parse(v.toString());
+      } catch (_) {
+        return null;
+      }
+    }
+
     return UserProfile(
       id: json['id'] as String,
       userId: json['user_id'] as String,
@@ -75,6 +101,12 @@ class UserProfile {
       bottomSize: json['bottom_size'] as String?,
       shoeSize: json['shoe_size'] as String?,
       skinToneUndertone: json['skin_tone_undertone'] as String?,
+      dob: parseDate(json['dob']),
+      country: json['country'] as String?,
+      state: json['state'] as String?,
+      referralSource: json['referral_source'] as String?,
+      weatherOptIn: json['weather_opt_in'] as bool? ?? false,
+      deletedAt: parseDate(json['deleted_at']),
     );
   }
 
@@ -95,6 +127,12 @@ class UserProfile {
         'bottom_size': bottomSize,
         'shoe_size': shoeSize,
         'skin_tone_undertone': skinToneUndertone,
+        'dob': dob?.toIso8601String(),
+        'country': country,
+        'state': state,
+        'referral_source': referralSource,
+        'weather_opt_in': weatherOptIn,
+        'deleted_at': deletedAt?.toIso8601String(),
       };
 
   UserProfile copyWith({
@@ -113,6 +151,12 @@ class UserProfile {
     String? bottomSize,
     String? shoeSize,
     String? skinToneUndertone,
+    DateTime? dob,
+    String? country,
+    String? state,
+    String? referralSource,
+    bool? weatherOptIn,
+    DateTime? deletedAt,
   }) {
     return UserProfile(
       id: id,
@@ -134,6 +178,12 @@ class UserProfile {
       bottomSize: bottomSize ?? this.bottomSize,
       shoeSize: shoeSize ?? this.shoeSize,
       skinToneUndertone: skinToneUndertone ?? this.skinToneUndertone,
+      dob: dob ?? this.dob,
+      country: country ?? this.country,
+      state: state ?? this.state,
+      referralSource: referralSource ?? this.referralSource,
+      weatherOptIn: weatherOptIn ?? this.weatherOptIn,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 }

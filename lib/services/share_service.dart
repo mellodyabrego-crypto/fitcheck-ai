@@ -57,6 +57,50 @@ class ShareService {
     }
   }
 
+  /// Share a pre-rendered image (from a RepaintBoundary). Tries native share
+  /// with the image first; falls back to text-only share, then clipboard.
+  /// Returns true if any share/clipboard path succeeded.
+  Future<bool> shareImage({
+    required Uint8List bytes,
+    required String fallbackText,
+    String filename = 'her-style-co.png',
+    String? subject,
+  }) async {
+    // Try native image share via share_plus XFile (works on web in modern browsers
+    // that support navigator.share with files; falls through otherwise).
+    try {
+      final file = XFile.fromData(
+        bytes,
+        name: filename,
+        mimeType: 'image/png',
+      );
+      final result = await Share.shareXFiles(
+        [file],
+        text: fallbackText,
+        subject: subject,
+      );
+      if (result.status == ShareResultStatus.success ||
+          result.status == ShareResultStatus.dismissed) {
+        return true;
+      }
+    } catch (_) {
+      // Fall through to text-only share.
+    }
+    // Fallback: text share
+    try {
+      await Share.share(fallbackText, subject: subject);
+      return true;
+    } catch (_) {
+      // Last fallback: clipboard
+      try {
+        await Clipboard.setData(ClipboardData(text: fallbackText));
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+  }
+
   // Keep for API compatibility
   Future<Uint8List?> renderToBytes(Widget widget) async => null;
 }
